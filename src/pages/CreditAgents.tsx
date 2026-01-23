@@ -66,7 +66,7 @@ const CreditAgents = () => {
               <Button asChild variant="outline">
                 <Link to="/cawao">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
-                  View Dashboard
+                  Go to Process
                 </Link>
               </Button>
               <Button asChild variant="outline">
