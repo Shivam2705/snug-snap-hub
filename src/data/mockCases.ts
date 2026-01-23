@@ -6,6 +6,15 @@ export type RiskLevel = 'low' | 'medium' | 'high';
 
 export type ActorType = 'ai' | 'human';
 
+export type RecommendationAction = 'escalate' | 'await' | 'block' | 'disable-flag' | 'approve' | 'investigate';
+
+export interface AIRecommendation {
+  action: RecommendationAction;
+  label: string;
+  reasoning: string;
+  supportingEvidence: string[];
+}
+
 export interface EvidenceItem {
   id: string;
   timestamp: string;
@@ -50,7 +59,7 @@ export interface CustomerCase {
   queue: QueueType;
   riskScore: number;
   riskLevel: RiskLevel;
-  aiRecommendation?: string;
+  aiRecommendation?: AIRecommendation;
   confidenceScore?: number;
   evidenceTimeline?: EvidenceItem[];
   activityLog?: ActivityLogItem[];
@@ -229,7 +238,16 @@ const baseCases = [
     fraud: true,
     queue: "day-0" as QueueType,
     aiSummary: "Customer flagged on CIFAS database for previous identity fraud. Address verification failed - Transunion shows different address. Email sent to ACT team for escalation. Case marked as confirmed fraud.",
-    aiRecommendation: "Escalate to AIT Team",
+    aiRecommendation: {
+      action: 'escalate' as RecommendationAction,
+      label: 'Escalate to AIT Team',
+      reasoning: 'CIFAS record indicates confirmed identity fraud case type. Address verification failed with significant discrepancy between application and credit bureau records. Pattern matches known fraud indicators.',
+      supportingEvidence: [
+        'CIFAS database match: Identity Fraud case type confirmed',
+        'Address mismatch: Transunion shows 45 Other Street vs application address',
+        'Phone number linked to 2 other flagged accounts'
+      ]
+    },
     confidenceScore: 94
   },
   {
@@ -251,7 +269,16 @@ const baseCases = [
     fraud: null,
     queue: "day-0" as QueueType,
     aiSummary: "Customer verification in progress. iGuide search returned single match. Address verification pending Transunion/Experian check.",
-    aiRecommendation: "Continue Investigation",
+    aiRecommendation: {
+      action: 'investigate' as RecommendationAction,
+      label: 'Continue Investigation',
+      reasoning: 'ZOWN flag triggered indicating potential duplicate account ownership. NOC flag present but initial verification shows single match. Additional checks required before final determination.',
+      supportingEvidence: [
+        'ZOWN: Potential duplicate account detected - same DOB, similar address',
+        'NOC flag: Name on Credit file requires verification',
+        'iGuide: Single customer match found - no duplicates'
+      ]
+    },
     confidenceScore: 62
   },
   {
@@ -273,7 +300,16 @@ const baseCases = [
     fraud: null,
     queue: "day-0" as QueueType,
     aiSummary: "Multiple customers found with similar phone number in iGuide. Relationship status unclear. Manual review required to determine if accounts are related.",
-    aiRecommendation: "Manual Review Required",
+    aiRecommendation: {
+      action: 'investigate' as RecommendationAction,
+      label: 'Manual Review Required',
+      reasoning: 'Phone number matches 3 other customer records in mainframe. Unable to determine if legitimate family/business connection or potential fraud ring. Human judgment required.',
+      supportingEvidence: [
+        'Phone shared with: Account #4521, #4522, #4523',
+        'Auth Code 4: Strong authentication completed',
+        'No CIFAS or ZOWN flags present'
+      ]
+    },
     confidenceScore: 45
   },
   {
@@ -294,7 +330,17 @@ const baseCases = [
     status: "Not Started" as CaseStatus,
     fraud: null,
     queue: "day-0" as QueueType,
-    aiRecommendation: "Auto-Complete (Low Risk)",
+    aiRecommendation: {
+      action: 'approve' as RecommendationAction,
+      label: 'Auto-Complete (Low Risk)',
+      reasoning: 'No fraud indicators detected. All verification checks passed. Customer profile matches credit bureau records. Eligible for automatic approval.',
+      supportingEvidence: [
+        'No CIFAS record found',
+        'Address verified: 100% match with Experian',
+        'DOB match: Confirmed across all sources',
+        'No duplicate accounts detected'
+      ]
+    },
     confidenceScore: 88
   },
   {
@@ -316,7 +362,17 @@ const baseCases = [
     fraud: false,
     queue: "day-0" as QueueType,
     aiSummary: "CIFAS check showed protective registration (genuine customer). All address verifications passed. Customer authenticated successfully. No fraud detected.",
-    aiRecommendation: "Approve - No Fraud",
+    aiRecommendation: {
+      action: 'disable-flag' as RecommendationAction,
+      label: 'Disable Fraud Flag - Legitimate Customer',
+      reasoning: 'CIFAS record is a Protective Registration filed by customer after being victim of previous fraud attempt. This is not a fraud indicator but customer protection. All other checks verify legitimacy.',
+      supportingEvidence: [
+        'CIFAS Type: Protective Registration (not fraud)',
+        'Customer is victim of previous identity theft',
+        'All verification checks passed successfully',
+        'Address and DOB fully verified'
+      ]
+    },
     confidenceScore: 96
   },
   {
@@ -338,7 +394,17 @@ const baseCases = [
     fraud: null,
     queue: "day-7" as QueueType,
     aiSummary: "Email sent to customer via Zendesk requesting additional documentation. Awaiting customer response for 7+ days.",
-    aiRecommendation: "Follow Up Required",
+    aiRecommendation: {
+      action: 'await' as RecommendationAction,
+      label: 'Await Customer Response',
+      reasoning: 'Customer documentation required to complete verification. Initial contact made via Zendesk 7 days ago. Recommend second contact attempt before escalation.',
+      supportingEvidence: [
+        'Zendesk ticket #ZD-45678 opened 7 days ago',
+        'No response received from customer',
+        'Documentation needed: Proof of address',
+        'Auto-escalation scheduled in 3 days if no response'
+      ]
+    },
     confidenceScore: 55
   },
   {
@@ -360,7 +426,17 @@ const baseCases = [
     fraud: true,
     queue: "day-0" as QueueType,
     aiSummary: "Identity fraud case type found on CIFAS. Details do not match victim of impersonation record. Address discrepancy confirmed via Transunion. Email sent to customer via Zendesk - no response. Escalated to ACT.",
-    aiRecommendation: "Block Account",
+    aiRecommendation: {
+      action: 'block' as RecommendationAction,
+      label: 'Block Account Immediately',
+      reasoning: 'High confidence fraud detection. CIFAS shows active identity fraud case. ZOWN indicates attempt to open duplicate account. Customer details do not match legitimate identity holder. Immediate blocking recommended.',
+      supportingEvidence: [
+        'CIFAS: Active Identity Fraud case - not protective registration',
+        'ZOWN: Previous account blocked for fraud in 2023',
+        'Address mismatch: 78% discrepancy with credit bureau',
+        'No response to verification request after 48 hours'
+      ]
+    },
     confidenceScore: 91
   },
   {
@@ -382,7 +458,17 @@ const baseCases = [
     fraud: null,
     queue: "day-7" as QueueType,
     aiSummary: "NOC flag present. Customer verification agent completed - single match in iGuide. Awaiting customer documentation.",
-    aiRecommendation: "Second Contact Attempt",
+    aiRecommendation: {
+      action: 'await' as RecommendationAction,
+      label: 'Second Contact Attempt Required',
+      reasoning: 'First customer contact attempt unsuccessful. NOC flag requires customer verification. Case on Day-7 queue - second attempt recommended before escalation decision.',
+      supportingEvidence: [
+        'NOC: Name on Credit discrepancy detected',
+        'First contact: Email sent 8 days ago, no response',
+        'iGuide: Single match confirms customer exists',
+        'SMS reminder scheduled for today'
+      ]
+    },
     confidenceScore: 60
   },
   {
@@ -403,7 +489,17 @@ const baseCases = [
     status: "Not Started" as CaseStatus,
     fraud: null,
     queue: "day-0" as QueueType,
-    aiRecommendation: "Auto-Complete (Low Risk)",
+    aiRecommendation: {
+      action: 'approve' as RecommendationAction,
+      label: 'Auto-Complete (Low Risk)',
+      reasoning: 'Clean application with no fraud indicators. All automated checks passed. Customer verified through standard authentication. Eligible for automatic approval without human review.',
+      supportingEvidence: [
+        'No CIFAS, NOC, or ZOWN flags',
+        'Address verified: Exact match with Experian/TransUnion',
+        'DOB confirmed: Matches credit bureau records',
+        'Phone number: No suspicious linkages found'
+      ]
+    },
     confidenceScore: 92
   },
   {
@@ -425,7 +521,17 @@ const baseCases = [
     fraud: false,
     queue: "day-0" as QueueType,
     aiSummary: "Protective registration on CIFAS - genuine customer protecting against previous fraud attempt. All verification checks passed. Customer authenticated with code 4. Case closed - no fraud.",
-    aiRecommendation: "Approve - No Fraud",
+    aiRecommendation: {
+      action: 'disable-flag' as RecommendationAction,
+      label: 'Disable Fraud Flag - Verified Customer',
+      reasoning: 'Despite multiple flags, investigation confirms legitimate customer. CIFAS is protective registration. ZOWN shows previous legitimate account. Strong authentication passed. All flags are false positives.',
+      supportingEvidence: [
+        'CIFAS: Protective Registration - customer is fraud victim',
+        'ZOWN: Previous account is in good standing',
+        'Auth Code 4: Strongest authentication level passed',
+        'All address and identity checks verified'
+      ]
+    },
     confidenceScore: 98
   },
   {
@@ -447,7 +553,17 @@ const baseCases = [
     fraud: null,
     queue: "day-7" as QueueType,
     aiSummary: "Customer contacted via Zendesk. No response after 9 days. Second attempt pending.",
-    aiRecommendation: "Final Contact Attempt",
+    aiRecommendation: {
+      action: 'escalate' as RecommendationAction,
+      label: 'Escalate - No Customer Response',
+      reasoning: 'Customer has not responded after 9 days and 2 contact attempts. Policy requires escalation to AIT for cases exceeding 7-day response window with no customer engagement.',
+      supportingEvidence: [
+        'First contact: Email sent 9 days ago',
+        'Second contact: SMS sent 5 days ago',
+        'No response on any channel',
+        'Policy threshold exceeded: 7-day limit'
+      ]
+    },
     confidenceScore: 48
   },
   {
@@ -469,7 +585,17 @@ const baseCases = [
     fraud: null,
     queue: "day-0" as QueueType,
     aiSummary: "CIFAS record found - investigating case type. Experian/TransUnion checks in progress.",
-    aiRecommendation: "Pending CIFAS Classification",
+    aiRecommendation: {
+      action: 'investigate' as RecommendationAction,
+      label: 'Pending CIFAS Classification',
+      reasoning: 'CIFAS match detected but case type not yet determined. Awaiting full CIFAS record retrieval to determine if fraud case or protective registration.',
+      supportingEvidence: [
+        'CIFAS: Record found - type pending',
+        'Experian check: In progress',
+        'TransUnion check: In progress',
+        'Expected completion: Within 2 hours'
+      ]
+    },
     confidenceScore: 72
   }
 ];
