@@ -42,10 +42,7 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Email Address</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Mobile Number</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Address</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">CIFAS</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">NOC</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Auth Code</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">ZOWN</TableHead>
+              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Flagged</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Received Date & Time</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Completion Date & Time</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Assign To</TableHead>
@@ -72,20 +69,31 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
                   {caseItem.address}
                 </TableCell>
                 <TableCell>
-                  <span className={`font-medium ${caseItem.cifas ? 'text-rose-600' : 'text-slate-500'}`}>
-                    {caseItem.cifas ? 'Yes' : 'No'}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className={`font-medium ${caseItem.noc ? 'text-amber-600' : 'text-slate-500'}`}>
-                    {caseItem.noc ? 'Yes' : 'No'}
-                  </span>
-                </TableCell>
-                <TableCell className="text-center font-medium">{caseItem.authenticateCode}</TableCell>
-                <TableCell>
-                  <span className={`font-medium ${caseItem.zown ? 'text-orange-600' : 'text-slate-500'}`}>
-                    {caseItem.zown ? 'Yes' : 'No'}
-                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {caseItem.cifas && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-700">
+                        CIFAS
+                      </span>
+                    )}
+                    {caseItem.noc && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                        NOC
+                      </span>
+                    )}
+                    {caseItem.authenticateCode && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                        Auth {caseItem.authenticateCode}
+                      </span>
+                    )}
+                    {caseItem.zown && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
+                        ZOWN
+                      </span>
+                    )}
+                    {!caseItem.cifas && !caseItem.noc && !caseItem.authenticateCode && !caseItem.zown && (
+                      <span className="text-slate-400 text-xs italic">None</span>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-sm">
                   {formatDateTime(caseItem.receivedDateTime)}
