@@ -1,14 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, FileCheck, Key, Home } from "lucide-react";
-import { getCaseStats } from "@/data/mockCases";
+import { Shield, Key, Home } from "lucide-react";
+import { getFlagCounts } from "@/data/mockCases";
 
 const FlagCountCards = () => {
-  const stats = getCaseStats();
+  const flags = getFlagCounts();
 
   const flagCards = [
     {
       label: 'CIFAS Flagged',
-      value: stats.cifasYes,
+      value: flags.cifasCount,
       icon: Shield,
       color: 'text-rose-600',
       bgColor: 'bg-rose-50',
@@ -16,7 +16,7 @@ const FlagCountCards = () => {
     },
     {
       label: 'Auth Code 2',
-      value: stats.authCode2,
+      value: flags.authCode2,
       icon: Key,
       color: 'text-amber-600',
       bgColor: 'bg-amber-50',
@@ -24,7 +24,7 @@ const FlagCountCards = () => {
     },
     {
       label: 'Auth Code 3/4',
-      value: stats.authCode3 + stats.authCode4,
+      value: flags.authCode3 + flags.authCode4,
       icon: Key,
       color: 'text-slate-600',
       bgColor: 'bg-slate-50',
@@ -32,7 +32,7 @@ const FlagCountCards = () => {
     },
     {
       label: 'ZOWN Flagged',
-      value: stats.zownYes,
+      value: flags.zownCount,
       icon: Home,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',

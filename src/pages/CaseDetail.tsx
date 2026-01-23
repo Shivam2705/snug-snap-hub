@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import { useParams, Link } from "react-router-dom";
-import { mockCases } from "@/data/mockCases";
+import { mockCases, FinalOutcome } from "@/data/mockCases";
 import StatusBadge from "@/components/StatusBadge";
 import RiskBadge from "@/components/investigation/RiskBadge";
 import CustomerDetailsPanel from "@/components/investigation/CustomerDetailsPanel";
@@ -14,10 +14,19 @@ import {
   ArrowLeft, 
   Brain,
   CheckCircle2,
-  XCircle,
+  Ban,
+  AlertTriangle,
+  Phone,
   FileText,
   Activity
 } from "lucide-react";
+
+const outcomeConfig: Record<FinalOutcome, { icon: React.ElementType; label: string; color: string; bgColor: string }> = {
+  blocked: { icon: Ban, label: 'Account Blocked', color: 'text-rose-700', bgColor: 'bg-rose-50 border-rose-200' },
+  escalated: { icon: AlertTriangle, label: 'Escalated to AIT', color: 'text-amber-700', bgColor: 'bg-amber-50 border-amber-200' },
+  'awaiting-customer': { icon: Phone, label: 'Awaiting Customer', color: 'text-sky-700', bgColor: 'bg-sky-50 border-sky-200' },
+  approved: { icon: CheckCircle2, label: 'Approved', color: 'text-emerald-700', bgColor: 'bg-emerald-50 border-emerald-200' }
+};
 
 const CaseDetail = () => {
   const { caseId } = useParams<{ caseId: string }>();
@@ -36,6 +45,9 @@ const CaseDetail = () => {
       </div>
     );
   }
+
+  const outcome = caseData.finalOutcome ? outcomeConfig[caseData.finalOutcome] : null;
+  const OutcomeIcon = outcome?.icon;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -73,23 +85,11 @@ const CaseDetail = () => {
               </p>
             </div>
             
-            {caseData.fraud !== null && (
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                caseData.fraud 
-                  ? 'bg-rose-50 text-rose-700 border border-rose-200' 
-                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-              }`}>
-                {caseData.fraud ? (
-                  <>
-                    <XCircle className="h-5 w-5" />
-                    <span className="font-semibold">Fraud Detected</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="h-5 w-5" />
-                    <span className="font-semibold">No Fraud</span>
-                  </>
-                )}
+            {/* Show final outcome for completed cases */}
+            {caseData.status === 'Completed' && outcome && OutcomeIcon && (
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${outcome.bgColor}`}>
+                <OutcomeIcon className={`h-5 w-5 ${outcome.color}`} />
+                <span className={`font-semibold ${outcome.color}`}>{outcome.label}</span>
               </div>
             )}
           </div>

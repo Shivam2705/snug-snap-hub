@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bot, CheckCircle2, XCircle, AlertTriangle, Phone, Shield, Search, Ban } from "lucide-react";
+import { Bot, CheckCircle2, AlertTriangle, Phone, Ban } from "lucide-react";
 import { CustomerCase, RecommendationAction } from "@/data/mockCases";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -12,10 +12,7 @@ interface AIRecommendationPanelProps {
 const actionConfig: Record<RecommendationAction, { icon: React.ElementType; color: string; bgColor: string }> = {
   escalate: { icon: AlertTriangle, color: 'text-amber-700', bgColor: 'bg-amber-50 border-amber-200' },
   await: { icon: Phone, color: 'text-sky-700', bgColor: 'bg-sky-50 border-sky-200' },
-  block: { icon: Ban, color: 'text-rose-700', bgColor: 'bg-rose-50 border-rose-200' },
-  'disable-flag': { icon: Shield, color: 'text-emerald-700', bgColor: 'bg-emerald-50 border-emerald-200' },
-  approve: { icon: CheckCircle2, color: 'text-emerald-700', bgColor: 'bg-emerald-50 border-emerald-200' },
-  investigate: { icon: Search, color: 'text-violet-700', bgColor: 'bg-violet-50 border-violet-200' }
+  block: { icon: Ban, color: 'text-rose-700', bgColor: 'bg-rose-50 border-rose-200' }
 };
 
 const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
@@ -44,6 +41,9 @@ const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
   const recommendation = caseData.aiRecommendation;
   const config = recommendation ? actionConfig[recommendation.action] : null;
   const ActionIcon = config?.icon || Bot;
+
+  // For completed cases, don't show action buttons
+  const isCompleted = caseData.status === 'Completed';
 
   return (
     <Card className="border-0 shadow-md">
@@ -104,45 +104,54 @@ const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="space-y-2 pt-2 border-t">
-          <Button 
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
-            onClick={() => handleAction('Approve AI Recommendation')}
-          >
-            <CheckCircle2 className="h-4 w-4 mr-2" />
-            Approve AI Action
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="w-full border-amber-200 text-amber-700 hover:bg-amber-50"
-            onClick={() => handleAction('Override')}
-          >
-            <AlertTriangle className="h-4 w-4 mr-2" />
-            Override
-          </Button>
-          
-          <div className="grid grid-cols-2 gap-2">
-            <Button 
-              variant="outline" 
-              className="border-rose-200 text-rose-700 hover:bg-rose-50"
-              onClick={() => handleAction('Escalate to AIT')}
-            >
-              <XCircle className="h-4 w-4 mr-2" />
-              Escalate
-            </Button>
+        {/* Action Buttons - Only show for non-completed cases */}
+        {!isCompleted && (
+          <div className="space-y-2 pt-2 border-t">
+            {/* Show the recommended action prominently */}
+            {recommendation && (
+              <div className="text-center text-xs text-muted-foreground mb-2">
+                Recommended: <span className="font-semibold">{recommendation.label}</span>
+              </div>
+            )}
             
             <Button 
-              variant="outline"
-              className="border-sky-200 text-sky-700 hover:bg-sky-50"
-              onClick={() => handleAction('Await Customer')}
+              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              onClick={() => handleAction(recommendation?.label || 'Approve')}
             >
-              <Phone className="h-4 w-4 mr-2" />
-              Await
+              <CheckCircle2 className="h-4 w-4 mr-2" />
+              Approve: {recommendation?.label || 'AI Action'}
             </Button>
+            
+            <div className="grid grid-cols-3 gap-2">
+              <Button 
+                variant="outline" 
+                className="border-rose-200 text-rose-700 hover:bg-rose-50 text-xs"
+                onClick={() => handleAction('Block Account')}
+              >
+                <Ban className="h-3 w-3 mr-1" />
+                Block
+              </Button>
+              
+              <Button 
+                variant="outline"
+                className="border-amber-200 text-amber-700 hover:bg-amber-50 text-xs"
+                onClick={() => handleAction('Escalate to AIT')}
+              >
+                <AlertTriangle className="h-3 w-3 mr-1" />
+                Escalate
+              </Button>
+              
+              <Button 
+                variant="outline"
+                className="border-sky-200 text-sky-700 hover:bg-sky-50 text-xs"
+                onClick={() => handleAction('Awaiting Customer')}
+              >
+                <Phone className="h-3 w-3 mr-1" />
+                Await
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
