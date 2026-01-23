@@ -1,0 +1,246 @@
+export interface AgentStep {
+  id: string;
+  name: string;
+  status: 'completed' | 'in-progress' | 'pending' | 'failed';
+  description: string;
+  actions: string[];
+  findings?: string[];
+  timestamp?: string;
+}
+
+export interface AgentWorkflow {
+  caseId: string;
+  agents: AgentStep[];
+}
+
+export const getAgentWorkflow = (caseId: string): AgentWorkflow => {
+  // Simulate different workflow states based on case
+  const baseWorkflow: AgentStep[] = [
+    {
+      id: "customer-verification",
+      name: "Customer Verification Agent",
+      status: "completed",
+      description: "Verifies if the case was previously worked and checks for multiple customer matches in iGuide Mainframe",
+      actions: [
+        "Read notes from iGuide Mainframe",
+        "Search by address in iGuide",
+        "Search by phone number in iGuide",
+        "Check for related/spouse/same person matches"
+      ],
+      findings: [
+        "Single customer match found in iGuide",
+        "No previous investigator notes found",
+        "Proceeding to next verification step"
+      ],
+      timestamp: "2024-01-15T09:35:00"
+    },
+    {
+      id: "address-verification",
+      name: "Address Verification Agent",
+      status: "in-progress",
+      description: "Verifies address details through Transunion and Experian credit bureaus",
+      actions: [
+        "Read Transunion reference ID from iGuide notes",
+        "Read Experian reference ID from iGuide notes",
+        "Fetch address from Transunion portal",
+        "Fetch address from Experian portal",
+        "Compare addresses for discrepancies",
+        "Calculate fraud probability score"
+      ],
+      findings: [
+        "Transunion ID: TU-789456123",
+        "Experian ID: EX-321654987",
+        "Address match: 95% confidence"
+      ],
+      timestamp: "2024-01-15T09:45:00"
+    },
+    {
+      id: "email-agent",
+      name: "Email Agent",
+      status: "pending",
+      description: "Sends customer communications via Zendesk ticketing system",
+      actions: [
+        "Create Zendesk ticket",
+        "Send verification email to customer",
+        "Update Zendesk notes with communication log"
+      ]
+    },
+    {
+      id: "messaging-agent",
+      name: "Messaging Agent",
+      status: "pending",
+      description: "Sends SMS communications via iGuide portal",
+      actions: [
+        "Send text message via iGuide portal",
+        "Update Zendesk notes with SMS log"
+      ]
+    },
+    {
+      id: "fraud-detection",
+      name: "Fraud Detection Agent",
+      status: "pending",
+      description: "Checks CIFAS National Fraud Database for fraud markers",
+      actions: [
+        "Access CIFAS portal (find.cifas.org.uk)",
+        "Search for customer in fraud database",
+        "Review case type and expand Person Summary",
+        "Compare CIFAS details with account details",
+        "Determine fraud status based on case type"
+      ]
+    }
+  ];
+
+  // Modify workflow based on case status
+  if (caseId === "CAW-2024-001" || caseId === "CAW-2024-007") {
+    return {
+      caseId,
+      agents: baseWorkflow.map(agent => ({
+        ...agent,
+        status: "completed" as const,
+        findings: agent.findings || ["Verification completed successfully"]
+      }))
+    };
+  }
+
+  return { caseId, agents: baseWorkflow };
+};
+
+export const marketingAgents = [
+  {
+    id: "customer-360",
+    name: "Customer 360° Intelligence Agent",
+    purpose: "Create a unified, continuously refreshed customer profile to serve as the foundation for all personalization and marketing decisions.",
+    capabilities: [
+      "Consolidates data from online and in-store purchase history",
+      "Tracks cart and wishlist behavior",
+      "Monitors monthly spend and average order value",
+      "Analyzes click-through rate (CTR) and browsing depth",
+      "Records store visits and offline transactions",
+      "Maintains demographic attributes (age band, household type, region)",
+      "Builds dynamic micro-segments rather than static personas",
+      "Updates profiles in near real time"
+    ],
+    businessValue: [
+      "Single source of truth for personalization",
+      "Eliminates fragmented targeting across channels"
+    ],
+    savings: [
+      "10–15% reduction in wasted marketing spend",
+      "5–8% uplift in campaign relevance and response rates"
+    ]
+  },
+  {
+    id: "apparel-recommendation",
+    name: "Hyper-Personalized Apparel Recommendation Agent",
+    purpose: "Deliver highly tailored apparel recommendations at SKU, size, color, and style level for each customer.",
+    capabilities: [
+      "Style affinity modeling (formal, casual, seasonal, occasion-based)",
+      "Size and fit intelligence using return and exchange history",
+      "Context-aware recommendations (weather, season, events)",
+      "Outfit and bundle creation across categories"
+    ],
+    businessValue: [
+      "Differentiated, fashion-first personalization",
+      "Improved customer confidence and purchase intent"
+    ],
+    savings: [
+      "8–12% increase in Average Order Value (AOV)",
+      "6–10% uplift in conversion rates",
+      "10–15% reduction in size-related returns"
+    ]
+  },
+  {
+    id: "spend-affordability",
+    name: "Spend Affordability & Price Sensitivity Agent",
+    purpose: "Align product and offer recommendations with each customer's spending comfort and price sensitivity.",
+    capabilities: [
+      "Analyzes monthly expense patterns and purchase cadence",
+      "Detects discount sensitivity and full-price tolerance",
+      "Optimizes recommendations between full-price items, bundles, and promotions",
+      "Determines optimal timing for offers"
+    ],
+    businessValue: [
+      "Prevents over-discounting",
+      "Protects margins while improving conversion"
+    ],
+    savings: [
+      "5–8% margin protection",
+      "7–12% improvement in offer conversion rates",
+      "Reduced promotion leakage"
+    ]
+  },
+  {
+    id: "omnichannel-orchestration",
+    name: "Omnichannel Behavior Orchestration Agent",
+    purpose: "Deliver consistent and personalized customer journeys across digital and physical channels.",
+    capabilities: [
+      "Identifies preferred engagement channel per customer",
+      "Orchestrates personalization across web, app, email, push, and store",
+      "Enables online browse to in-store try-on recommendations",
+      "Triggers personalized digital follow-up after store visits"
+    ],
+    businessValue: [
+      "Seamless omnichannel experience",
+      "Increased engagement and satisfaction"
+    ],
+    savings: [
+      "10–15% uplift in omnichannel engagement",
+      "5–7% increase in repeat purchase frequency"
+    ]
+  },
+  {
+    id: "next-best-product",
+    name: "Predictive Next-Best-Product Agent",
+    purpose: "Anticipate what a customer is most likely to buy next and proactively recommend it.",
+    capabilities: [
+      "Learns purchase cycles and replenishment behavior",
+      "Predicts upcoming needs (seasonal refresh, workwear, occasion wear)",
+      "Triggers proactive recommendations and reminders"
+    ],
+    businessValue: [
+      "Shifts marketing from reactive to anticipatory",
+      "Drives higher customer lifetime value"
+    ],
+    savings: [
+      "8–12% increase in repeat sales",
+      "10–20% improvement in email and push CTR"
+    ]
+  },
+  {
+    id: "campaign-personalization",
+    name: "Campaign Personalization & Creative Optimization Agent",
+    purpose: "Personalize not only products, but also creative assets, messaging, and timing.",
+    capabilities: [
+      "Selects optimal creative variant per customer",
+      "Optimizes subject lines, imagery, tone, and frequency",
+      "Determines best send time using engagement history",
+      "Continuously learns from CTR and interaction signals"
+    ],
+    businessValue: [
+      "Higher ROI from existing marketing spend",
+      "Reduced customer fatigue and opt-outs"
+    ],
+    savings: [
+      "15–25% improvement in CTR",
+      "10–20% reduction in unsubscribes and opt-outs"
+    ]
+  },
+  {
+    id: "loyalty-lifecycle",
+    name: "Loyalty & Lifecycle Personalization Agent",
+    purpose: "Personalize offers and experiences based on customer lifecycle stage and loyalty value.",
+    capabilities: [
+      "Identifies lifecycle stage (new, active, at-risk, dormant)",
+      "Customizes loyalty rewards, early access, and exclusive offers",
+      "Designs targeted win-back and retention campaigns"
+    ],
+    businessValue: [
+      "Improved retention and loyalty stickiness",
+      "Maximized lifetime revenue"
+    ],
+    savings: [
+      "15–20% improvement in retention rates",
+      "10–15% increase in loyalty program engagement"
+    ]
+  }
+];
