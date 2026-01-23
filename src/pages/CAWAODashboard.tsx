@@ -58,11 +58,19 @@ const CAWAODashboard = () => {
         </div>
 
         {/* Stats Overview */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-3">
             Dashboard Overview
           </h2>
           <InvestigationStatsCards />
+        </div>
+
+        {/* Flag Counts */}
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-3">
+            Flag Distribution
+          </h2>
+          <FlagCountCards />
         </div>
 
         {/* Queue Tabs */}
