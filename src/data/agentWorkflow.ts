@@ -105,6 +105,143 @@ export const getAgentWorkflow = (caseId: string): AgentWorkflow => {
   return { caseId, agents: baseWorkflow };
 };
 
+export const creditInvestigationAgents = [
+  {
+    id: "customer-verification",
+    name: "Customer Verification Agent",
+    purpose: "Identify if the case was previously worked and check for multiple customer matches in iGuide Mainframe to detect potential fraud.",
+    capabilities: [
+      "Read notes from iGuide Mainframe to check previous investigator work",
+      "Search by address in iGuide Mainframe",
+      "Search by phone number in iGuide Mainframe",
+      "Identify if multiple customers are related, spouse, or same person",
+      "Mark account as Fraud if multiple unrelated customers found",
+      "Escalate case to ACT (Accounts Investigation Team) via email"
+    ],
+    businessValue: [
+      "Early fraud detection through duplicate account identification",
+      "Reduces manual investigation time",
+      "Ensures consistent verification process"
+    ],
+    savings: [
+      "40-60% reduction in investigation time",
+      "25-35% improvement in fraud detection rate"
+    ],
+    sampleInputs: [
+      { label: "Customer Name", type: "text", placeholder: "John Doe" },
+      { label: "Phone Number", type: "text", placeholder: "+44 7123 456789" },
+      { label: "Address", type: "text", placeholder: "123 High Street, London" }
+    ]
+  },
+  {
+    id: "address-verification",
+    name: "Address Verification Agent",
+    purpose: "Verify address details through Transunion and Experian credit bureaus and identify discrepancies.",
+    capabilities: [
+      "Read Transunion reference ID from iGuide notes",
+      "Read Experian reference ID from iGuide notes",
+      "Fetch address and birth date from Transunion portal",
+      "Fetch address and birth date from Experian portal",
+      "Compare addresses for discrepancies",
+      "Calculate fraud probability score",
+      "Trigger Email Agent if probability > 95%"
+    ],
+    businessValue: [
+      "Cross-reference verification with credit bureaus",
+      "Automated discrepancy detection",
+      "Probability-based fraud scoring"
+    ],
+    savings: [
+      "50-70% reduction in manual address checks",
+      "30-40% improvement in discrepancy detection"
+    ],
+    sampleInputs: [
+      { label: "Transunion Reference ID", type: "text", placeholder: "TU-789456123" },
+      { label: "Experian Reference ID", type: "text", placeholder: "EX-321654987" },
+      { label: "Customer Address", type: "text", placeholder: "123 High Street, London" },
+      { label: "Date of Birth", type: "date", placeholder: "1990-01-15" }
+    ]
+  },
+  {
+    id: "email-agent",
+    name: "Email Agent",
+    purpose: "Send customer communications via Zendesk ticketing system for verification and follow-up.",
+    capabilities: [
+      "Create Zendesk ticket for customer communication",
+      "Send verification email to customer",
+      "Update Zendesk notes with communication log",
+      "Track email delivery and response status"
+    ],
+    businessValue: [
+      "Automated customer communication",
+      "Centralized ticket management",
+      "Complete audit trail of communications"
+    ],
+    savings: [
+      "60-80% reduction in manual email handling",
+      "Improved response tracking"
+    ],
+    sampleInputs: [
+      { label: "Customer Email", type: "email", placeholder: "customer@email.com" },
+      { label: "Subject", type: "text", placeholder: "Account Verification Required" },
+      { label: "Message Template", type: "select", options: ["Verification Request", "Follow-up", "Confirmation"] }
+    ]
+  },
+  {
+    id: "messaging-agent",
+    name: "Messaging Agent",
+    purpose: "Send SMS communications via iGuide portal and maintain records in Zendesk.",
+    capabilities: [
+      "Send text message via iGuide portal",
+      "Update Zendesk notes with SMS log",
+      "Track message delivery status",
+      "Handle automated responses"
+    ],
+    businessValue: [
+      "Multi-channel customer engagement",
+      "Faster customer response rates",
+      "Unified communication tracking"
+    ],
+    savings: [
+      "70-85% improvement in customer response time",
+      "Reduced operational overhead"
+    ],
+    sampleInputs: [
+      { label: "Mobile Number", type: "text", placeholder: "+44 7123 456789" },
+      { label: "Message Template", type: "select", options: ["Verification Code", "Account Alert", "Follow-up"] }
+    ]
+  },
+  {
+    id: "fraud-detection",
+    name: "Fraud Detection Agent",
+    purpose: "Check CIFAS National Fraud Database for fraud markers and determine case status based on case type.",
+    capabilities: [
+      "Access CIFAS portal (find.cifas.org.uk)",
+      "Search for customer in National Fraud Database",
+      "Handle IDENTITY FRAUD (02) case type",
+      "Handle PROTECTIVE REGISTRATION (98/99) case types",
+      "Skip MISUSE OF FACILITY (06) and FALSE APPLICATION cases",
+      "Compare CIFAS details with account details"
+    ],
+    businessValue: [
+      "Direct integration with national fraud database",
+      "Standardized fraud case handling",
+      "Comprehensive fraud type coverage"
+    ],
+    savings: [
+      "45-55% reduction in fraud investigation time",
+      "90%+ accuracy in fraud detection"
+    ],
+    sampleInputs: [
+      { label: "Customer Name", type: "text", placeholder: "John Doe" },
+      { label: "Date of Birth", type: "date", placeholder: "1990-01-15" },
+      { label: "Email Address", type: "email", placeholder: "customer@email.com" },
+      { label: "Address", type: "text", placeholder: "123 High Street, London" },
+      { label: "Case Type", type: "select", options: ["IDENTITY FRAUD (02)", "PROTECTIVE REGISTRATION (98)", "PROTECTIVE REGISTRATION & VICTIM (99)"] }
+    ]
+  }
+];
+
 export const marketingAgents = [
   {
     id: "customer-360",

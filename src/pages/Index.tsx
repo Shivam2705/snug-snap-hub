@@ -136,7 +136,7 @@ const Index = () => {
               description="CAWAO process for investigating credit accounts without orders. Detect potential fraud through multi-agent verification workflows."
               agents={creditAgents}
               icon={Shield}
-              href="/cawao"
+              href="/cawao/agents"
             />
             
             <ProcessTile
