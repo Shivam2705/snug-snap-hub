@@ -11,7 +11,8 @@ const statusStyles: Record<CaseStatus, string> = {
   "In Progress": "bg-info/20 text-info border-info/30 hover:bg-info/30",
   "Review Required": "bg-warning/20 text-warning border-warning/30 hover:bg-warning/30",
   "Pending": "bg-muted text-muted-foreground border-muted-foreground/30 hover:bg-muted/80",
-  "Not Started": "bg-secondary text-secondary-foreground border-border hover:bg-secondary/80"
+  "Not Started": "bg-secondary text-secondary-foreground border-border hover:bg-secondary/80",
+  "Awaiting Customer": "bg-sky-100 text-sky-700 border-sky-200 hover:bg-sky-200"
 };
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
