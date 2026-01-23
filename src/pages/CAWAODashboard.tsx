@@ -1,48 +1,54 @@
+import { useState } from "react";
 import Header from "@/components/Header";
-import StatCard from "@/components/StatCard";
-import CasesTable from "@/components/CasesTable";
-import { mockCases, getCaseStats } from "@/data/mockCases";
-import { 
-  LayoutGrid, 
-  Clock, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Pause, 
-  Circle,
-  Shield,
-  FileCheck,
-  Key,
-  Home
-} from "lucide-react";
+import { mockCases, getCaseStats, QueueType } from "@/data/mockCases";
+import InvestigationStatsCards from "@/components/investigation/InvestigationStatsCards";
+import FlagCountCards from "@/components/investigation/FlagCountCards";
+import InvestigationTable from "@/components/investigation/InvestigationTable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Home, Calendar, Clock } from "lucide-react";
 
 const CAWAODashboard = () => {
+  const [activeQueue, setActiveQueue] = useState<QueueType>('day-0');
+  const [cases, setCases] = useState(mockCases);
   const stats = getCaseStats();
 
+  const day0Cases = cases.filter(c => c.queue === 'day-0');
+  const day7Cases = cases.filter(c => c.queue === 'day-7');
+
+  const handleMoveToDay7 = (caseId: string) => {
+    setCases(prev => prev.map(c => 
+      c.caseId === caseId 
+        ? { ...c, queue: 'day-7' as QueueType, status: 'Awaiting Customer' as const }
+        : c
+    ));
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50">
       <Header />
       
-      <main className="container py-6 md:py-8">
+      <main className="container py-6 md:py-8 max-w-7xl">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
           <span>/</span>
-          <span className="text-foreground font-medium">CAWAO Process</span>
+          <span className="text-foreground font-medium">Investigation Portal</span>
         </div>
 
         {/* Page Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">Credit Account Investigation</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+                Credit Account Investigation Portal
+              </h1>
               <p className="text-muted-foreground">
-                CAWAO (Credit Account Without Any Order) - Fraud Investigation Dashboard
+                Day-0 onboarding investigations & Day-7 follow-up queue management
               </p>
             </div>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="bg-white">
               <Link to="/">
                 <Home className="mr-2 h-4 w-4" />
                 Back to Home
@@ -51,121 +57,61 @@ const CAWAODashboard = () => {
           </div>
         </div>
 
-        {/* Status Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <StatCard 
-            title="Total Cases" 
-            value={stats.total} 
-            icon={LayoutGrid}
-            variant="primary"
-          />
-          <StatCard 
-            title="In Progress" 
-            value={stats.inProgress} 
-            icon={Clock}
-            variant="info"
-          />
-          <StatCard 
-            title="Completed" 
-            value={stats.completed} 
-            icon={CheckCircle2}
-            variant="success"
-          />
-          <StatCard 
-            title="Review Required" 
-            value={stats.reviewRequired} 
-            icon={AlertTriangle}
-            variant="warning"
-          />
-          <StatCard 
-            title="Pending" 
-            value={stats.pending} 
-            icon={Pause}
-            variant="default"
-          />
-          <StatCard 
-            title="Not Started" 
-            value={stats.notStarted} 
-            icon={Circle}
-            variant="default"
-          />
+        {/* Stats Overview */}
+        <div className="mb-6">
+          <InvestigationStatsCards />
         </div>
 
-        {/* Verification Stats */}
+        {/* Flag Counts */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold mb-4">Verification Flags</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="border-destructive/20 bg-destructive/5">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-destructive" />
-                  CIFAS Flagged
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-destructive">{stats.cifasYes}</p>
-                <p className="text-xs text-muted-foreground mt-1">Cases with CIFAS = Yes</p>
-              </CardContent>
-            </Card>
+          <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wider mb-3">
+            Flag Distribution
+          </h2>
+          <FlagCountCards />
+        </div>
 
-            <Card className="border-warning/20 bg-warning/5">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <FileCheck className="h-4 w-4 text-warning" />
-                  NOC Flagged
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-warning">{stats.nocYes}</p>
-                <p className="text-xs text-muted-foreground mt-1">Cases with NOC = Yes</p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-info/20 bg-info/5">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Key className="h-4 w-4 text-info" />
-                  Auth Codes
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-4">
-                  <div>
-                    <p className="text-xl font-bold text-info">{stats.authCode2}</p>
-                    <p className="text-xs text-muted-foreground">Code 2</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-info">{stats.authCode3}</p>
-                    <p className="text-xs text-muted-foreground">Code 3</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-info">{stats.authCode4}</p>
-                    <p className="text-xs text-muted-foreground">Code 4</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-accent/20 bg-accent/5">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Home className="h-4 w-4 text-accent" />
-                  ZOWN Flagged
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-accent">{stats.zownYes}</p>
-                <p className="text-xs text-muted-foreground mt-1">Cases with ZOWN = Yes</p>
-              </CardContent>
-            </Card>
+        {/* Queue Tabs */}
+        <Tabs value={activeQueue} onValueChange={(v) => setActiveQueue(v as QueueType)}>
+          <div className="flex items-center justify-between mb-4">
+            <TabsList className="bg-white border shadow-sm">
+              <TabsTrigger 
+                value="day-0" 
+                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
+              >
+                <Clock className="h-4 w-4" />
+                Day-0 Queue
+                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-100 data-[state=active]:bg-slate-700 text-slate-600 data-[state=active]:text-slate-200">
+                  {day0Cases.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="day-7"
+                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
+              >
+                <Calendar className="h-4 w-4" />
+                Day-7 Queue
+                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-100 data-[state=active]:bg-slate-700 text-slate-600 data-[state=active]:text-slate-200">
+                  {day7Cases.length}
+                </span>
+              </TabsTrigger>
+            </TabsList>
           </div>
-        </div>
 
-        {/* Cases Table */}
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Customer Cases</h2>
-          <CasesTable cases={mockCases} />
-        </div>
+          <TabsContent value="day-0" className="mt-0">
+            <InvestigationTable 
+              cases={day0Cases} 
+              queue="day-0"
+              onMoveToDay7={handleMoveToDay7}
+            />
+          </TabsContent>
+
+          <TabsContent value="day-7" className="mt-0">
+            <InvestigationTable 
+              cases={day7Cases} 
+              queue="day-7"
+            />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
