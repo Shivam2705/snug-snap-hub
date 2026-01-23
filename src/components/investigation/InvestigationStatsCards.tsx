@@ -1,59 +1,64 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { 
-  Clock, 
-  AlertTriangle, 
-  Bot, 
-  UserCheck,
-  TrendingUp
+  FileText, 
+  Loader2, 
+  CheckCircle2, 
+  AlertCircle,
+  Clock,
+  CircleDashed
 } from "lucide-react";
 import { getCaseStats } from "@/data/mockCases";
 
 const InvestigationStatsCards = () => {
   const stats = getCaseStats();
-  const automationRate = stats.total > 0 
-    ? Math.round((stats.aiAutoCompleted / stats.completed) * 100) 
-    : 0;
 
   const statCards = [
     {
-      label: 'Pending Investigation',
-      value: stats.inProgress + stats.notStarted + stats.reviewRequired,
-      icon: Clock,
+      label: 'Total Cases',
+      value: stats.total,
+      icon: FileText,
+      color: 'text-slate-600',
+      bgColor: 'bg-slate-50'
+    },
+    {
+      label: 'In Progress',
+      value: stats.inProgress,
+      icon: Loader2,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50'
+    },
+    {
+      label: 'Completed',
+      value: stats.completed,
+      icon: CheckCircle2,
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50'
+    },
+    {
+      label: 'Review Required',
+      value: stats.reviewRequired,
+      icon: AlertCircle,
       color: 'text-amber-600',
       bgColor: 'bg-amber-50'
     },
     {
-      label: 'High Risk',
-      value: stats.highRisk,
-      icon: AlertTriangle,
-      color: 'text-rose-600',
-      bgColor: 'bg-rose-50'
-    },
-    {
-      label: 'AI Auto-Completed',
-      value: stats.aiAutoCompleted,
-      icon: Bot,
+      label: 'Pending',
+      value: stats.pending,
+      icon: Clock,
       color: 'text-violet-600',
       bgColor: 'bg-violet-50'
     },
     {
-      label: 'Awaiting Customer',
-      value: stats.awaitingCustomer,
-      icon: UserCheck,
-      color: 'text-sky-600',
-      bgColor: 'bg-sky-50'
-    },
-    {
-      label: 'Automation Rate',
-      value: `${automationRate}%`,
-      icon: TrendingUp,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50'
+      label: 'Not Started',
+      value: stats.notStarted,
+      icon: CircleDashed,
+      color: 'text-slate-500',
+      bgColor: 'bg-slate-100'
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
       {statCards.map((stat) => (
         <Card key={stat.label} className="border-0 shadow-sm">
           <CardContent className="p-4">
