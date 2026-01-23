@@ -38,10 +38,8 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Case ID</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">First Name</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Last Name</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Birth Date</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Email Address</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Mobile Number</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Address</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Flagged</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Received Date & Time</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Completion Date & Time</TableHead>
@@ -60,16 +58,10 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
                 <TableCell className="font-medium text-primary whitespace-nowrap">{caseItem.caseId}</TableCell>
                 <TableCell className="whitespace-nowrap">{caseItem.firstName}</TableCell>
                 <TableCell className="whitespace-nowrap">{caseItem.lastName}</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  {format(new Date(caseItem.birthDate), "dd/MM/yyyy")}
-                </TableCell>
                 <TableCell className="text-sm">{caseItem.emailAddress}</TableCell>
                 <TableCell className="whitespace-nowrap">{caseItem.mobileNumber}</TableCell>
-                <TableCell className="max-w-[200px] truncate text-sm" title={caseItem.address}>
-                  {caseItem.address}
-                </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex items-center gap-1 flex-nowrap">
                     {caseItem.cifas && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-700">
                         CIFAS
