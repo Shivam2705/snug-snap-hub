@@ -51,7 +51,7 @@ const ProcessTile = ({ title, description, agents, icon: Icon, href, color = "pr
         
         <Button asChild className="w-full group/btn">
           <Link to={href}>
-            Go to Process
+            View Agents
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
           </Link>
         </Button>
