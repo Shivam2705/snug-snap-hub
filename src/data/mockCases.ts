@@ -6,7 +6,9 @@ export type RiskLevel = 'low' | 'medium' | 'high';
 
 export type ActorType = 'ai' | 'human';
 
-export type RecommendationAction = 'escalate' | 'await' | 'block' | 'disable-flag' | 'approve' | 'investigate';
+export type RecommendationAction = 'escalate' | 'await' | 'block';
+
+export type FinalOutcome = 'blocked' | 'escalated' | 'awaiting-customer' | 'approved';
 
 export interface AIRecommendation {
   action: RecommendationAction;
@@ -54,7 +56,7 @@ export interface CustomerCase {
   completionDateTime: string | null;
   assignTo: string;
   status: CaseStatus;
-  fraud: boolean | null;
+  finalOutcome?: FinalOutcome;
   aiSummary?: string;
   queue: QueueType;
   riskScore: number;
@@ -71,7 +73,6 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
   const timeline: EvidenceItem[] = [];
   const baseDate = new Date(caseData.receivedDateTime || new Date());
   
-  // Initial case received
   timeline.push({
     id: '1',
     timestamp: baseDate.toISOString(),
@@ -137,7 +138,6 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
     });
   }
 
-  // Add address verification
   timeline.push({
     id: '6',
     timestamp: new Date(baseDate.getTime() + 25 * 60000).toISOString(),
@@ -202,7 +202,7 @@ const calculateDaysSince = (dateString: string): number => {
 };
 
 const calculateRiskScore = (c: Partial<CustomerCase>): number => {
-  let score = 20; // Base score
+  let score = 20;
   if (c.cifas) score += 35;
   if (c.noc) score += 15;
   if (c.zown) score += 20;
@@ -217,7 +217,7 @@ const getRiskLevel = (score: number): RiskLevel => {
   return 'low';
 };
 
-// Base case data without computed fields
+// Base case data
 const baseCases = [
   {
     caseId: "CAW-2024-001",
@@ -235,13 +235,13 @@ const baseCases = [
     completionDateTime: "2024-01-15T14:45:00",
     assignTo: "Sarah Johnson",
     status: "Completed" as CaseStatus,
-    fraud: true,
+    finalOutcome: 'escalated' as FinalOutcome,
     queue: "day-0" as QueueType,
-    aiSummary: "Customer flagged on CIFAS database for previous identity fraud. Address verification failed - Transunion shows different address. Email sent to ACT team for escalation. Case marked as confirmed fraud.",
+    aiSummary: "Customer flagged on CIFAS database for previous identity fraud. Address verification failed - Transunion shows different address. Case escalated to AIT team.",
     aiRecommendation: {
       action: 'escalate' as RecommendationAction,
       label: 'Escalate to AIT Team',
-      reasoning: 'CIFAS record indicates confirmed identity fraud case type. Address verification failed with significant discrepancy between application and credit bureau records. Pattern matches known fraud indicators.',
+      reasoning: 'CIFAS record indicates confirmed identity fraud case type. Address verification failed with significant discrepancy between application and credit bureau records.',
       supportingEvidence: [
         'CIFAS database match: Identity Fraud case type confirmed',
         'Address mismatch: Transunion shows 45 Other Street vs application address',
@@ -266,20 +266,19 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Michael Chen",
     status: "In Progress" as CaseStatus,
-    fraud: null,
     queue: "day-0" as QueueType,
-    aiSummary: "Customer verification in progress. iGuide search returned single match. Address verification pending Transunion/Experian check.",
+    aiSummary: "Customer verification in progress. ZOWN flag triggered - potential duplicate account. NOC flag requires verification.",
     aiRecommendation: {
-      action: 'investigate' as RecommendationAction,
-      label: 'Continue Investigation',
-      reasoning: 'ZOWN flag triggered indicating potential duplicate account ownership. NOC flag present but initial verification shows single match. Additional checks required before final determination.',
+      action: 'block' as RecommendationAction,
+      label: 'Block Account',
+      reasoning: 'ZOWN flag triggered indicating potential duplicate account ownership. NOC flag present with name verification mismatch. High risk indicators suggest blocking.',
       supportingEvidence: [
         'ZOWN: Potential duplicate account detected - same DOB, similar address',
-        'NOC flag: Name on Credit file requires verification',
-        'iGuide: Single customer match found - no duplicates'
+        'NOC flag: Name on Credit file does not match application',
+        'iGuide: Account linkage to previously blocked customer'
       ]
     },
-    confidenceScore: 62
+    confidenceScore: 72
   },
   {
     caseId: "CAW-2024-003",
@@ -297,20 +296,19 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Emma Williams",
     status: "Review Required" as CaseStatus,
-    fraud: null,
     queue: "day-0" as QueueType,
-    aiSummary: "Multiple customers found with similar phone number in iGuide. Relationship status unclear. Manual review required to determine if accounts are related.",
+    aiSummary: "Multiple customers found with similar phone number in iGuide. Relationship status unclear. Manual review required.",
     aiRecommendation: {
-      action: 'investigate' as RecommendationAction,
-      label: 'Manual Review Required',
-      reasoning: 'Phone number matches 3 other customer records in mainframe. Unable to determine if legitimate family/business connection or potential fraud ring. Human judgment required.',
+      action: 'escalate' as RecommendationAction,
+      label: 'Escalate to AIT Team',
+      reasoning: 'Phone number matches 3 other customer records in mainframe. Unable to determine if legitimate family/business connection or potential fraud ring. Specialist review required.',
       supportingEvidence: [
         'Phone shared with: Account #4521, #4522, #4523',
         'Auth Code 4: Strong authentication completed',
-        'No CIFAS or ZOWN flags present'
+        'Pattern matches known fraud ring indicators'
       ]
     },
-    confidenceScore: 45
+    confidenceScore: 58
   },
   {
     caseId: "CAW-2024-004",
@@ -328,20 +326,18 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Unassigned",
     status: "Not Started" as CaseStatus,
-    fraud: null,
     queue: "day-0" as QueueType,
     aiRecommendation: {
-      action: 'approve' as RecommendationAction,
-      label: 'Auto-Complete (Low Risk)',
-      reasoning: 'No fraud indicators detected. All verification checks passed. Customer profile matches credit bureau records. Eligible for automatic approval.',
+      action: 'await' as RecommendationAction,
+      label: 'Awaiting Customer Information',
+      reasoning: 'Additional documentation required to verify identity. Customer contact initiated to request proof of address.',
       supportingEvidence: [
         'No CIFAS record found',
-        'Address verified: 100% match with Experian',
-        'DOB match: Confirmed across all sources',
-        'No duplicate accounts detected'
+        'Address verification: Partial match - requires confirmation',
+        'DOB match: Confirmed across all sources'
       ]
     },
-    confidenceScore: 88
+    confidenceScore: 65
   },
   {
     caseId: "CAW-2024-005",
@@ -359,18 +355,17 @@ const baseCases = [
     completionDateTime: "2024-01-14T16:30:00",
     assignTo: "Sarah Johnson",
     status: "Completed" as CaseStatus,
-    fraud: false,
+    finalOutcome: 'approved' as FinalOutcome,
     queue: "day-0" as QueueType,
-    aiSummary: "CIFAS check showed protective registration (genuine customer). All address verifications passed. Customer authenticated successfully. No fraud detected.",
+    aiSummary: "CIFAS check showed protective registration (genuine customer). All address verifications passed. Customer authenticated successfully.",
     aiRecommendation: {
-      action: 'disable-flag' as RecommendationAction,
-      label: 'Disable Fraud Flag - Legitimate Customer',
-      reasoning: 'CIFAS record is a Protective Registration filed by customer after being victim of previous fraud attempt. This is not a fraud indicator but customer protection. All other checks verify legitimacy.',
+      action: 'await' as RecommendationAction,
+      label: 'Awaiting Customer Information',
+      reasoning: 'CIFAS record is Protective Registration - customer is fraud victim. Verified as legitimate customer after documentation received.',
       supportingEvidence: [
         'CIFAS Type: Protective Registration (not fraud)',
-        'Customer is victim of previous identity theft',
-        'All verification checks passed successfully',
-        'Address and DOB fully verified'
+        'Customer confirmed as previous identity theft victim',
+        'All verification checks passed'
       ]
     },
     confidenceScore: 96
@@ -391,18 +386,16 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Michael Chen",
     status: "Awaiting Customer" as CaseStatus,
-    fraud: null,
     queue: "day-7" as QueueType,
     aiSummary: "Email sent to customer via Zendesk requesting additional documentation. Awaiting customer response for 7+ days.",
     aiRecommendation: {
       action: 'await' as RecommendationAction,
-      label: 'Await Customer Response',
-      reasoning: 'Customer documentation required to complete verification. Initial contact made via Zendesk 7 days ago. Recommend second contact attempt before escalation.',
+      label: 'Awaiting Customer Information',
+      reasoning: 'Customer documentation required to complete verification. Initial contact made via Zendesk 7 days ago. Second contact attempt recommended.',
       supportingEvidence: [
         'Zendesk ticket #ZD-45678 opened 7 days ago',
         'No response received from customer',
-        'Documentation needed: Proof of address',
-        'Auto-escalation scheduled in 3 days if no response'
+        'Documentation needed: Proof of address'
       ]
     },
     confidenceScore: 55
@@ -423,18 +416,17 @@ const baseCases = [
     completionDateTime: "2024-01-14T11:00:00",
     assignTo: "Emma Williams",
     status: "Completed" as CaseStatus,
-    fraud: true,
+    finalOutcome: 'blocked' as FinalOutcome,
     queue: "day-0" as QueueType,
-    aiSummary: "Identity fraud case type found on CIFAS. Details do not match victim of impersonation record. Address discrepancy confirmed via Transunion. Email sent to customer via Zendesk - no response. Escalated to ACT.",
+    aiSummary: "Identity fraud case type found on CIFAS. ZOWN indicates attempt to open duplicate account. Account blocked.",
     aiRecommendation: {
       action: 'block' as RecommendationAction,
-      label: 'Block Account Immediately',
-      reasoning: 'High confidence fraud detection. CIFAS shows active identity fraud case. ZOWN indicates attempt to open duplicate account. Customer details do not match legitimate identity holder. Immediate blocking recommended.',
+      label: 'Block Account',
+      reasoning: 'High confidence fraud detection. CIFAS shows active identity fraud case. ZOWN indicates attempt to open duplicate account. Immediate blocking recommended.',
       supportingEvidence: [
-        'CIFAS: Active Identity Fraud case - not protective registration',
+        'CIFAS: Active Identity Fraud case',
         'ZOWN: Previous account blocked for fraud in 2023',
-        'Address mismatch: 78% discrepancy with credit bureau',
-        'No response to verification request after 48 hours'
+        'Address mismatch: 78% discrepancy with credit bureau'
       ]
     },
     confidenceScore: 91
@@ -455,18 +447,16 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Sarah Johnson",
     status: "Awaiting Customer" as CaseStatus,
-    fraud: null,
     queue: "day-7" as QueueType,
     aiSummary: "NOC flag present. Customer verification agent completed - single match in iGuide. Awaiting customer documentation.",
     aiRecommendation: {
       action: 'await' as RecommendationAction,
-      label: 'Second Contact Attempt Required',
-      reasoning: 'First customer contact attempt unsuccessful. NOC flag requires customer verification. Case on Day-7 queue - second attempt recommended before escalation decision.',
+      label: 'Awaiting Customer Information',
+      reasoning: 'NOC flag requires customer verification. Second contact attempt recommended before escalation decision.',
       supportingEvidence: [
         'NOC: Name on Credit discrepancy detected',
         'First contact: Email sent 8 days ago, no response',
-        'iGuide: Single match confirms customer exists',
-        'SMS reminder scheduled for today'
+        'iGuide: Single match confirms customer exists'
       ]
     },
     confidenceScore: 60
@@ -487,20 +477,18 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Unassigned",
     status: "Not Started" as CaseStatus,
-    fraud: null,
     queue: "day-0" as QueueType,
     aiRecommendation: {
-      action: 'approve' as RecommendationAction,
-      label: 'Auto-Complete (Low Risk)',
-      reasoning: 'Clean application with no fraud indicators. All automated checks passed. Customer verified through standard authentication. Eligible for automatic approval without human review.',
+      action: 'block' as RecommendationAction,
+      label: 'Block Account',
+      reasoning: 'Address verification failed. Application address does not match any known addresses in credit bureau records.',
       supportingEvidence: [
-        'No CIFAS, NOC, or ZOWN flags',
-        'Address verified: Exact match with Experian/TransUnion',
-        'DOB confirmed: Matches credit bureau records',
-        'Phone number: No suspicious linkages found'
+        'Address not found in Experian/TransUnion',
+        'Phone number: Previously linked to fraud case',
+        'Email domain flagged as high-risk'
       ]
     },
-    confidenceScore: 92
+    confidenceScore: 78
   },
   {
     caseId: "CAW-2024-010",
@@ -518,21 +506,20 @@ const baseCases = [
     completionDateTime: "2024-01-13T09:00:00",
     assignTo: "Michael Chen",
     status: "Completed" as CaseStatus,
-    fraud: false,
+    finalOutcome: 'awaiting-customer' as FinalOutcome,
     queue: "day-0" as QueueType,
-    aiSummary: "Protective registration on CIFAS - genuine customer protecting against previous fraud attempt. All verification checks passed. Customer authenticated with code 4. Case closed - no fraud.",
+    aiSummary: "Multiple flags triggered but CIFAS shows Protective Registration. Case resolved after customer provided verification documents.",
     aiRecommendation: {
-      action: 'disable-flag' as RecommendationAction,
-      label: 'Disable Fraud Flag - Verified Customer',
-      reasoning: 'Despite multiple flags, investigation confirms legitimate customer. CIFAS is protective registration. ZOWN shows previous legitimate account. Strong authentication passed. All flags are false positives.',
+      action: 'await' as RecommendationAction,
+      label: 'Awaiting Customer Information',
+      reasoning: 'Despite multiple flags, CIFAS is protective registration. Customer verification documents received and validated.',
       supportingEvidence: [
         'CIFAS: Protective Registration - customer is fraud victim',
         'ZOWN: Previous account is in good standing',
-        'Auth Code 4: Strongest authentication level passed',
-        'All address and identity checks verified'
+        'Auth Code 4: Strongest authentication level passed'
       ]
     },
-    confidenceScore: 98
+    confidenceScore: 85
   },
   {
     caseId: "CAW-2024-011",
@@ -550,18 +537,16 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Emma Williams",
     status: "Awaiting Customer" as CaseStatus,
-    fraud: null,
     queue: "day-7" as QueueType,
     aiSummary: "Customer contacted via Zendesk. No response after 9 days. Second attempt pending.",
     aiRecommendation: {
       action: 'escalate' as RecommendationAction,
-      label: 'Escalate - No Customer Response',
-      reasoning: 'Customer has not responded after 9 days and 2 contact attempts. Policy requires escalation to AIT for cases exceeding 7-day response window with no customer engagement.',
+      label: 'Escalate to AIT Team',
+      reasoning: 'Customer has not responded after 9 days and 2 contact attempts. Policy requires escalation for cases exceeding 7-day response window.',
       supportingEvidence: [
         'First contact: Email sent 9 days ago',
         'Second contact: SMS sent 5 days ago',
-        'No response on any channel',
-        'Policy threshold exceeded: 7-day limit'
+        'No response on any channel'
       ]
     },
     confidenceScore: 48
@@ -582,18 +567,16 @@ const baseCases = [
     completionDateTime: null,
     assignTo: "Sarah Johnson",
     status: "In Progress" as CaseStatus,
-    fraud: null,
     queue: "day-0" as QueueType,
     aiSummary: "CIFAS record found - investigating case type. Experian/TransUnion checks in progress.",
     aiRecommendation: {
-      action: 'investigate' as RecommendationAction,
-      label: 'Pending CIFAS Classification',
-      reasoning: 'CIFAS match detected but case type not yet determined. Awaiting full CIFAS record retrieval to determine if fraud case or protective registration.',
+      action: 'escalate' as RecommendationAction,
+      label: 'Escalate to AIT Team',
+      reasoning: 'CIFAS match detected with Identity Fraud case type. Requires specialist AIT team review for final determination.',
       supportingEvidence: [
-        'CIFAS: Record found - type pending',
-        'Experian check: In progress',
-        'TransUnion check: In progress',
-        'Expected completion: Within 2 hours'
+        'CIFAS: Identity Fraud case type detected',
+        'Experian check: Address mismatch found',
+        'TransUnion check: In progress'
       ]
     },
     confidenceScore: 72
@@ -624,22 +607,17 @@ export const getCaseStats = () => {
   const notStarted = mockCases.filter(c => c.status === 'Not Started').length;
   const awaitingCustomer = mockCases.filter(c => c.status === 'Awaiting Customer').length;
   
-  const cifasYes = mockCases.filter(c => c.cifas).length;
-  const nocYes = mockCases.filter(c => c.noc).length;
-  const zownYes = mockCases.filter(c => c.zown).length;
-  const authCode2 = mockCases.filter(c => c.authenticateCode === 2).length;
-  const authCode3 = mockCases.filter(c => c.authenticateCode === 3).length;
-  const authCode4 = mockCases.filter(c => c.authenticateCode === 4).length;
-
   const day0Count = mockCases.filter(c => c.queue === 'day-0').length;
   const day7Count = mockCases.filter(c => c.queue === 'day-7').length;
-
+  
   const highRisk = mockCases.filter(c => c.riskLevel === 'high').length;
   const mediumRisk = mockCases.filter(c => c.riskLevel === 'medium').length;
   const lowRisk = mockCases.filter(c => c.riskLevel === 'low').length;
-
-  const aiAutoCompleted = mockCases.filter(c => c.status === 'Completed' && c.confidenceScore && c.confidenceScore >= 90).length;
   
+  const aiAutoCompleted = mockCases.filter(c => 
+    c.status === 'Completed' && c.confidenceScore && c.confidenceScore >= 85
+  ).length;
+
   return {
     total,
     inProgress,
@@ -648,17 +626,29 @@ export const getCaseStats = () => {
     pending,
     notStarted,
     awaitingCustomer,
-    cifasYes,
-    nocYes,
-    zownYes,
-    authCode2,
-    authCode3,
-    authCode4,
     day0Count,
     day7Count,
     highRisk,
     mediumRisk,
     lowRisk,
     aiAutoCompleted
+  };
+};
+
+export const getFlagCounts = () => {
+  const cifasCount = mockCases.filter(c => c.cifas).length;
+  const zownCount = mockCases.filter(c => c.zown).length;
+  const nocCount = mockCases.filter(c => c.noc).length;
+  const authCode2 = mockCases.filter(c => c.authenticateCode === 2).length;
+  const authCode3 = mockCases.filter(c => c.authenticateCode === 3).length;
+  const authCode4 = mockCases.filter(c => c.authenticateCode === 4).length;
+
+  return {
+    cifasCount,
+    zownCount,
+    nocCount,
+    authCode2,
+    authCode3,
+    authCode4
   };
 };
