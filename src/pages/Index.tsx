@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import ProcessTile from "@/components/ProcessTile";
-import { Brain, Shield, Sparkles, TrendingUp, Users, Zap, Target, ShoppingBag } from "lucide-react";
+import { Brain, Shield, Sparkles, TrendingUp, Users, Zap, Target, ShoppingBag, Calculator, Package } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Index = () => {
@@ -20,6 +20,18 @@ const Index = () => {
     { name: "Predictive Next-Best-Product" },
     { name: "Campaign Personalization" },
     { name: "Loyalty & Lifecycle" }
+  ];
+
+  const financeAgents = [
+    { name: "Invoice Processing & Reconciliation" },
+    { name: "Revenue Recognition" },
+    { name: "Margin Leakage Detection" }
+  ];
+
+  const merchandisingAgents = [
+    { name: "Demand Forecasting & Replenishment" },
+    { name: "Assortment & Range Optimization" },
+    { name: "Supplier Performance Intelligence" }
   ];
 
   return (
@@ -137,6 +149,7 @@ const Index = () => {
               agents={creditAgents}
               icon={Shield}
               href="/cawao/agents"
+              processHref="/cawao"
             />
             
             <ProcessTile
@@ -144,7 +157,26 @@ const Index = () => {
               description="Deliver highly tailored customer experiences through AI-driven personalization, predictive analytics, and omnichannel orchestration."
               agents={marketingAgents}
               icon={ShoppingBag}
-              href="/marketing"
+              href="/marketing/agents"
+              processHref="/marketing"
+            />
+
+            <ProcessTile
+              title="Finance, Accounting & Commercial Control"
+              description="Automate financial operations including invoice processing, revenue recognition, and margin analysis with intelligent AI agents."
+              agents={financeAgents}
+              icon={Calculator}
+              href="/finance/agents"
+              processHref="/finance"
+            />
+
+            <ProcessTile
+              title="Merchandising, Buying & Planning"
+              description="Optimize demand forecasting, assortment planning, and supplier performance with AI-powered merchandising intelligence."
+              agents={merchandisingAgents}
+              icon={Package}
+              href="/merchandising/agents"
+              processHref="/merchandising"
             />
           </div>
         </div>

@@ -381,3 +381,154 @@ export const marketingAgents = [
     ]
   }
 ];
+
+export const financeAgents = [
+  {
+    id: "invoice-processing",
+    name: "Invoice Processing & Reconciliation Agent",
+    purpose: "Automate supplier invoice intake, validation, and reconciliation.",
+    capabilities: [
+      "OCR + semantic extraction from invoices",
+      "3-way match (PO, GRN, Invoice)",
+      "Exception identification and auto-resolution",
+      "Automated AP workflow processing"
+    ],
+    businessValue: [
+      "60–80% reduction in manual AP effort",
+      "Faster supplier payments, fewer disputes"
+    ],
+    savings: [
+      "60–80% reduction in manual AP effort",
+      "Faster supplier payments"
+    ],
+    sampleInputs: [
+      { label: "Invoice Number", type: "text", placeholder: "INV-2024-001234" },
+      { label: "Supplier Name", type: "text", placeholder: "Acme Supplies Ltd" },
+      { label: "Invoice Amount", type: "text", placeholder: "£15,450.00" },
+      { label: "PO Number", type: "text", placeholder: "PO-2024-5678" }
+    ]
+  },
+  {
+    id: "revenue-recognition",
+    name: "Revenue Recognition & Reconciliation Agent",
+    purpose: "Ensure accurate, compliant revenue accounting across channels.",
+    capabilities: [
+      "Online vs store sales reconciliation",
+      "Returns and refunds accounting",
+      "Gift card and credit accounting",
+      "Multi-channel revenue tracking"
+    ],
+    businessValue: [
+      "Reduced month-end close cycles",
+      "Lower audit risk"
+    ],
+    savings: [
+      "30-50% faster month-end close",
+      "Reduced audit risk"
+    ],
+    sampleInputs: [
+      { label: "Revenue Period", type: "select", options: ["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024"] },
+      { label: "Channel", type: "select", options: ["Online", "In-Store", "All Channels"] },
+      { label: "Transaction Date", type: "date", placeholder: "2024-01-15" }
+    ]
+  },
+  {
+    id: "margin-leakage",
+    name: "Margin Leakage & Cost Anomaly Detection Agent",
+    purpose: "Identify hidden profit erosion across the value chain.",
+    capabilities: [
+      "Detect abnormal discounting patterns",
+      "Identify excess logistics or fulfilment costs",
+      "Flag unusual return or write-off spikes",
+      "Cost variance analysis"
+    ],
+    businessValue: [
+      "2–4% margin protection",
+      "Early corrective action"
+    ],
+    savings: [
+      "2–4% margin protection",
+      "Early corrective action"
+    ],
+    sampleInputs: [
+      { label: "Analysis Period", type: "select", options: ["Last 7 Days", "Last 30 Days", "Last Quarter"] },
+      { label: "Cost Category", type: "select", options: ["Discounting", "Logistics", "Returns", "All Categories"] },
+      { label: "Threshold (%)", type: "text", placeholder: "5" }
+    ]
+  }
+];
+
+export const merchandisingAgents = [
+  {
+    id: "demand-forecasting",
+    name: "Demand Forecasting & Replenishment Agent",
+    purpose: "Improve SKU-level demand planning across regions and channels.",
+    capabilities: [
+      "SKU/store/channel demand forecasting",
+      "Seasonal and trend-driven adjustments",
+      "Automated replenishment triggers",
+      "Multi-location inventory optimization"
+    ],
+    businessValue: [
+      "10–20% inventory holding cost reduction",
+      "Fewer stock-outs and markdowns"
+    ],
+    savings: [
+      "10–20% inventory cost reduction",
+      "Fewer stock-outs"
+    ],
+    sampleInputs: [
+      { label: "SKU", type: "text", placeholder: "SKU-12345" },
+      { label: "Region", type: "select", options: ["North", "South", "East", "West", "All Regions"] },
+      { label: "Forecast Horizon", type: "select", options: ["7 Days", "30 Days", "90 Days"] }
+    ]
+  },
+  {
+    id: "assortment-optimization",
+    name: "Assortment & Range Optimization Agent",
+    purpose: "Optimize product mix at store and regional level.",
+    capabilities: [
+      "Identify underperforming SKUs",
+      "Localized assortment recommendations",
+      "New product success prediction",
+      "Category performance analysis"
+    ],
+    businessValue: [
+      "Higher sell-through rates",
+      "Reduced dead stock"
+    ],
+    savings: [
+      "15–25% higher sell-through",
+      "Reduced dead stock"
+    ],
+    sampleInputs: [
+      { label: "Store/Region", type: "select", options: ["All Stores", "Flagship Stores", "Regional", "Online"] },
+      { label: "Category", type: "select", options: ["Apparel", "Footwear", "Accessories", "All Categories"] },
+      { label: "Analysis Type", type: "select", options: ["Underperformers", "Top Sellers", "New Products"] }
+    ]
+  },
+  {
+    id: "supplier-performance",
+    name: "Supplier Performance Intelligence Agent",
+    purpose: "Continuously evaluate supplier reliability and quality.",
+    capabilities: [
+      "On-time delivery tracking",
+      "Quality issue pattern detection",
+      "Cost vs performance scoring",
+      "Supplier risk assessment"
+    ],
+    businessValue: [
+      "Better supplier negotiations",
+      "Reduced operational disruptions"
+    ],
+    savings: [
+      "5–10% better supplier terms",
+      "Reduced disruptions"
+    ],
+    sampleInputs: [
+      { label: "Supplier Name", type: "text", placeholder: "Global Textiles Inc" },
+      { label: "Evaluation Period", type: "select", options: ["Last Month", "Last Quarter", "Last Year"] },
+      { label: "Metric Focus", type: "select", options: ["Delivery", "Quality", "Cost", "All Metrics"] }
+    ]
+  }
+];

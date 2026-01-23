@@ -14,10 +14,11 @@ interface ProcessTileProps {
   agents: Agent[];
   icon: LucideIcon;
   href: string;
+  processHref?: string;
   color?: string;
 }
 
-const ProcessTile = ({ title, description, agents, icon: Icon, href, color = "primary" }: ProcessTileProps) => {
+const ProcessTile = ({ title, description, agents, icon: Icon, href, processHref, color = "primary" }: ProcessTileProps) => {
   return (
     <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <div className="absolute top-0 right-0 w-32 h-32 gradient-exl opacity-10 rounded-bl-full transition-all duration-300 group-hover:opacity-20" />
@@ -49,12 +50,22 @@ const ProcessTile = ({ title, description, agents, icon: Icon, href, color = "pr
           )}
         </div>
         
-        <Button asChild className="w-full group/btn">
-          <Link to={href}>
-            View Agents
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild className="flex-1 group/btn">
+            <Link to={href}>
+              Go to Agents
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+            </Link>
+          </Button>
+          {processHref && (
+            <Button asChild variant="outline" className="flex-1 group/btn">
+              <Link to={processHref}>
+                Go to Process
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+              </Link>
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

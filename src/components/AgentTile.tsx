@@ -63,7 +63,7 @@ const AgentTile = ({ id, name, purpose, capabilities, savings, icon: Icon, onRun
           variant="default"
         >
           <Play className="mr-2 h-4 w-4" />
-          Run Agent
+          Try Agent
         </Button>
       </CardContent>
     </Card>

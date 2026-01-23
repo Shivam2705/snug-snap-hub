@@ -8,6 +8,8 @@ import CAWAODashboard from "./pages/CAWAODashboard";
 import CaseDetail from "./pages/CaseDetail";
 import CreditAgents from "./pages/CreditAgents";
 import MarketingAgentsNew from "./pages/MarketingAgentsNew";
+import FinanceAgents from "./pages/FinanceAgents";
+import MerchandisingAgents from "./pages/MerchandisingAgents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,9 @@ const App = () => (
           <Route path="/cawao/agents" element={<CreditAgents />} />
           <Route path="/case/:caseId" element={<CaseDetail />} />
           <Route path="/marketing" element={<MarketingAgentsNew />} />
+          <Route path="/marketing/agents" element={<MarketingAgentsNew />} />
+          <Route path="/finance/agents" element={<FinanceAgents />} />
+          <Route path="/merchandising/agents" element={<MerchandisingAgents />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
