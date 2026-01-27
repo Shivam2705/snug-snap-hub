@@ -55,12 +55,12 @@ const Index = () => {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
               <Sparkles className="h-4 w-4" />
-              EXL Agentic AI Platform
+              NEXT Agentic AI Platform
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              <span className="text-gradient-exl">EXL Agentic Capabilities</span>
+              <span className="text-gradient-exl">NEXT Agentic AI</span>
               <br />
-              <span className="text-foreground">for NEXT</span>
+              <span className="text-foreground">Platform</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
               Empowering NEXT with intelligent AI agents that automate complex workflows, 
@@ -161,7 +161,7 @@ const Index = () => {
               description="Process emails, invoices, and documents with intelligent extraction, validation, and knowledge assistance capabilities."
               agents={textAgents}
               icon={FileText}
-              href="/base-agents/text"
+              href="/base-agents?filter=text"
             />
             
             <ProcessTile
@@ -169,7 +169,7 @@ const Index = () => {
               description="Analyze images for product recommendations, extract visual information, and identify fashion trends for buying decisions."
               agents={imageAgents}
               icon={Image}
-              href="/base-agents/image"
+              href="/base-agents?filter=image"
             />
 
             <ProcessTile
@@ -177,7 +177,7 @@ const Index = () => {
               description="Transcribe and analyze voice interactions, perform post-call analysis, and identify customer sentiment and compliance issues."
               agents={voiceAgents}
               icon={Mic}
-              href="/base-agents/voice"
+              href="/base-agents?filter=voice"
             />
           </div>
         </div>
@@ -223,7 +223,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Brain className="h-5 w-5 text-primary" />
-              <span className="font-semibold">EXL Agentic AI for NEXT</span>
+              <span className="font-semibold">NEXT Agentic AI Platform</span>
             </div>
             <p className="text-sm text-muted-foreground">
               © 2024 EXL Service. All rights reserved.

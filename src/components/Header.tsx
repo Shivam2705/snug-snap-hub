@@ -11,7 +11,7 @@ const Header = () => {
             <Brain className="h-6 w-6 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-foreground">EXL</span>
+            <span className="text-lg font-bold text-foreground">NEXT</span>
             <span className="text-xs text-muted-foreground">Agentic AI Platform</span>
           </div>
         </Link>
