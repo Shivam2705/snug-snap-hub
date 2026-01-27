@@ -13,6 +13,7 @@ import MerchandisingAgents from "./pages/MerchandisingAgents";
 import BaseAgentsText from "./pages/BaseAgentsText";
 import BaseAgentsImage from "./pages/BaseAgentsImage";
 import BaseAgentsVoice from "./pages/BaseAgentsVoice";
+import BaseAgents from "./pages/BaseAgents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/marketing/agents" element={<MarketingAgentsNew />} />
           <Route path="/finance/agents" element={<FinanceAgents />} />
           <Route path="/merchandising/agents" element={<MerchandisingAgents />} />
+          <Route path="/base-agents" element={<BaseAgents />} />
           <Route path="/base-agents/text" element={<BaseAgentsText />} />
           <Route path="/base-agents/image" element={<BaseAgentsImage />} />
           <Route path="/base-agents/voice" element={<BaseAgentsVoice />} />
