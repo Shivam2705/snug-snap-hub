@@ -1,9 +1,31 @@
 import Header from "@/components/Header";
 import ProcessTile from "@/components/ProcessTile";
-import { Brain, Shield, Sparkles, TrendingUp, Users, Zap, Target, ShoppingBag, Calculator, Package } from "lucide-react";
+import { Brain, Shield, Sparkles, TrendingUp, Users, Zap, FileText, Image, Mic, ShoppingBag } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Index = () => {
+  // Base Agents - Text
+  const textAgents = [
+    { name: "Email Assist Agent" },
+    { name: "Invoice Agent" },
+    { name: "Text Extraction Agent" },
+    { name: "Knowledge Assist Agent" }
+  ];
+
+  // Base Agents - Image
+  const imageAgents = [
+    { name: "Product Recommendation Agent" },
+    { name: "Image Extraction Agent" },
+    { name: "Buyer Assist Agent" }
+  ];
+
+  // Base Agents - Voice
+  const voiceAgents = [
+    { name: "i-Assist" },
+    { name: "i-Audit" }
+  ];
+
+  // NEXT Specific Processes
   const creditAgents = [
     { name: "Customer Verification" },
     { name: "Fraud Detection" },
@@ -22,18 +44,6 @@ const Index = () => {
     { name: "Loyalty & Lifecycle" }
   ];
 
-  const financeAgents = [
-    { name: "Invoice Processing & Reconciliation" },
-    { name: "Revenue Recognition" },
-    { name: "Margin Leakage Detection" }
-  ];
-
-  const merchandisingAgents = [
-    { name: "Demand Forecasting & Replenishment" },
-    { name: "Assortment & Range Optimization" },
-    { name: "Supplier Performance Intelligence" }
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -45,17 +55,17 @@ const Index = () => {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
               <Sparkles className="h-4 w-4" />
-              EXLerate.AI Platform
+              EXL Agentic AI Platform
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              <span className="text-gradient-exl">Agentic AI</span>
+              <span className="text-gradient-exl">EXL Agentic Capabilities</span>
               <br />
-              <span className="text-foreground">Capabilities</span>
+              <span className="text-foreground">for NEXT</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-              Harness the power of autonomous AI agents to transform your business processes. 
-              From fraud detection to hyper-personalized marketing, our intelligent agents work 
-              together to deliver exceptional outcomes.
+              Empowering NEXT with intelligent AI agents that automate complex workflows, 
+              enhance decision-making, and deliver measurable business outcomes across 
+              customer service, fraud detection, and personalized marketing operations.
             </p>
           </div>
           
@@ -71,7 +81,7 @@ const Index = () => {
                   <Shield className="h-10 w-10 text-accent" />
                 </div>
                 <div className="h-20 w-20 rounded-2xl bg-card border shadow-lg flex items-center justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                  <Target className="h-10 w-10 text-warning" />
+                  <FileText className="h-10 w-10 text-warning" />
                 </div>
                 <div className="h-20 w-20 rounded-2xl bg-card border shadow-lg flex items-center justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
                   <Zap className="h-10 w-10 text-success" />
@@ -82,13 +92,13 @@ const Index = () => {
         </div>
       </section>
 
-      {/* EXLerate.AI Section */}
+      {/* Platform Overview Section */}
       <section className="container py-12 md:py-16">
         <div className="mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">EXLerate.AI</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">Platform Overview</h2>
           <p className="text-muted-foreground max-w-3xl">
-            Our flagship AI acceleration platform that combines cutting-edge machine learning 
-            with domain expertise to deliver transformative solutions across industries.
+            A comprehensive suite of AI-powered agents designed to transform NEXT's operations, 
+            delivering automation, intelligence, and efficiency across every business function.
           </p>
         </div>
         
@@ -131,54 +141,79 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Agents Suite Section */}
+      {/* Base Agents Section */}
       <section className="bg-muted/30 border-y">
         <div className="container py-12 md:py-16">
           <div className="mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">Agents Suite</h2>
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
+              Foundation Layer
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Base Agents</h2>
             <p className="text-muted-foreground max-w-3xl">
-              Purpose-built AI agent workflows for specific business processes. Each suite 
-              contains specialized agents that collaborate to deliver end-to-end automation.
+              Core AI agents that provide fundamental capabilities for document processing, 
+              image analysis, and voice interactions—building blocks for enterprise automation.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <ProcessTile
-              title="Credit Account Investigation"
-              description="CAWAO process for investigating credit accounts without orders. Detect potential fraud through multi-agent verification workflows."
-              agents={creditAgents}
-              icon={Shield}
-              href="/cawao/agents"
-              processHref="/cawao"
+              title="Text Agents"
+              description="Process emails, invoices, and documents with intelligent extraction, validation, and knowledge assistance capabilities."
+              agents={textAgents}
+              icon={FileText}
+              href="/base-agents/text"
             />
             
             <ProcessTile
-              title="Hyper Personalized Marketing"
-              description="Deliver highly tailored customer experiences through AI-driven personalization, predictive analytics, and omnichannel orchestration."
-              agents={marketingAgents}
-              icon={ShoppingBag}
-              href="/marketing/agents"
-              processHref="/marketing"
+              title="Image Agents"
+              description="Analyze images for product recommendations, extract visual information, and identify fashion trends for buying decisions."
+              agents={imageAgents}
+              icon={Image}
+              href="/base-agents/image"
             />
 
             <ProcessTile
-              title="Finance, Accounting & Commercial Control"
-              description="Automate financial operations including invoice processing, revenue recognition, and margin analysis with intelligent AI agents."
-              agents={financeAgents}
-              icon={Calculator}
-              href="/finance/agents"
-              processHref="/finance"
-            />
-
-            <ProcessTile
-              title="Merchandising, Buying & Planning"
-              description="Optimize demand forecasting, assortment planning, and supplier performance with AI-powered merchandising intelligence."
-              agents={merchandisingAgents}
-              icon={Package}
-              href="/merchandising/agents"
-              processHref="/merchandising"
+              title="Voice Agents"
+              description="Transcribe and analyze voice interactions, perform post-call analysis, and identify customer sentiment and compliance issues."
+              agents={voiceAgents}
+              icon={Mic}
+              href="/base-agents/voice"
             />
           </div>
+        </div>
+      </section>
+
+      {/* NEXT Agents Section */}
+      <section className="container py-12 md:py-16">
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent mb-3">
+            NEXT Specific
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">NEXT Agents</h2>
+          <p className="text-muted-foreground max-w-3xl">
+            Purpose-built AI agent workflows tailored for NEXT's specific business processes, 
+            delivering end-to-end automation for credit investigation and personalized marketing.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <ProcessTile
+            title="CAWAO (Credit Account Investigation)"
+            description="Investigate credit accounts without orders through multi-agent verification workflows. Detect potential fraud with AI-powered analysis of CIFAS markers, authentication codes, and customer data validation."
+            agents={creditAgents}
+            icon={Shield}
+            href="/cawao/agents"
+            processHref="/cawao"
+          />
+          
+          <ProcessTile
+            title="Hyper Personalized Marketing"
+            description="Analyze customer demographics and past buying trends from NEXT.co.uk to deliver highly personalized product recommendations, driving customer engagement and conversion rates."
+            agents={marketingAgents}
+            icon={ShoppingBag}
+            href="/marketing/agents"
+            processHref="/marketing"
+          />
         </div>
       </section>
 
@@ -188,7 +223,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Brain className="h-5 w-5 text-primary" />
-              <span className="font-semibold">EXL Agentic AI</span>
+              <span className="font-semibold">EXL Agentic AI for NEXT</span>
             </div>
             <p className="text-sm text-muted-foreground">
               © 2024 EXL Service. All rights reserved.
