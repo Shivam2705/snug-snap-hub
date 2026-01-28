@@ -47,7 +47,7 @@ const FlagCountCards = () => {
     borderColor: 'border-blue-100'
   }];
   return <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-      {flagCards.map(flag => <Card key={flag.label} className={`border ${flag.borderColor} shadow-none`}>
+      {flagCards.map(flag => <Card key={flag.label} className={`border ${flag.borderColor} shadow-none transition-all duration-200 hover:shadow-lg hover:scale-105 hover:border-primary/40 cursor-pointer`}>
           <CardContent className="p-3 flex items-center gap-3">
             <div className={`p-2 rounded-lg ${flag.bgColor}`}>
               

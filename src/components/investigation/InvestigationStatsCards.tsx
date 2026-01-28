@@ -41,7 +41,7 @@ const InvestigationStatsCards = () => {
     bgColor: 'bg-slate-100'
   }];
   return <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-      {statCards.map(stat => <Card key={stat.label} className="border-0 shadow-sm">
+      {statCards.map(stat => <Card key={stat.label} className="border-0 shadow-sm transition-all duration-200 hover:shadow-lg hover:scale-105 hover:border-primary/20 cursor-pointer">
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div>
