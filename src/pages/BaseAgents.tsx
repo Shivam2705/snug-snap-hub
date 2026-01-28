@@ -5,6 +5,7 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
 import ImageExtractionDialog from "@/components/ImageExtractionDialog";
+import EmailAssistDialog from "@/components/EmailAssistDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -24,6 +25,7 @@ const BaseAgents = () => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [showProductRecommendation, setShowProductRecommendation] = useState(false);
   const [showImageExtraction, setShowImageExtraction] = useState(false);
+  const [showEmailAssist, setShowEmailAssist] = useState(false);
 
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
@@ -200,6 +202,8 @@ const BaseAgents = () => {
       setShowProductRecommendation(true);
     } else if (agentId === "image-extraction") {
       setShowImageExtraction(true);
+    } else if (agentId === "email-assist") {
+      setShowEmailAssist(true);
     } else {
       setSelectedAgent(agentId);
     }
@@ -408,6 +412,12 @@ const BaseAgents = () => {
       <ImageExtractionDialog
         open={showImageExtraction}
         onOpenChange={setShowImageExtraction}
+      />
+
+      {/* Email Assist Dialog */}
+      <EmailAssistDialog
+        open={showEmailAssist}
+        onOpenChange={setShowEmailAssist}
       />
     </div>
   );
