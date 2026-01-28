@@ -34,17 +34,17 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50 hover:bg-slate-50">
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Case ID</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">First Name</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Last Name</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Email Address</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Mobile Number</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Flagged</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Received Date & Time</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Completion Date & Time</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Assign To</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Status</TableHead>
+            <TableRow className="bg-slate-900 hover:bg-slate-900">
+              <TableHead className="font-semibold text-white whitespace-nowrap">Case ID</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">First Name</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Last Name</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Email Address</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Mobile Number</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Flagged</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Received Date & Time</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Completion Date & Time</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Assign To</TableHead>
+              <TableHead className="font-semibold text-white whitespace-nowrap">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
