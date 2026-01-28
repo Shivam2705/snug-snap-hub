@@ -155,8 +155,8 @@ const generateCAW001Timeline = (baseDate: Date): EvidenceItem[] => {
       agentName: 'Fraud Detection Agent',
       action: 'CIFAS search completed',
       system: 'CIFAS (find.cifas.org.uk)',
-      result: 'Outcome: Record found in National Fraud Database',
-      details: 'Customer address matched to existing fraud record. Case escalated to AIT team.',
+      result: 'Outcome: Record found in National Fraud Database for the Address: 456 High Street, London, EC1A 1BB',
+      details: 'Fraud record matched to previous address. Case escalated to AIT team.',
       status: 'error'
     }
   ];
