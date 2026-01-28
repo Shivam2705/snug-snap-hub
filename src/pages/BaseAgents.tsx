@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
+import ImageExtractionDialog from "@/components/ImageExtractionDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -22,6 +23,7 @@ const BaseAgents = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>(initialFilter);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [showProductRecommendation, setShowProductRecommendation] = useState(false);
+  const [showImageExtraction, setShowImageExtraction] = useState(false);
 
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
@@ -196,6 +198,8 @@ const BaseAgents = () => {
   const handleRunAgent = (agentId: string) => {
     if (agentId === "product-recommendation") {
       setShowProductRecommendation(true);
+    } else if (agentId === "image-extraction") {
+      setShowImageExtraction(true);
     } else {
       setSelectedAgent(agentId);
     }
@@ -398,6 +402,12 @@ const BaseAgents = () => {
       <ProductRecommendationDialog
         open={showProductRecommendation}
         onOpenChange={setShowProductRecommendation}
+      />
+
+      {/* Image Extraction Dialog */}
+      <ImageExtractionDialog
+        open={showImageExtraction}
+        onOpenChange={setShowImageExtraction}
       />
     </div>
   );
