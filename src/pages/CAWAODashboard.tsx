@@ -7,7 +7,7 @@ import InvestigationTable from "@/components/investigation/InvestigationTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Home, Calendar, Clock } from "lucide-react";
+import { Home, Calendar, Clock, CalendarDays } from "lucide-react";
 
 const CAWAODashboard = () => {
   const [activeQueue, setActiveQueue] = useState<QueueType>('day-0');
@@ -16,6 +16,7 @@ const CAWAODashboard = () => {
 
   const day0Cases = cases.filter(c => c.queue === 'day-0');
   const day7Cases = cases.filter(c => c.queue === 'day-7');
+  const day28Cases = cases.filter(c => c.queue === 'day-28');
 
   const handleMoveToDay7 = (caseId: string) => {
     setCases(prev => prev.map(c => 
@@ -79,7 +80,7 @@ const CAWAODashboard = () => {
             <TabsList className="bg-white border shadow-sm">
               <TabsTrigger 
                 value="day-0" 
-                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
+                className="text-slate-900 data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
               >
                 <Clock className="h-4 w-4" />
                 Day-0 Queue
@@ -97,6 +98,16 @@ const CAWAODashboard = () => {
                   {day7Cases.length}
                 </span>
               </TabsTrigger>
+              <TabsTrigger 
+                value="day-28"
+                className="text-slate-900 data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
+              >
+                <CalendarDays className="h-4 w-4" />
+                Day-28 Queue
+                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-100 data-[state=active]:bg-slate-700 text-slate-600 data-[state=active]:text-slate-200">
+                  {day28Cases.length}
+                </span>
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -112,6 +123,13 @@ const CAWAODashboard = () => {
             <InvestigationTable 
               cases={day7Cases} 
               queue="day-7"
+            />
+          </TabsContent>
+
+          <TabsContent value="day-28" className="mt-0">
+            <InvestigationTable 
+              cases={day28Cases} 
+              queue="day-28"
             />
           </TabsContent>
         </Tabs>
