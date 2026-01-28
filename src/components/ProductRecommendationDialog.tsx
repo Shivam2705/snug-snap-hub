@@ -212,9 +212,9 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
           <div className="w-1/3 border-r bg-muted/30 p-6 flex flex-col">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-semibold">Product Recommendation</h2>
+                <h2 className="text-xl font-semibold">NEXT Lens</h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Upload an image to find similar products
+                  Image-based search to find similar products
                 </p>
               </div>
               <Button variant="ghost" size="icon" onClick={handleClose}>
