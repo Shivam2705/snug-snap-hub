@@ -482,13 +482,8 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                           </div>
 
                           <div className="pt-4 border-t border-blue-500/20">
-                            <p className="text-xs text-muted-foreground mb-2">Detected Keywords</p>
-                            <div className="flex flex-wrap gap-2">
-                              <Badge variant="outline" className="text-xs">urgent</Badge>
-                              <Badge variant="outline" className="text-xs">issue</Badge>
-                              <Badge variant="outline" className="text-xs">disappointed</Badge>
-                              <Badge variant="outline" className="text-xs">frustrating</Badge>
-                            </div>
+                            <p className="text-xs text-muted-foreground mb-2">Reasoning</p>
+                            <p className="text-sm">Customer expresses frustration over delayed order with emotional urgency due to upcoming job interview.</p>
                           </div>
                         </div>
                       </div>
@@ -519,12 +514,8 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                           </div>
 
                           <div className="pt-4 border-t border-orange-500/20">
-                            <p className="text-xs text-muted-foreground mb-2">Vulnerability Indicators</p>
-                            <div className="flex flex-wrap gap-2">
-                              <Badge variant="outline" className="text-xs">time pressure</Badge>
-                              <Badge variant="outline" className="text-xs">emotional distress</Badge>
-                              <Badge variant="outline" className="text-xs">job interview</Badge>
-                            </div>
+                            <p className="text-xs text-muted-foreground mb-2">Reasoning</p>
+                            <p className="text-sm">Time-sensitive situation with external pressure and signs of emotional distress requiring priority handling.</p>
                           </div>
                         </div>
                       </div>
