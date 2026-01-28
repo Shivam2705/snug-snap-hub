@@ -34,7 +34,7 @@ const CaseDetail = () => {
 
   if (!caseData) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-black">
         <Header />
         <div className="container py-12 text-center">
           <h1 className="text-2xl font-bold mb-4">Case Not Found</h1>
@@ -50,7 +50,7 @@ const CaseDetail = () => {
   const OutcomeIcon = outcome?.icon;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-black">
       <Header />
       
       <main className="container py-6 md:py-8 max-w-7xl">
