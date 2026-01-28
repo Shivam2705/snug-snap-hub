@@ -37,7 +37,7 @@ const CAWAODashboard = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Credit Account Investigation Portal
               </h1>
               
