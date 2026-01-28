@@ -49,7 +49,7 @@ const CAWAODashboard = () => {
                 Day-0 onboarding investigations & Day-7 follow-up queue management
               </p>
             </div>
-            <Button asChild variant="outline" className="bg-white">
+            <Button asChild variant="outline" className="bg-slate-900 text-white border-slate-700 hover:bg-slate-800">
               <Link to="/">
                 <Home className="mr-2 h-4 w-4" />
                 Back to Home
