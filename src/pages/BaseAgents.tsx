@@ -103,14 +103,14 @@ const BaseAgents = () => {
   const imageAgents = [
     {
       id: "product-recommendation",
-      name: "Product Recommendation Agent",
-      purpose: "Upload an image to receive personalized product recommendations from NEXT.co.uk website.",
+      name: "NEXT Lens",
+      purpose: "Image-based search agent that finds similar products by extracting product attributes and matching against our inventory.",
       capabilities: [
+        "Product attribute extraction",
         "Visual similarity matching",
+        "Inventory search & matching",
         "Style analysis",
-        "Cross-category recommendations",
-        "Price range filtering",
-        "Availability checking"
+        "Cross-category recommendations"
       ],
       savings: ["3x conversion rate", "40% faster discovery"],
       icon: ShoppingBag,
