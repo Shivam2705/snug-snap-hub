@@ -2,11 +2,13 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
+import EmailAssistDialog from "@/components/EmailAssistDialog";
 import { Mail, FileSpreadsheet, FileText, MessageSquare } from "lucide-react";
 
 const BaseAgentsText = () => {
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showEmailAssist, setShowEmailAssist] = useState(false);
 
   const agents = [
     {
@@ -90,6 +92,10 @@ const BaseAgentsText = () => {
   ];
 
   const handleRunAgent = (agentId: string) => {
+    if (agentId === "email-assist") {
+      setShowEmailAssist(true);
+      return;
+    }
     const agent = agents.find(a => a.id === agentId);
     if (agent) {
       setSelectedAgent(agent);
@@ -128,6 +134,11 @@ const BaseAgentsText = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         agent={selectedAgent}
+      />
+
+      <EmailAssistDialog
+        open={showEmailAssist}
+        onOpenChange={setShowEmailAssist}
       />
     </div>
   );
