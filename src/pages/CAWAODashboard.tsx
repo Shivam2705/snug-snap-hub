@@ -89,7 +89,7 @@ const CAWAODashboard = () => {
               </TabsTrigger>
               <TabsTrigger 
                 value="day-7"
-                className="data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
+                className="text-slate-900 data-[state=active]:bg-slate-900 data-[state=active]:text-white gap-2"
               >
                 <Calendar className="h-4 w-4" />
                 Day-7 Queue
