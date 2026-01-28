@@ -89,11 +89,11 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
       id: '2',
       timestamp: new Date(baseDate.getTime() + 5 * 60000).toISOString(),
       actor: 'ai',
-      agentName: 'CIFAS Verification Agent',
-      action: 'CIFAS portal lookup initiated',
-      system: 'find.cifas.org.uk',
-      result: 'Record found in National Fraud Database',
-      details: 'Case type identified. Checking for Identity Fraud or Protective Registration.',
+      agentName: 'Customer Verification Agent',
+      action: 'Mainframe address lookup initiated',
+      system: 'iGuide Mainframe',
+      result: 'Searching for multiple addresses using customer phone number and address',
+      details: 'Checking if customer has multiple addresses registered in Mainframe.',
       status: 'warning'
     });
 
@@ -101,11 +101,11 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
       id: '3',
       timestamp: new Date(baseDate.getTime() + 10 * 60000).toISOString(),
       actor: 'ai',
-      agentName: 'CIFAS Verification Agent',
-      action: 'Cross-referencing mainframe data',
+      agentName: 'Customer Verification Agent',
+      action: 'Multiple address verification completed',
       system: 'iGuide Mainframe',
-      result: 'Phone number and address linkage check completed',
-      details: 'Checking for reuse across multiple customers.',
+      result: 'Customer name comparison across addresses completed',
+      details: 'Verified if Customer Name is the same across all registered addresses.',
       status: 'info'
     });
   }
