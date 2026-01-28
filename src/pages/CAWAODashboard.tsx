@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Header";
-import { mockCases, getCaseStats, QueueType } from "@/data/mockCases";
+import { mockCases, getCaseStats, QueueType, CustomerCase } from "@/data/mockCases";
 import InvestigationStatsCards from "@/components/investigation/InvestigationStatsCards";
 import FlagCountCards from "@/components/investigation/FlagCountCards";
 import InvestigationTable from "@/components/investigation/InvestigationTable";
@@ -8,10 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Home, Calendar, Clock, CalendarDays } from "lucide-react";
+import FileUploadButton from "@/components/investigation/FileUploadButton";
+
 const CAWAODashboard = () => {
   const [activeQueue, setActiveQueue] = useState<QueueType>('day-0');
   const [cases, setCases] = useState(mockCases);
   const stats = getCaseStats();
+
+  const handleDataLoaded = (uploadedCases: CustomerCase[]) => {
+    setCases(uploadedCases);
+  };
   const day0Cases = cases.filter(c => c.queue === 'day-0');
   const day7Cases = cases.filter(c => c.queue === 'day-7');
   const day28Cases = cases.filter(c => c.queue === 'day-28');
@@ -40,14 +46,16 @@ const CAWAODashboard = () => {
               <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Credit Account Investigation Portal
               </h1>
-              
             </div>
-            <Button asChild variant="outline" className="bg-slate-900 text-white border-slate-700 hover:bg-slate-800">
-              <Link to="/">
-                <Home className="mr-2 h-4 w-4" />
-                Back to Home
-              </Link>
-            </Button>
+            <div className="flex items-center gap-3">
+              <FileUploadButton onDataLoaded={handleDataLoaded} />
+              <Button asChild variant="outline" className="bg-slate-900 text-white border-slate-700 hover:bg-slate-800">
+                <Link to="/">
+                  <Home className="mr-2 h-4 w-4" />
+                  Back to Home
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
 
