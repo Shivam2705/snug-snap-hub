@@ -459,14 +459,6 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                             </div>
                             <Progress value={80} className="h-3 bg-blue-100" />
                           </div>
-
-                          <div className="pt-4 border-t border-blue-500/20">
-                            <p className="text-xs text-muted-foreground mb-2">Reasoning</p>
-                            <p className="text-sm">
-                              Customer expresses frustration over delayed order with emotional urgency due to upcoming
-                              job interview.
-                            </p>
-                          </div>
                         </div>
                       </div>
 
@@ -493,14 +485,6 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                               <span className="text-2xl font-bold text-orange-600">9/10</span>
                             </div>
                             <Progress value={90} className="h-3 bg-orange-100" />
-                          </div>
-
-                          <div className="pt-4 border-t border-orange-500/20">
-                            <p className="text-xs text-muted-foreground mb-2">Reasoning</p>
-                            <p className="text-sm">
-                              Time-sensitive situation with external pressure and signs of emotional distress requiring
-                              priority handling.
-                            </p>
                           </div>
                         </div>
                       </div>
