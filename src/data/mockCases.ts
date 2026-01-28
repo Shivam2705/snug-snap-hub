@@ -68,10 +68,110 @@ export interface CustomerCase {
   daysSinceReceived: number;
 }
 
+// Generate evidence timeline for CAW-2024-001 specifically
+const generateCAW001Timeline = (baseDate: Date): EvidenceItem[] => {
+  return [
+    {
+      id: '1',
+      timestamp: baseDate.toISOString(),
+      actor: 'ai',
+      agentName: 'Case Intake Agent',
+      action: 'Case received and investigator notes reviewed',
+      system: 'Case Management System',
+      result: 'Checked if case was previously worked by another investigator',
+      details: 'Reading notes from iGuide Mainframe to identify prior investigator activity.',
+      status: 'info'
+    },
+    {
+      id: '2',
+      timestamp: new Date(baseDate.getTime() + 5 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Customer Verification Agent',
+      action: 'Step 1: Search for Customer Details using Address & Phone Number',
+      system: 'iGuide Mainframe',
+      result: 'Customer lookup initiated using address and phone number',
+      details: 'Searching for multiple addresses associated with customer in iGuide Mainframe.',
+      status: 'info'
+    },
+    {
+      id: '3',
+      timestamp: new Date(baseDate.getTime() + 8 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Customer Verification Agent',
+      action: 'Step 2: Address search completed',
+      system: 'iGuide Mainframe',
+      result: 'Found Only 1 Address',
+      details: 'Single address found in Mainframe. No duplicate addresses detected.',
+      status: 'success'
+    },
+    {
+      id: '4',
+      timestamp: new Date(baseDate.getTime() + 10 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Customer Verification Agent',
+      action: 'Step 3: Customer Verified',
+      system: 'iGuide Mainframe',
+      result: 'Outcome: No potential fraud identified',
+      details: 'Customer verification successful. Calling Address Verification Agent.',
+      status: 'success'
+    },
+    {
+      id: '5',
+      timestamp: new Date(baseDate.getTime() + 15 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Address Verification Agent',
+      action: 'Step 1: Search for Address History in Transunion & Experian Portals',
+      system: 'TransUnion / Experian',
+      result: 'Address history lookup initiated',
+      details: 'Querying credit bureau portals for customer address history.',
+      status: 'info'
+    },
+    {
+      id: '6',
+      timestamp: new Date(baseDate.getTime() + 20 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Address Verification Agent',
+      action: 'Address history search completed',
+      system: 'TransUnion / Experian',
+      result: 'Outcome: Found 4 previous addresses',
+      details: 'Sending the 4 addresses to Fraud Detection Agent for CIFAS check.',
+      status: 'warning'
+    },
+    {
+      id: '7',
+      timestamp: new Date(baseDate.getTime() + 25 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Step 1: Search for the 4 addresses in CIFAS Portal',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'Searching addresses provided by Address Verification Agent',
+      details: 'Querying National Fraud Database for matches on all 4 addresses.',
+      status: 'info'
+    },
+    {
+      id: '8',
+      timestamp: new Date(baseDate.getTime() + 30 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'CIFAS search completed',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'Outcome: Record found in National Fraud Database',
+      details: 'Customer address matched to existing fraud record. Case escalated to AIT team.',
+      status: 'error'
+    }
+  ];
+};
+
 // Generate evidence timeline for cases
 const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem[] => {
-  const timeline: EvidenceItem[] = [];
   const baseDate = new Date(caseData.receivedDateTime || new Date());
+  
+  // Special handling for CAW-2024-001
+  if (caseData.caseId === 'CAW-2024-001') {
+    return generateCAW001Timeline(baseDate);
+  }
+  
+  const timeline: EvidenceItem[] = [];
   
   timeline.push({
     id: '1',
