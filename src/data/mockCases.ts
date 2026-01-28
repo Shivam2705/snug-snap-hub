@@ -78,9 +78,10 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
     timestamp: baseDate.toISOString(),
     actor: 'ai',
     agentName: 'Case Intake Agent',
-    action: 'Case received and queued for investigation',
+    action: 'Case received and investigator notes reviewed',
     system: 'Case Management System',
-    result: 'Case initialized with triggered flags',
+    result: 'Checked if case was previously worked by another investigator',
+    details: 'Reading notes from iGuide Mainframe to identify prior investigator activity.',
     status: 'info'
   });
 
