@@ -45,7 +45,6 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Completion Date & Time</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Assign To</TableHead>
               <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Status</TableHead>
-              <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -100,31 +99,6 @@ const InvestigationTable = ({ cases, queue, onMoveToDay7 }: InvestigationTablePr
                 </TableCell>
                 <TableCell>
                   <StatusBadge status={caseItem.status} />
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    {queue === 'day-0' && caseItem.status !== 'Completed' && (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="text-xs whitespace-nowrap"
-                        onClick={(e) => handleMoveToDay7(e, caseItem.caseId)}
-                      >
-                        <Calendar className="h-3 w-3 mr-1" />
-                        Move to Day-7
-                      </Button>
-                    )}
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/case/${caseItem.caseId}`);
-                      }}
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </TableCell>
               </TableRow>
             ))}

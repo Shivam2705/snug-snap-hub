@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
@@ -13,12 +13,13 @@ import {
   ShoppingBag, Image, Shirt,
   Mic, Headphones,
   FileType, ImageIcon, Volume2,
-  Filter
+  Filter, ArrowLeft, Home
 } from "lucide-react";
 
 type FilterType = "all" | "text" | "image" | "voice";
 
 const BaseAgents = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialFilter = (searchParams.get("filter") as FilterType) || "all";
   const [activeFilter, setActiveFilter] = useState<FilterType>(initialFilter);
@@ -268,6 +269,20 @@ const BaseAgents = () => {
       <Header />
       
       <div className="container py-8">
+        {/* Navigation Buttons */}
+        <div className="flex items-center gap-3 mb-6">
+          <Button variant="outline" size="sm" onClick={() => navigate(-1)} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Go Back
+          </Button>
+          <Button variant="outline" size="sm" asChild className="gap-2">
+            <Link to="/">
+              <Home className="h-4 w-4" />
+              Home
+            </Link>
+          </Button>
+        </div>
+
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Base Agents</h1>

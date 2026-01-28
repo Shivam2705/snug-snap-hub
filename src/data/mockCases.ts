@@ -1,6 +1,6 @@
 export type CaseStatus = 'Completed' | 'Review Required' | 'In Progress' | 'Not Started' | 'Pending' | 'Awaiting Customer';
 
-export type QueueType = 'day-0' | 'day-7';
+export type QueueType = 'day-0' | 'day-7' | 'day-28';
 
 export type RiskLevel = 'low' | 'medium' | 'high';
 
@@ -609,6 +609,7 @@ export const getCaseStats = () => {
   
   const day0Count = mockCases.filter(c => c.queue === 'day-0').length;
   const day7Count = mockCases.filter(c => c.queue === 'day-7').length;
+  const day28Count = mockCases.filter(c => c.queue === 'day-28').length;
   
   const highRisk = mockCases.filter(c => c.riskLevel === 'high').length;
   const mediumRisk = mockCases.filter(c => c.riskLevel === 'medium').length;
@@ -628,6 +629,7 @@ export const getCaseStats = () => {
     awaitingCustomer,
     day0Count,
     day7Count,
+    day28Count,
     highRisk,
     mediumRisk,
     lowRisk,
