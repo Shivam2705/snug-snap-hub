@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
+import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -20,6 +21,7 @@ const BaseAgents = () => {
   const initialFilter = (searchParams.get("filter") as FilterType) || "all";
   const [activeFilter, setActiveFilter] = useState<FilterType>(initialFilter);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [showProductRecommendation, setShowProductRecommendation] = useState(false);
 
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
@@ -192,7 +194,11 @@ const BaseAgents = () => {
   ];
 
   const handleRunAgent = (agentId: string) => {
-    setSelectedAgent(agentId);
+    if (agentId === "product-recommendation") {
+      setShowProductRecommendation(true);
+    } else {
+      setSelectedAgent(agentId);
+    }
   };
 
   const getSelectedAgentData = () => {
@@ -386,6 +392,12 @@ const BaseAgents = () => {
         open={!!selectedAgent}
         onOpenChange={(open) => !open && setSelectedAgent(null)}
         agent={selectedAgentData}
+      />
+
+      {/* Product Recommendation Dialog */}
+      <ProductRecommendationDialog
+        open={showProductRecommendation}
+        onOpenChange={setShowProductRecommendation}
       />
     </div>
   );
