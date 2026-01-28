@@ -26,7 +26,7 @@ const CAWAODashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-black">
       <Header />
       
       <main className="container py-6 md:py-8 max-w-7xl">
