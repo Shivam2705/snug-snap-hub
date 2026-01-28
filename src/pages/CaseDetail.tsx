@@ -72,15 +72,15 @@ const CaseDetail = () => {
         </div>
 
         {/* Case Header */}
-        <div className="bg-white rounded-xl border shadow-sm p-6 mb-6">
+        <div className="bg-slate-900 rounded-xl border border-slate-700 shadow-sm p-6 mb-6">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-slate-900">{caseData.caseId}</h1>
+                <h1 className="text-2xl font-bold text-white">{caseData.caseId}</h1>
                 <StatusBadge status={caseData.status} />
                 <RiskBadge level={caseData.riskLevel} score={caseData.riskScore} />
               </div>
-              <p className="text-muted-foreground">
+              <p className="text-slate-300">
                 {caseData.firstName} {caseData.lastName} • {caseData.queue === 'day-0' ? 'Day-0 Queue' : 'Day-7 Queue'}
               </p>
             </div>
