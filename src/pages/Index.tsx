@@ -88,7 +88,8 @@ const Index = () => {
             </div>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8">
-              <span className="text-gradient-primary">NEXT Agentic AI</span>
+              <span className="text-foreground font-display">NEXT</span>{" "}
+              <span className="text-gradient-primary">Agentic AI</span>
               <br />
               <span className="text-foreground">Platform</span>
             </h1>
