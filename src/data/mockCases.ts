@@ -17,6 +17,14 @@ export interface AIRecommendation {
   supportingEvidence: string[];
 }
 
+export interface EvidenceAction {
+  id: string;
+  label: string;
+  type: 'sms' | 'email' | 'ticket';
+  target?: string;
+  completed?: boolean;
+}
+
 export interface EvidenceItem {
   id: string;
   timestamp: string;
@@ -27,6 +35,7 @@ export interface EvidenceItem {
   result: string;
   details?: string;
   status: 'success' | 'warning' | 'error' | 'info';
+  interactiveAction?: EvidenceAction;
 }
 
 export interface ActivityLogItem {
@@ -335,22 +344,36 @@ const generateCAW004Timeline = (baseDate: Date): EvidenceItem[] => {
       timestamp: new Date(baseDate.getTime() + 45 * 60000).toISOString(),
       actor: 'ai',
       agentName: 'Communication Agent',
-      action: 'Sent SMS to customer (01406860876)',
+      action: 'Send SMS to customer (01406860876)',
       system: 'iGuide Mainframe',
-      result: 'Text message sent successfully',
-      details: 'Customer notification via SMS initiated.',
-      status: 'success'
+      result: 'Awaiting investigator action',
+      details: 'Click button to send text message to customer.',
+      status: 'info',
+      interactiveAction: {
+        id: 'sms-01406860876',
+        label: 'Send Text',
+        type: 'sms',
+        target: '01406860876',
+        completed: false
+      }
     },
     {
       id: '17',
       timestamp: new Date(baseDate.getTime() + 48 * 60000).toISOString(),
       actor: 'ai',
       agentName: 'Communication Agent',
-      action: 'Created Ticket in Zendesk and sent Email to sarahdavis1234@gmail.com',
+      action: 'Create Ticket in Zendesk and send Email to sarahdavis1234@gmail.com',
       system: 'Zendesk',
-      result: 'Email sent and ticket created',
-      details: 'Notes updated in Zendesk. Awaiting customer response.',
-      status: 'success'
+      result: 'Awaiting investigator action',
+      details: 'Click button to create Zendesk ticket and send email.',
+      status: 'info',
+      interactiveAction: {
+        id: 'email-sarahdavis1234',
+        label: 'Send Email',
+        type: 'email',
+        target: 'sarahdavis1234@gmail.com',
+        completed: false
+      }
     }
   ];
 };
