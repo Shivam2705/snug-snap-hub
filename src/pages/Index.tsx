@@ -3,62 +3,73 @@ import SolutionTile from "@/components/SolutionTile";
 import PartnerSlider from "@/components/PartnerSlider";
 import { Brain, Shield, Sparkles, FileText, Image, Mic, ShoppingBag, Layers, Cpu, Zap, Database } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
 const Index = () => {
   // Agentic Repository - consolidates all base agents
-  const repositoryAgents = [
-    { name: "Email Assist Agent" },
-    { name: "Invoice Agent" },
-    { name: "Text Extraction Agent" },
-    { name: "Knowledge Assist Agent" },
-    { name: "Product Recommendation Agent" },
-    { name: "Image Extraction Agent" },
-    { name: "Buyer Assist Agent" },
-    { name: "i-Assist" },
-    { name: "i-Audit" }
-  ];
+  const repositoryAgents = [{
+    name: "Email Assist Agent"
+  }, {
+    name: "Invoice Agent"
+  }, {
+    name: "Text Extraction Agent"
+  }, {
+    name: "Knowledge Assist Agent"
+  }, {
+    name: "Product Recommendation Agent"
+  }, {
+    name: "Image Extraction Agent"
+  }, {
+    name: "Buyer Assist Agent"
+  }, {
+    name: "i-Assist"
+  }, {
+    name: "i-Audit"
+  }];
 
   // CAWAO Agents
-  const cawaoAgents = [
-    { name: "Customer Verification" },
-    { name: "Fraud Detection" },
-    { name: "Address Verification" },
-    { name: "Email Agent" },
-    { name: "Messaging Agent" }
-  ];
+  const cawaoAgents = [{
+    name: "Customer Verification"
+  }, {
+    name: "Fraud Detection"
+  }, {
+    name: "Address Verification"
+  }, {
+    name: "Email Agent"
+  }, {
+    name: "Messaging Agent"
+  }];
 
   // Marketing Agents
-  const marketingAgents = [
-    { name: "Customer 360° Intelligence" },
-    { name: "Hyper-Personalized Apparel" },
-    { name: "Spend Affordability" },
-    { name: "Omnichannel Orchestration" },
-    { name: "Predictive Next-Best-Product" },
-    { name: "Campaign Personalization" },
-    { name: "Loyalty & Lifecycle" }
-  ];
+  const marketingAgents = [{
+    name: "Customer 360° Intelligence"
+  }, {
+    name: "Hyper-Personalized Apparel"
+  }, {
+    name: "Spend Affordability"
+  }, {
+    name: "Omnichannel Orchestration"
+  }, {
+    name: "Predictive Next-Best-Product"
+  }, {
+    name: "Campaign Personalization"
+  }, {
+    name: "Loyalty & Lifecycle"
+  }];
 
   // Multi-modal capabilities
-  const capabilities = [
-    {
-      icon: FileText,
-      title: "Text Intelligence",
-      description: "Process documents, emails, and invoices with advanced NLP for extraction, validation, and knowledge assistance."
-    },
-    {
-      icon: Image,
-      title: "Visual Recognition",
-      description: "Analyze images for product recommendations, extract visual data, and identify fashion trends."
-    },
-    {
-      icon: Mic,
-      title: "Voice Analytics",
-      description: "Transcribe and analyze voice interactions, perform sentiment analysis, and ensure compliance."
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const capabilities = [{
+    icon: FileText,
+    title: "Text Intelligence",
+    description: "Process documents, emails, and invoices with advanced NLP for extraction, validation, and knowledge assistance."
+  }, {
+    icon: Image,
+    title: "Visual Recognition",
+    description: "Analyze images for product recommendations, extract visual data, and identify fashion trends."
+  }, {
+    icon: Mic,
+    title: "Voice Analytics",
+    description: "Transcribe and analyze voice interactions, perform sentiment analysis, and ensure compliance."
+  }];
+  return <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
@@ -93,16 +104,24 @@ const Index = () => {
           <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden xl:block">
             <div className="relative">
               <div className="grid grid-cols-2 gap-4">
-                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '0s' }}>
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{
+                animationDelay: '0s'
+              }}>
                   <Brain className="h-8 w-8 text-primary" />
                 </div>
-                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '1s' }}>
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{
+                animationDelay: '1s'
+              }}>
                   <Cpu className="h-8 w-8 text-primary/80" />
                 </div>
-                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '2s' }}>
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{
+                animationDelay: '2s'
+              }}>
                   <Database className="h-8 w-8 text-primary/60" />
                 </div>
-                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '3s' }}>
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{
+                animationDelay: '3s'
+              }}>
                   <Zap className="h-8 w-8 text-primary/70" />
                 </div>
               </div>
@@ -130,11 +149,7 @@ const Index = () => {
         </div>
         
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {capabilities.map((cap, index) => (
-            <Card 
-              key={index} 
-              className="card-glow bg-card/30 border-border/50 text-center"
-            >
+          {capabilities.map((cap, index) => <Card key={index} className="card-glow bg-card/30 border-border/50 text-center">
               <CardHeader className="pb-4">
                 <div className="h-14 w-14 rounded-xl gradient-primary flex items-center justify-center mx-auto mb-4 glow-primary">
                   <cap.icon className="h-7 w-7 text-white" />
@@ -144,8 +159,7 @@ const Index = () => {
                   {cap.description}
                 </CardDescription>
               </CardHeader>
-            </Card>
-          ))}
+            </Card>)}
         </div>
       </section>
 
@@ -166,31 +180,11 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <SolutionTile
-              title="Agentic Repository"
-              description="Comprehensive library of multi-modal AI agents for text processing, visual analysis, and voice interactions—your foundation for intelligent automation."
-              agents={repositoryAgents}
-              icon={Layers}
-              href="/base-agents"
-            />
+            <SolutionTile title="Agentic Repository" description="Comprehensive library of multi-modal AI agents for text processing, visual analysis, and voice interactions—your foundation for intelligent automation." agents={repositoryAgents} icon={Layers} href="/base-agents" />
             
-            <SolutionTile
-              title="CAWAO"
-              description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation."
-              agents={cawaoAgents}
-              icon={Shield}
-              href="/cawao/agents"
-              processHref="/cawao"
-            />
+            <SolutionTile title="CAWAO" description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation." agents={cawaoAgents} icon={Shield} href="/cawao/agents" processHref="/cawao" />
             
-            <SolutionTile
-              title="Hyper Personalized Marketing"
-              description="Analyze customer demographics and buying trends to deliver highly personalized product recommendations and drive engagement."
-              agents={marketingAgents}
-              icon={ShoppingBag}
-              href="/marketing/agents"
-              processHref="/marketing"
-            />
+            <SolutionTile title="Hyper Personalized Marketing" description="Analyze customer demographics and buying trends to deliver highly personalized product recommendations and drive engagement." agents={marketingAgents} icon={ShoppingBag} href="/marketing/agents" processHref="/marketing" />
           </div>
         </div>
       </section>
@@ -208,14 +202,10 @@ const Index = () => {
                 <span className="text-muted-foreground text-sm ml-2">Platform</span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              © 2024 EXL Service. All rights reserved.
-            </p>
+            <p className="text-sm text-muted-foreground">© 2026 EXL Service. All rights reserved.</p>
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
