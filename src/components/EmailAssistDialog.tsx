@@ -222,8 +222,8 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
         </VisuallyHidden>
         <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Left Column - Email Upload (1/3) */}
-          <div className="w-1/3 border-r bg-muted/30 p-4 md:p-6 flex flex-col overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
+          <div className="w-1/3 border-r bg-muted/30 p-4 md:p-6 flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between mb-6 shrink-0">
               <div>
                 <h2 className="text-xl font-semibold">Email Assist Agent</h2>
                 <p className="text-sm text-muted-foreground mt-1">Upload .eml file to analyze</p>
@@ -235,26 +235,30 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
             {/* Upload Area */}
             {!emailUploaded ? (
-              <div
-                onClick={handleUploadEmail}
-                className="flex-1 border-2 border-dashed border-muted-foreground/30 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
-              >
-                <div className="p-4 rounded-full bg-primary/10">
-                  <Upload className="h-8 w-8 text-primary" />
+              <div className="flex-1 min-h-0 overflow-y-auto">
+                <div
+                  onClick={handleUploadEmail}
+                  className="h-full border-2 border-dashed border-muted-foreground/30 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
+                >
+                  <div className="p-4 rounded-full bg-primary/10">
+                    <Upload className="h-8 w-8 text-primary" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium">Upload .eml file</p>
+                    <p className="text-sm text-muted-foreground mt-1">Click to upload or drag and drop</p>
+                  </div>
+                  <Badge variant="outline" className="mt-2">
+                    Supports .eml format
+                  </Badge>
                 </div>
-                <div className="text-center">
-                  <p className="font-medium">Upload .eml file</p>
-                  <p className="text-sm text-muted-foreground mt-1">Click to upload or drag and drop</p>
-                </div>
-                <Badge variant="outline" className="mt-2">
-                  Supports .eml format
-                </Badge>
               </div>
             ) : (
-              <div className="flex-1 flex flex-col">
-                {/* Email Preview */}
-                <div className="flex-1 bg-background rounded-xl border overflow-hidden">
-                  <div className="bg-primary/5 p-4 border-b">
+              <div className="flex-1 min-h-0 flex flex-col">
+                {/* Scrollable content */}
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                  {/* Email Preview */}
+                  <div className="bg-background rounded-xl border overflow-hidden">
+                    <div className="bg-primary/5 p-4 border-b">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="p-2 rounded-full bg-primary/10">
                         <Mail className="h-5 w-5 text-primary" />
@@ -283,21 +287,24 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                     <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">{mockEmail.content}</pre>
                   </ScrollArea>
                 </div>
+                </div>
 
-                {/* Run Button */}
-                <Button className="mt-4 w-full" size="lg" onClick={runAgentWorkflow} disabled={isRunning}>
-                  {isRunning ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing Email...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="mr-2 h-4 w-4" />
-                      Run Agent Analysis
-                    </>
-                  )}
-                </Button>
+                {/* Sticky footer */}
+                <div className="shrink-0 pt-4 bg-muted/30">
+                  <Button className="w-full" size="lg" onClick={runAgentWorkflow} disabled={isRunning}>
+                    {isRunning ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing Email...
+                      </>
+                    ) : (
+                      <>
+                        <Play className="mr-2 h-4 w-4" />
+                        Run Agent Analysis
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             )}
           </div>
@@ -324,8 +331,9 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
               </div>
 
               <TabsContent value="execution" className="flex-1 m-0 overflow-hidden min-h-0">
-                <ScrollArea className="h-full p-4 md:p-6">
-                  <h3 className="text-lg font-semibold mb-6">Multi-Agent Workflow</h3>
+                <ScrollArea className="h-full">
+                  <div className="p-4 md:p-6">
+                    <h3 className="text-lg font-semibold mb-6">Multi-Agent Workflow</h3>
 
                   <div className="flex gap-12 justify-center">
                     {/* Intent Classification Track */}
@@ -422,6 +430,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                       <p className="text-muted-foreground">Upload an email to start the agent workflow</p>
                     </div>
                   )}
+                  </div>
                 </ScrollArea>
               </TabsContent>
 
