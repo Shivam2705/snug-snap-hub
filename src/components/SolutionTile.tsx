@@ -28,7 +28,7 @@ const SolutionTile = ({
   accentColor = "blue"
 }: SolutionTileProps) => {
   return (
-    <Card className="group card-glow relative overflow-hidden bg-card/50 border-border/50 backdrop-blur-sm">
+    <Card className="group card-glow relative overflow-hidden bg-card/50 border-border/50 backdrop-blur-sm h-full flex flex-col">
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
@@ -48,12 +48,12 @@ const SolutionTile = ({
           </Badge>
         </div>
         <CardTitle className="text-xl font-semibold tracking-tight">{title}</CardTitle>
-        <CardDescription className="text-muted-foreground/80 line-clamp-2 leading-relaxed">
+        <CardDescription className="text-muted-foreground/80 leading-relaxed">
           {description}
         </CardDescription>
       </CardHeader>
       
-      <CardContent className="space-y-5 relative z-10">
+      <CardContent className="space-y-5 relative z-10 flex-1 flex flex-col justify-end">
         <div className="flex flex-wrap gap-2">
           {agents.slice(0, 4).map((agent, index) => (
             <Badge 
@@ -74,7 +74,7 @@ const SolutionTile = ({
           )}
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex gap-3 mt-auto">
           <Button asChild className="flex-1 group/btn bg-primary hover:bg-primary/90">
             <Link to={href}>
               Explore
