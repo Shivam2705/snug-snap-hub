@@ -162,6 +162,283 @@ const generateCAW001Timeline = (baseDate: Date): EvidenceItem[] => {
   ];
 };
 
+// Generate evidence timeline for CAW-2024-004 specifically (Sarah Davis)
+const generateCAW004Timeline = (baseDate: Date): EvidenceItem[] => {
+  return [
+    {
+      id: '1',
+      timestamp: baseDate.toISOString(),
+      actor: 'ai',
+      agentName: 'Case Intake Agent',
+      action: 'Case Intake - Fetched Customer Details from iGuide',
+      system: 'iGuide Mainframe',
+      result: 'Customer details retrieved successfully',
+      details: 'Notes reviewed in iGuide Mainframe.',
+      status: 'info'
+    },
+    {
+      id: '2',
+      timestamp: new Date(baseDate.getTime() + 2 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Case Intake Agent',
+      action: 'No Previous Investigator Activity Found',
+      system: 'iGuide Mainframe',
+      result: 'Case is new - no prior investigator notes',
+      details: 'Case sent to Customer Verification Agent.',
+      status: 'success'
+    },
+    {
+      id: '3',
+      timestamp: new Date(baseDate.getTime() + 5 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Customer Verification Agent',
+      action: 'Searched for Accounts using Address',
+      system: 'iGuide Mainframe',
+      result: '1 Account Found with the name \'Sarah Davis\'',
+      details: 'Address search completed in Mainframe.',
+      status: 'success'
+    },
+    {
+      id: '4',
+      timestamp: new Date(baseDate.getTime() + 7 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Customer Verification Agent',
+      action: 'Searched using Phone Number',
+      system: 'iGuide Mainframe',
+      result: '1 Account Found with the name \'Sarah Davis\'',
+      details: 'Customer Verified successfully on Mainframe. Case sent to Fraud Detection Agent.',
+      status: 'success'
+    },
+    {
+      id: '5',
+      timestamp: new Date(baseDate.getTime() + 10 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched using Address in CIFAS',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'No Result Found',
+      details: 'Initial address check against National Fraud Database.',
+      status: 'success'
+    },
+    {
+      id: '6',
+      timestamp: new Date(baseDate.getTime() + 12 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched using Phone Number in CIFAS',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'No Result Found',
+      details: 'Phone number not found in fraud database.',
+      status: 'success'
+    },
+    {
+      id: '7',
+      timestamp: new Date(baseDate.getTime() + 14 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched using combinations of Customer PII',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'No Result Found - No Fraud Detected',
+      details: 'Case sent to Address Verification Agent.',
+      status: 'success'
+    },
+    {
+      id: '8',
+      timestamp: new Date(baseDate.getTime() + 18 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Address Verification Agent',
+      action: 'Searched for Credit Report using TransUnion ID',
+      system: 'TransUnion Portal',
+      result: 'Name & DOB confirmed with Mainframe',
+      details: '2 addresses found: 20 Eluna Apartments, 4 Wapping Lane, E1W 2RG and 47, 45-47 Junction Road, N9 7JS.',
+      status: 'info'
+    },
+    {
+      id: '9',
+      timestamp: new Date(baseDate.getTime() + 22 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Address Verification Agent',
+      action: 'Searched for Mail order in Experian using reference ID',
+      system: 'Experian Portal',
+      result: 'Name & DOB confirmed with Mainframe',
+      details: '1 address found: 355 Montagu Road, N9 0EU. Case sent to Fraud Detection Agent with 3 addresses.',
+      status: 'info'
+    },
+    {
+      id: '10',
+      timestamp: new Date(baseDate.getTime() + 26 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched Address (20, Eluna Apartments, 4 Wapping Lane, E1W 2RG) in CIFAS',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'No Result Found',
+      details: 'First historical address clear.',
+      status: 'success'
+    },
+    {
+      id: '11',
+      timestamp: new Date(baseDate.getTime() + 28 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched Address (47, 45-47 Junction Road, N9 7JS) in CIFAS',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'No Result Found',
+      details: 'Second historical address clear.',
+      status: 'success'
+    },
+    {
+      id: '12',
+      timestamp: new Date(baseDate.getTime() + 30 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched Address (355 Montagu Road, N9 0EU) in CIFAS',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: '1 Result Found - Case 16218601',
+      details: 'CIFAS match: Applicant – False Identity (01) at 355 Montagu Road, N9 0EU.',
+      status: 'error'
+    },
+    {
+      id: '13',
+      timestamp: new Date(baseDate.getTime() + 33 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Fraud Detection Agent',
+      action: 'Searched for Phone Number & Email ID for Case 16218601',
+      system: 'CIFAS (find.cifas.org.uk)',
+      result: 'No Phone Number & Email ID found on CIFAS',
+      details: 'Case sent to Investigation Agent.',
+      status: 'warning'
+    },
+    {
+      id: '14',
+      timestamp: new Date(baseDate.getTime() + 37 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Investigation Agent',
+      action: 'Searched using Name & Address for Sarah Davis',
+      system: 'Investigation Database',
+      result: '1 result found',
+      details: 'Phone Number: 01406860876, Email ID: sarahdavis1234@gmail.com.',
+      status: 'info'
+    },
+    {
+      id: '15',
+      timestamp: new Date(baseDate.getTime() + 40 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Investigation Agent',
+      action: 'Matched Phone Number & Email ID with iGuide Mainframe',
+      system: 'iGuide Mainframe',
+      result: 'Verification Successful',
+      details: 'Case sent to Communication Agent.',
+      status: 'success'
+    },
+    {
+      id: '16',
+      timestamp: new Date(baseDate.getTime() + 45 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Communication Agent',
+      action: 'Sent SMS to customer (01406860876)',
+      system: 'iGuide Mainframe',
+      result: 'Text message sent successfully',
+      details: 'Customer notification via SMS initiated.',
+      status: 'success'
+    },
+    {
+      id: '17',
+      timestamp: new Date(baseDate.getTime() + 48 * 60000).toISOString(),
+      actor: 'ai',
+      agentName: 'Communication Agent',
+      action: 'Created Ticket in Zendesk and sent Email to sarahdavis1234@gmail.com',
+      system: 'Zendesk',
+      result: 'Email sent and ticket created',
+      details: 'Notes updated in Zendesk. Awaiting customer response.',
+      status: 'success'
+    }
+  ];
+};
+
+// Generate activity log for CAW-2024-004 specifically
+const generateCAW004ActivityLog = (baseDate: Date): ActivityLogItem[] => {
+  return [
+    {
+      id: '1',
+      timestamp: baseDate.toISOString(),
+      actor: 'ai',
+      actorName: 'Case Intake Agent',
+      action: 'Case received - Fetched customer details from iGuide Mainframe',
+      category: 'check'
+    },
+    {
+      id: '2',
+      timestamp: new Date(baseDate.getTime() + 2 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Case Intake Agent',
+      action: 'No previous investigator activity found - Case forwarded to verification',
+      category: 'decision'
+    },
+    {
+      id: '3',
+      timestamp: new Date(baseDate.getTime() + 7 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Customer Verification Agent',
+      action: 'Customer verified successfully using address and phone number lookup',
+      category: 'check',
+      beforeState: 'Unverified',
+      afterState: 'Verified'
+    },
+    {
+      id: '4',
+      timestamp: new Date(baseDate.getTime() + 14 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Fraud Detection Agent',
+      action: 'Initial CIFAS check completed - No fraud detected on primary PII',
+      category: 'check'
+    },
+    {
+      id: '5',
+      timestamp: new Date(baseDate.getTime() + 22 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Address Verification Agent',
+      action: 'Retrieved 3 historical addresses from TransUnion and Experian portals',
+      category: 'check'
+    },
+    {
+      id: '6',
+      timestamp: new Date(baseDate.getTime() + 30 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Fraud Detection Agent',
+      action: 'CIFAS match found - Case 16218601: False Identity (01) at 355 Montagu Road',
+      category: 'check',
+      beforeState: 'Clear',
+      afterState: 'CIFAS Match Found'
+    },
+    {
+      id: '7',
+      timestamp: new Date(baseDate.getTime() + 40 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Investigation Agent',
+      action: 'Phone and Email verified against iGuide Mainframe',
+      category: 'check'
+    },
+    {
+      id: '8',
+      timestamp: new Date(baseDate.getTime() + 48 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'Communication Agent',
+      action: 'Customer contacted via SMS and Zendesk email - Awaiting response',
+      category: 'communication',
+      beforeState: 'Pending Contact',
+      afterState: 'Awaiting Customer'
+    },
+    {
+      id: '9',
+      timestamp: new Date(baseDate.getTime() + 50 * 60000).toISOString(),
+      actor: 'ai',
+      actorName: 'AI Recommendation Engine',
+      action: 'Case recommendation generated: Awaiting Customer Information (95% confidence)',
+      category: 'decision'
+    }
+  ];
+};
+
 // Generate evidence timeline for cases
 const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem[] => {
   const baseDate = new Date(caseData.receivedDateTime || new Date());
@@ -169,6 +446,11 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
   // Special handling for CAW-2024-001
   if (caseData.caseId === 'CAW-2024-001') {
     return generateCAW001Timeline(baseDate);
+  }
+
+  // Special handling for CAW-2024-004 (Sarah Davis)
+  if (caseData.caseId === 'CAW-2024-004') {
+    return generateCAW004Timeline(baseDate);
   }
   
   const timeline: EvidenceItem[] = [];
@@ -256,8 +538,14 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
 
 // Generate activity log
 const generateActivityLog = (caseData: Partial<CustomerCase>): ActivityLogItem[] => {
-  const log: ActivityLogItem[] = [];
   const baseDate = new Date(caseData.receivedDateTime || new Date());
+
+  // Special handling for CAW-2024-004 (Sarah Davis)
+  if (caseData.caseId === 'CAW-2024-004') {
+    return generateCAW004ActivityLog(baseDate);
+  }
+
+  const log: ActivityLogItem[] = [];
 
   log.push({
     id: '1',
@@ -416,29 +704,30 @@ const baseCases = [
     firstName: "Sarah",
     lastName: "Davis",
     birthDate: "1995-02-28",
-    emailAddress: "sarah.d@yahoo.com",
-    mobileNumber: "+44 7700 900012",
+    emailAddress: "sarahdavis1234@gmail.com",
+    mobileNumber: "01406860876",
     address: "12 Garden View, Leeds, LS1 4EF",
-    cifas: false,
+    cifas: true,
     noc: false,
     authenticateCode: 2 as const,
     zown: false,
     receivedDateTime: "2024-01-15T12:30:00",
     completionDateTime: null,
-    assignTo: "Unassigned",
-    status: "Not Started" as CaseStatus,
+    assignTo: "AI Agent",
+    status: "Awaiting Customer" as CaseStatus,
     queue: "day-0" as QueueType,
+    aiSummary: "Customer verification completed. CIFAS match found (Case 16218601) for False Identity at historical address 355 Montagu Road. Customer contacted via SMS and Zendesk email for additional documentation.",
     aiRecommendation: {
       action: 'await' as RecommendationAction,
       label: 'Awaiting Customer Information',
-      reasoning: 'Additional documentation required to verify identity. Customer contact initiated to request proof of address.',
+      reasoning: 'Additional documentation required to verify identity. CIFAS record found at historical address requires customer clarification.',
       supportingEvidence: [
-        'No CIFAS record found',
-        'Address verification: Partial match - requires confirmation',
-        'DOB match: Confirmed across all sources'
+        '1 CIFAS record found - Case 16218601: False Identity (01)',
+        'DOB Match confirmed across all sources',
+        'Customer contacted via SMS (01406860876) and Email (sarahdavis1234@gmail.com)'
       ]
     },
-    confidenceScore: 65
+    confidenceScore: 95
   },
   {
     caseId: "CAW-2024-005",
