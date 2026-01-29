@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -215,10 +216,13 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[85vw] w-[85vw] h-[85vh] p-0 gap-0 overflow-hidden">
-        <div className="flex h-full">
+      <DialogContent className="max-w-[85vw] w-[85vw] h-[85vh] max-h-[85vh] p-0 gap-0 flex flex-col" aria-describedby={undefined}>
+        <VisuallyHidden>
+          <DialogTitle>Email Assist Agent</DialogTitle>
+        </VisuallyHidden>
+        <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Left Column - Email Upload (1/3) */}
-          <div className="w-1/3 border-r bg-muted/30 p-6 flex flex-col">
+          <div className="w-1/3 border-r bg-muted/30 p-4 md:p-6 flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-xl font-semibold">Email Assist Agent</h2>
@@ -275,7 +279,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                       </div>
                     </div>
                   </div>
-                  <ScrollArea className="h-[300px] p-4">
+                  <ScrollArea className="h-[200px] md:h-[300px] p-4">
                     <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">{mockEmail.content}</pre>
                   </ScrollArea>
                 </div>
@@ -299,7 +303,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
           </div>
 
           {/* Right Column - Tabs (2/3) */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
               <div className="border-b px-6 pt-4">
                 <TabsList className="grid w-full max-w-md grid-cols-2">
@@ -319,7 +323,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                 </TabsList>
               </div>
 
-              <TabsContent value="execution" className="flex-1 m-0 p-6 overflow-auto">
+              <TabsContent value="execution" className="flex-1 m-0 p-4 md:p-6 overflow-y-auto min-h-0">
                 <div className="h-full">
                   <h3 className="text-lg font-semibold mb-6">Multi-Agent Workflow</h3>
 
@@ -421,7 +425,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="results" className="flex-1 m-0 p-6">
+              <TabsContent value="results" className="flex-1 m-0 p-4 md:p-6 overflow-y-auto min-h-0">
                 {executionComplete ? (
                   <div className="space-y-6">
                     <div className="flex items-center gap-3 mb-8">
