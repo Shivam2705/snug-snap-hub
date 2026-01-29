@@ -21,7 +21,7 @@ const Header = () => {
             Home
           </Link>
           <Link to="/cawao" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            CAWAO Process
+            CAWAO-Schedule
           </Link>
           <Link to="/marketing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Marketing Agents

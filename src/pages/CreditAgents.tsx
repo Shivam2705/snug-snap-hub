@@ -58,7 +58,7 @@ const CreditAgents = () => {
               </div>
               <h1 className="text-2xl md:text-3xl font-bold mb-2">Credit Account Investigation Agents</h1>
               <p className="text-muted-foreground max-w-2xl">
-                Our CAWAO (Credit Account Without Any Order) investigation suite uses specialized AI agents 
+                Our CAWAO-Schedule (Credit Account Without Any Order) investigation suite uses specialized AI agents 
                 to detect potential fraud through multi-step verification workflows.
               </p>
             </div>

@@ -18,10 +18,10 @@ const FlagBadge = ({ type, value, size = 'sm' }: FlagBadgeProps) => {
   };
 
   const activeColorMap = {
-    cifas: 'bg-rose-50 text-rose-700 border-rose-200',
-    noc: 'bg-amber-50 text-amber-700 border-amber-200',
-    zown: 'bg-blue-50 text-blue-700 border-blue-200',
-    auth: 'bg-slate-100 text-slate-700 border-slate-200'
+    cifas: 'bg-[#FF4757]/10 text-[#FF4757] border-[#FF4757]/20',
+    noc: 'bg-[#FFA502]/10 text-[#FFA502] border-[#FFA502]/20',
+    zown: 'bg-[#4DA3FF]/10 text-[#4DA3FF] border-[#4DA3FF]/20',
+    auth: 'bg-slate-500/10 text-slate-400 border-slate-500/20'
   };
 
   const sizeMap = {
