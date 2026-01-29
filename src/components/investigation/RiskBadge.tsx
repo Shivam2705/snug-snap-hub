@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { RiskLevel } from "@/data/mockCases";
 import { cn } from "@/lib/utils";
+import { AlertTriangle, AlertCircle, CheckCircle } from "lucide-react";
 
 interface RiskBadgeProps {
   level: RiskLevel;
@@ -11,9 +12,15 @@ interface RiskBadgeProps {
 
 const RiskBadge = ({ level, score, showScore = true, size = 'md' }: RiskBadgeProps) => {
   const colorMap = {
-    low: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    medium: 'bg-amber-100 text-amber-700 border-amber-200',
-    high: 'bg-rose-100 text-rose-700 border-rose-200'
+    low: 'bg-[#2ED573]/10 text-[#2ED573] border-[#2ED573]/20',
+    medium: 'bg-[#FFA502]/10 text-[#FFA502] border-[#FFA502]/20',
+    high: 'bg-[#FF4757]/10 text-[#FF4757] border-[#FF4757]/20'
+  };
+
+  const iconMap = {
+    low: CheckCircle,
+    medium: AlertCircle,
+    high: AlertTriangle
   };
 
   const sizeMap = {
@@ -22,16 +29,19 @@ const RiskBadge = ({ level, score, showScore = true, size = 'md' }: RiskBadgePro
     lg: 'text-base px-3 py-1.5'
   };
 
+  const Icon = iconMap[level];
+
   return (
     <Badge 
       variant="outline" 
       className={cn(
         colorMap[level],
         sizeMap[size],
-        'font-medium capitalize border'
+        'font-medium capitalize border gap-1'
       )}
     >
-      {showScore && score !== undefined ? `${score}% ${level}` : level}
+      <Icon className="h-3 w-3" />
+      {showScore && score !== undefined ? `${level} (${score})` : level}
     </Badge>
   );
 };

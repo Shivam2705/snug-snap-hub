@@ -183,7 +183,7 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <SolutionTile title="Agentic Repository" description="Comprehensive library of multi-modal AI agents for text processing, visual analysis, and voice interactions—your foundation for intelligent automation." agents={repositoryAgents} icon={Layers} href="/base-agents" />
             
-            <SolutionTile title="CAWAO" description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation." agents={cawaoAgents} icon={Shield} href="/cawao/agents" processHref="/cawao" />
+            <SolutionTile title="CAWAO-Schedule" description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation." agents={cawaoAgents} icon={Shield} href="/cawao/agents" processHref="/cawao" />
             
             <SolutionTile title="Hyper Personalized Marketing" description="Analyze customer demographics and buying trends to deliver highly personalized product recommendations and drive engagement." agents={marketingAgents} icon={ShoppingBag} href="/marketing/agents" processHref="/marketing" />
           </div>

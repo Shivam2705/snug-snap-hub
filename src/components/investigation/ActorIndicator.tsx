@@ -29,19 +29,19 @@ const ActorIndicator = ({ actor, size = 'md', showLabel = false }: ActorIndicato
         className={cn(
           'rounded-full flex items-center justify-center',
           containerSizeMap[size],
-          isAI ? 'bg-violet-100' : 'bg-sky-100'
+          isAI ? 'bg-[#4DA3FF]/10' : 'bg-[#2ED573]/10'
         )}
       >
         {isAI ? (
-          <Bot className={cn(sizeMap[size], 'text-violet-600')} />
+          <Bot className={cn(sizeMap[size], 'text-[#4DA3FF]')} />
         ) : (
-          <User className={cn(sizeMap[size], 'text-sky-600')} />
+          <User className={cn(sizeMap[size], 'text-[#2ED573]')} />
         )}
       </div>
       {showLabel && (
         <span className={cn(
           'font-medium',
-          isAI ? 'text-violet-600' : 'text-sky-600'
+          isAI ? 'text-[#4DA3FF]' : 'text-[#2ED573]'
         )}>
           {isAI ? 'AI Agent' : 'Human'}
         </span>
