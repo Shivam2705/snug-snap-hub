@@ -323,8 +323,8 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                 </TabsList>
               </div>
 
-              <TabsContent value="execution" className="flex-1 m-0 p-4 md:p-6 overflow-y-auto min-h-0">
-                <div className="h-full">
+              <TabsContent value="execution" className="flex-1 m-0 overflow-hidden min-h-0">
+                <ScrollArea className="h-full p-4 md:p-6">
                   <h3 className="text-lg font-semibold mb-6">Multi-Agent Workflow</h3>
 
                   <div className="flex gap-12 justify-center">
@@ -422,7 +422,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                       <p className="text-muted-foreground">Upload an email to start the agent workflow</p>
                     </div>
                   )}
-                </div>
+                </ScrollArea>
               </TabsContent>
 
               <TabsContent value="results" className="flex-1 m-0 p-4 md:p-6 overflow-y-auto min-h-0">
