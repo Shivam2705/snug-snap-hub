@@ -91,7 +91,7 @@ const Index = () => {
               <span className="text-foreground font-display">NEXT</span>{" "}
               <span className="text-gradient-primary">Agentic AI</span>
               <br />
-              <span className="text-foreground">Platform</span>
+              <span className="text-gradient-primary">Platform</span>
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
