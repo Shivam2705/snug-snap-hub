@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -216,14 +215,11 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[85vw] w-[85vw] h-[85vh] max-h-[85vh] p-0 gap-0 flex flex-col" aria-describedby={undefined}>
-        <VisuallyHidden>
-          <DialogTitle>Email Assist Agent</DialogTitle>
-        </VisuallyHidden>
-        <div className="flex flex-1 min-h-0 overflow-hidden">
+      <DialogContent className="max-w-[85vw] w-[85vw] h-[85vh] p-0 gap-0 overflow-hidden">
+        <div className="flex h-full">
           {/* Left Column - Email Upload (1/3) */}
-          <div className="w-1/3 border-r bg-muted/30 p-4 md:p-6 flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between mb-6 shrink-0">
+          <div className="w-1/3 border-r bg-muted/30 p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-xl font-semibold">Email Assist Agent</h2>
                 <p className="text-sm text-muted-foreground mt-1">Upload .eml file to analyze</p>
@@ -235,30 +231,26 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
             {/* Upload Area */}
             {!emailUploaded ? (
-              <div className="flex-1 min-h-0 overflow-y-auto">
-                <div
-                  onClick={handleUploadEmail}
-                  className="h-full border-2 border-dashed border-muted-foreground/30 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
-                >
-                  <div className="p-4 rounded-full bg-primary/10">
-                    <Upload className="h-8 w-8 text-primary" />
-                  </div>
-                  <div className="text-center">
-                    <p className="font-medium">Upload .eml file</p>
-                    <p className="text-sm text-muted-foreground mt-1">Click to upload or drag and drop</p>
-                  </div>
-                  <Badge variant="outline" className="mt-2">
-                    Supports .eml format
-                  </Badge>
+              <div
+                onClick={handleUploadEmail}
+                className="flex-1 border-2 border-dashed border-muted-foreground/30 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
+              >
+                <div className="p-4 rounded-full bg-primary/10">
+                  <Upload className="h-8 w-8 text-primary" />
                 </div>
+                <div className="text-center">
+                  <p className="font-medium">Upload .eml file</p>
+                  <p className="text-sm text-muted-foreground mt-1">Click to upload or drag and drop</p>
+                </div>
+                <Badge variant="outline" className="mt-2">
+                  Supports .eml format
+                </Badge>
               </div>
             ) : (
-              <div className="flex-1 min-h-0 flex flex-col">
-                {/* Scrollable content */}
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  {/* Email Preview */}
-                  <div className="bg-background rounded-xl border overflow-hidden">
-                    <div className="bg-primary/5 p-4 border-b">
+              <div className="flex-1 flex flex-col">
+                {/* Email Preview */}
+                <div className="flex-1 bg-background rounded-xl border overflow-hidden">
+                  <div className="bg-primary/5 p-4 border-b">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="p-2 rounded-full bg-primary/10">
                         <Mail className="h-5 w-5 text-primary" />
@@ -283,34 +275,31 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                       </div>
                     </div>
                   </div>
-                  <ScrollArea className="h-[200px] md:h-[300px] p-4">
+                  <ScrollArea className="h-[300px] p-4">
                     <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">{mockEmail.content}</pre>
                   </ScrollArea>
                 </div>
-                </div>
 
-                {/* Sticky footer */}
-                <div className="shrink-0 pt-4 bg-muted/30">
-                  <Button className="w-full" size="lg" onClick={runAgentWorkflow} disabled={isRunning}>
-                    {isRunning ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing Email...
-                      </>
-                    ) : (
-                      <>
-                        <Play className="mr-2 h-4 w-4" />
-                        Run Agent Analysis
-                      </>
-                    )}
-                  </Button>
-                </div>
+                {/* Run Button */}
+                <Button className="mt-4 w-full" size="lg" onClick={runAgentWorkflow} disabled={isRunning}>
+                  {isRunning ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing Email...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="mr-2 h-4 w-4" />
+                      Run Agent Analysis
+                    </>
+                  )}
+                </Button>
               </div>
             )}
           </div>
 
           {/* Right Column - Tabs (2/3) */}
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          <div className="flex-1 flex flex-col">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
               <div className="border-b px-6 pt-4">
                 <TabsList className="grid w-full max-w-md grid-cols-2">
@@ -330,10 +319,9 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                 </TabsList>
               </div>
 
-              <TabsContent value="execution" className="flex-1 m-0 overflow-hidden min-h-0">
-                <ScrollArea className="h-full">
-                  <div className="p-4 md:p-6">
-                    <h3 className="text-lg font-semibold mb-6">Multi-Agent Workflow</h3>
+              <TabsContent value="execution" className="flex-1 m-0 p-6 overflow-auto">
+                <div className="h-full">
+                  <h3 className="text-lg font-semibold mb-6">Multi-Agent Workflow</h3>
 
                   <div className="flex gap-12 justify-center">
                     {/* Intent Classification Track */}
@@ -430,11 +418,10 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                       <p className="text-muted-foreground">Upload an email to start the agent workflow</p>
                     </div>
                   )}
-                  </div>
-                </ScrollArea>
+                </div>
               </TabsContent>
 
-              <TabsContent value="results" className="flex-1 m-0 p-4 md:p-6 overflow-y-auto min-h-0">
+              <TabsContent value="results" className="flex-1 m-0 p-6">
                 {executionComplete ? (
                   <div className="space-y-6">
                     <div className="flex items-center gap-3 mb-8">
