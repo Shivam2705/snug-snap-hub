@@ -1,32 +1,25 @@
 import Header from "@/components/Header";
-import ProcessTile from "@/components/ProcessTile";
-import { Brain, Shield, Sparkles, TrendingUp, Users, Zap, FileText, Image, Mic, ShoppingBag } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import SolutionTile from "@/components/SolutionTile";
+import PartnerSlider from "@/components/PartnerSlider";
+import { Brain, Shield, Sparkles, FileText, Image, Mic, ShoppingBag, Layers, Cpu, Zap, Database } from "lucide-react";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Index = () => {
-  // Base Agents - Text
-  const textAgents = [
+  // Agentic Repository - consolidates all base agents
+  const repositoryAgents = [
     { name: "Email Assist Agent" },
     { name: "Invoice Agent" },
     { name: "Text Extraction Agent" },
-    { name: "Knowledge Assist Agent" }
-  ];
-
-  // Base Agents - Image
-  const imageAgents = [
+    { name: "Knowledge Assist Agent" },
     { name: "Product Recommendation Agent" },
     { name: "Image Extraction Agent" },
-    { name: "Buyer Assist Agent" }
-  ];
-
-  // Base Agents - Voice
-  const voiceAgents = [
+    { name: "Buyer Assist Agent" },
     { name: "i-Assist" },
     { name: "i-Audit" }
   ];
 
-  // NEXT Specific Processes
-  const creditAgents = [
+  // CAWAO Agents
+  const cawaoAgents = [
     { name: "Customer Verification" },
     { name: "Fraud Detection" },
     { name: "Address Verification" },
@@ -34,6 +27,7 @@ const Index = () => {
     { name: "Messaging Agent" }
   ];
 
+  // Marketing Agents
   const marketingAgents = [
     { name: "Customer 360° Intelligence" },
     { name: "Hyper-Personalized Apparel" },
@@ -44,47 +38,72 @@ const Index = () => {
     { name: "Loyalty & Lifecycle" }
   ];
 
+  // Multi-modal capabilities
+  const capabilities = [
+    {
+      icon: FileText,
+      title: "Text Intelligence",
+      description: "Process documents, emails, and invoices with advanced NLP for extraction, validation, and knowledge assistance."
+    },
+    {
+      icon: Image,
+      title: "Visual Recognition",
+      description: "Analyze images for product recommendations, extract visual data, and identify fashion trends."
+    },
+    {
+      icon: Mic,
+      title: "Voice Analytics",
+      description: "Transcribe and analyze voice interactions, perform sentiment analysis, and ensure compliance."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b bg-card">
-        <div className="absolute inset-0 gradient-exl opacity-5" />
-        <div className="container py-16 md:py-24 relative">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
+      <section className="relative overflow-hidden border-b border-border/50">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        
+        {/* Radial gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.08)_0%,transparent_70%)]" />
+        
+        <div className="container py-24 md:py-32 relative">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-8 animate-pulse-subtle">
               <Sparkles className="h-4 w-4" />
-              NEXT Agentic AI Platform
+              Autonomous Intelligence Platform
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              <span className="text-gradient-exl">NEXT Agentic AI</span>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8">
+              <span className="text-gradient-primary">NEXT Agentic AI</span>
               <br />
               <span className="text-foreground">Platform</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-              Empowering NEXT with intelligent AI agents that automate complex workflows, 
-              enhance decision-making, and deliver measurable business outcomes across 
-              customer service, fraud detection, and personalized marketing operations.
+            
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Luxury retail meets autonomous intelligence. Empowering NEXT with AI agents 
+              that automate complex workflows, enhance decision-making, and deliver 
+              measurable business outcomes with precision and elegance.
             </p>
           </div>
           
-          {/* Floating elements */}
-          <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden lg:block">
+          {/* Floating AI elements */}
+          <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden xl:block">
             <div className="relative">
-              <div className="absolute -inset-4 gradient-exl opacity-20 blur-3xl rounded-full" />
-              <div className="relative grid grid-cols-2 gap-4">
-                <div className="h-20 w-20 rounded-2xl bg-card border shadow-lg flex items-center justify-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                  <Brain className="h-10 w-10 text-primary" />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '0s' }}>
+                  <Brain className="h-8 w-8 text-primary" />
                 </div>
-                <div className="h-20 w-20 rounded-2xl bg-card border shadow-lg flex items-center justify-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                  <Shield className="h-10 w-10 text-accent" />
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '1s' }}>
+                  <Cpu className="h-8 w-8 text-primary/80" />
                 </div>
-                <div className="h-20 w-20 rounded-2xl bg-card border shadow-lg flex items-center justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                  <FileText className="h-10 w-10 text-warning" />
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '2s' }}>
+                  <Database className="h-8 w-8 text-primary/60" />
                 </div>
-                <div className="h-20 w-20 rounded-2xl bg-card border shadow-lg flex items-center justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-                  <Zap className="h-10 w-10 text-success" />
+                <div className="h-16 w-16 rounded-xl bg-card/80 border border-border/50 flex items-center justify-center animate-float glow-primary-hover" style={{ animationDelay: '3s' }}>
+                  <Zap className="h-8 w-8 text-primary/70" />
                 </div>
               </div>
             </div>
@@ -92,138 +111,102 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Platform Overview Section */}
-      <section className="container py-12 md:py-16">
-        <div className="mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">Platform Overview</h2>
-          <p className="text-muted-foreground max-w-3xl">
-            A comprehensive suite of AI-powered agents designed to transform NEXT's operations, 
-            delivering automation, intelligence, and efficiency across every business function.
+      {/* Partner Slider */}
+      <PartnerSlider />
+
+      {/* Multi-Modal Agentic Capabilities */}
+      <section className="container py-20 md:py-28">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="inline-flex items-center gap-2 rounded-full bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground mb-4">
+            Foundation Layer
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Multi-Modal Agentic Capabilities
+          </h2>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            Our autonomous agents perceive the world through text, vision, and voice—processing 
+            information across modalities to deliver comprehensive, context-aware intelligence.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
-          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
-                <TrendingUp className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">Intelligent Automation</CardTitle>
-              <CardDescription>
-                Autonomous agents that learn, adapt, and execute complex workflows without human intervention.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          
-          <Card className="border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center mb-2">
-                <Users className="h-6 w-6 text-accent" />
-              </div>
-              <CardTitle className="text-lg">Human-AI Collaboration</CardTitle>
-              <CardDescription>
-                Seamless integration between AI agents and human experts for optimal decision-making.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          
-          <Card className="border-success/20 bg-gradient-to-br from-success/5 to-transparent">
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-success/10 flex items-center justify-center mb-2">
-                <Zap className="h-6 w-6 text-success" />
-              </div>
-              <CardTitle className="text-lg">Real-time Processing</CardTitle>
-              <CardDescription>
-                Process thousands of cases simultaneously with sub-second response times.
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {capabilities.map((cap, index) => (
+            <Card 
+              key={index} 
+              className="card-glow bg-card/30 border-border/50 text-center"
+            >
+              <CardHeader className="pb-4">
+                <div className="h-14 w-14 rounded-xl gradient-primary flex items-center justify-center mx-auto mb-4 glow-primary">
+                  <cap.icon className="h-7 w-7 text-white" />
+                </div>
+                <CardTitle className="text-lg">{cap.title}</CardTitle>
+                <CardDescription className="text-muted-foreground/80 leading-relaxed">
+                  {cap.description}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
         </div>
       </section>
 
-      {/* Base Agents Section */}
-      <section className="bg-muted/30 border-y">
-        <div className="container py-12 md:py-16">
-          <div className="mb-10">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
-              Foundation Layer
+      {/* Our Solutions */}
+      <section className="border-y border-border/50 bg-card/20">
+        <div className="container py-20 md:py-28">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary mb-4">
+              Enterprise Solutions
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">Base Agents</h2>
-            <p className="text-muted-foreground max-w-3xl">
-              Core AI agents that provide fundamental capabilities for document processing, 
-              image analysis, and voice interactions—building blocks for enterprise automation.
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Our Solutions
+            </h2>
+            <p className="text-muted-foreground text-lg leading-relaxed">
+              Purpose-built agentic solutions designed for NEXT's unique business challenges—from 
+              fraud detection to hyper-personalized customer experiences.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            <ProcessTile
-              title="Text Agents"
-              description="Process emails, invoices, and documents with intelligent extraction, validation, and knowledge assistance capabilities."
-              agents={textAgents}
-              icon={FileText}
-              href="/base-agents?filter=text"
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <SolutionTile
+              title="Agentic Repository"
+              description="Comprehensive library of multi-modal AI agents for text processing, visual analysis, and voice interactions—your foundation for intelligent automation."
+              agents={repositoryAgents}
+              icon={Layers}
+              href="/base-agents"
             />
             
-            <ProcessTile
-              title="Image Agents"
-              description="Analyze images for product recommendations, extract visual information, and identify fashion trends for buying decisions."
-              agents={imageAgents}
-              icon={Image}
-              href="/base-agents?filter=image"
+            <SolutionTile
+              title="CAWAO"
+              description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation."
+              agents={cawaoAgents}
+              icon={Shield}
+              href="/cawao/agents"
+              processHref="/cawao"
             />
-
-            <ProcessTile
-              title="Voice Agents"
-              description="Transcribe and analyze voice interactions, perform post-call analysis, and identify customer sentiment and compliance issues."
-              agents={voiceAgents}
-              icon={Mic}
-              href="/base-agents?filter=voice"
+            
+            <SolutionTile
+              title="Hyper Personalized Marketing"
+              description="Analyze customer demographics and buying trends to deliver highly personalized product recommendations and drive engagement."
+              agents={marketingAgents}
+              icon={ShoppingBag}
+              href="/marketing/agents"
+              processHref="/marketing"
             />
           </div>
-        </div>
-      </section>
-
-      {/* NEXT Agents Section */}
-      <section className="container py-12 md:py-16">
-        <div className="mb-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent mb-3">
-            NEXT Specific
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">NEXT Agents</h2>
-          <p className="text-muted-foreground max-w-3xl">
-            Purpose-built AI agent workflows tailored for NEXT's specific business processes, 
-            delivering end-to-end automation for credit investigation and personalized marketing.
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <ProcessTile
-            title="CAWAO (Credit Account Investigation)"
-            description="Investigate credit accounts without orders through multi-agent verification workflows. Detect potential fraud with AI-powered analysis of CIFAS markers, authentication codes, and customer data validation."
-            agents={creditAgents}
-            icon={Shield}
-            href="/cawao/agents"
-            processHref="/cawao"
-          />
-          
-          <ProcessTile
-            title="Hyper Personalized Marketing"
-            description="Analyze customer demographics and past buying trends from NEXT.co.uk to deliver highly personalized product recommendations, driving customer engagement and conversion rates."
-            agents={marketingAgents}
-            icon={ShoppingBag}
-            href="/marketing/agents"
-            processHref="/marketing"
-          />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-card">
-        <div className="container py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-primary" />
-              <span className="font-semibold">NEXT Agentic AI Platform</span>
+      <footer className="border-t border-border/50">
+        <div className="container py-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg gradient-primary flex items-center justify-center glow-primary">
+                <Brain className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <span className="font-semibold text-foreground">NEXT Agentic AI</span>
+                <span className="text-muted-foreground text-sm ml-2">Platform</span>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">
               © 2024 EXL Service. All rights reserved.
