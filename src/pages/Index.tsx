@@ -171,13 +171,9 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary mb-4">
               Enterprise Solutions
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Our Solutions
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              Purpose-built agentic solutions designed for NEXT's unique business challenges—from 
-              fraud detection to hyper-personalized customer experiences.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Agentic Suite for NEXT</h2>
+            <p className="text-muted-foreground text-lg leading-relaxed">Purpose-built agentic solutions designed for NEXT's unique business challenges. 
+Agentic Processes, Powered by the 3R Ideology - Repurposed Intelligence, Reusable Processes, Responsible Automation.</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
