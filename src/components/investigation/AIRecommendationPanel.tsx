@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bot, CheckCircle2, AlertTriangle, Phone, Ban } from "lucide-react";
-import { CustomerCase, RecommendationAction } from "@/data/mockCases";
+import { Bot, CheckCircle2, AlertTriangle, Phone, Ban, MessageSquare, Mail, Send, Loader2 } from "lucide-react";
+import { CustomerCase, RecommendationAction, EvidenceAction } from "@/data/mockCases";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface AIRecommendationPanelProps {
   caseData: CustomerCase;
@@ -16,6 +17,9 @@ const actionConfig: Record<RecommendationAction, { icon: React.ElementType; colo
 };
 
 const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
+  const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
+  const [loadingActions, setLoadingActions] = useState<Set<string>>(new Set());
+
   const confidenceLevel = caseData.confidenceScore && caseData.confidenceScore >= 85 
     ? 'high' 
     : caseData.confidenceScore && caseData.confidenceScore >= 60 
@@ -38,9 +42,32 @@ const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
     toast.success(`Action "${action}" executed for case ${caseData.caseId}`);
   };
 
+  const handleAgentAction = async (action: EvidenceAction) => {
+    setLoadingActions(prev => new Set(prev).add(action.id));
+    
+    // Simulate sending
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    setLoadingActions(prev => {
+      const next = new Set(prev);
+      next.delete(action.id);
+      return next;
+    });
+    
+    setCompletedActions(prev => new Set(prev).add(action.id));
+    
+    const actionLabel = action.type === 'sms' ? 'Text message' : 'Email';
+    toast.success(`${actionLabel} sent to ${action.target}`);
+  };
+
   const recommendation = caseData.aiRecommendation;
   const config = recommendation ? actionConfig[recommendation.action] : null;
   const ActionIcon = config?.icon || Bot;
+
+  // Extract interactive actions from evidence timeline
+  const agentRecommendedActions = caseData.evidenceTimeline
+    ?.filter(item => item.interactiveAction)
+    .map(item => item.interactiveAction!) || [];
 
   // For completed cases, don't show action buttons
   const isCompleted = caseData.status === 'Completed';
@@ -101,6 +128,73 @@ const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* Agent Recommended Actions */}
+        {agentRecommendedActions.length > 0 && (
+          <div className="space-y-3 pt-2 border-t border-[#12151B]">
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              Agent Recommended Actions
+            </span>
+            <div className="space-y-2">
+              {agentRecommendedActions.map((action) => {
+                const isLoading = loadingActions.has(action.id);
+                const isCompleted = completedActions.has(action.id);
+                const Icon = action.type === 'sms' ? MessageSquare : Mail;
+                
+                return (
+                  <div 
+                    key={action.id}
+                    className="flex items-center justify-between p-3 rounded-lg bg-[#12151B] border border-[#1a1f28]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "p-2 rounded-lg",
+                        action.type === 'sms' ? 'bg-[#2ED573]/10' : 'bg-[#4DA3FF]/10'
+                      )}>
+                        <Icon className={cn(
+                          "h-4 w-4",
+                          action.type === 'sms' ? 'text-[#2ED573]' : 'text-[#4DA3FF]'
+                        )} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{action.label}</p>
+                        <p className="text-xs text-slate-500">{action.target}</p>
+                      </div>
+                    </div>
+                    
+                    {isCompleted ? (
+                      <div className="flex items-center gap-1.5 text-[#2ED573]">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span className="text-xs font-medium">Sent</span>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        disabled={isLoading}
+                        onClick={() => handleAgentAction(action)}
+                        className={cn(
+                          "h-8",
+                          action.type === 'sms' 
+                            ? 'bg-[#2ED573] hover:bg-[#2ED573]/90 text-black' 
+                            : 'bg-[#4DA3FF] hover:bg-[#4DA3FF]/90 text-white'
+                        )}
+                      >
+                        {isLoading ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <>
+                            <Send className="h-3 w-3 mr-1" />
+                            Send
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
