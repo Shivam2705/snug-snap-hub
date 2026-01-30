@@ -66,8 +66,8 @@ const Index = () => {
     description: "EXL's Visual AI powers intelligent image recognition, product attribute extraction, visual search, and fashion trend analysis for seamless retail experiences."
   }, {
     icon: Mic,
-    title: "Voice Analytics",
-    description: "Transcribe and analyze voice interactions, perform sentiment analysis, and ensure compliance."
+    title: "Voice AI",
+    description: "EXL's Voice AI delivers real-time transcription, sentiment analysis, compliance monitoring, and conversational intelligence for enhanced customer interactions."
   }];
   return <div className="min-h-screen bg-background">
       <Header />
