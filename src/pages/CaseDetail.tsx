@@ -7,6 +7,7 @@ import CustomerDetailsPanel from "@/components/investigation/CustomerDetailsPane
 import AIRecommendationPanel from "@/components/investigation/AIRecommendationPanel";
 import EvidenceTimeline from "@/components/investigation/EvidenceTimeline";
 import ActivityLog from "@/components/investigation/ActivityLog";
+import AgentPlaybook from "@/components/investigation/AgentPlaybook";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +19,8 @@ import {
   AlertTriangle,
   Phone,
   FileText,
-  Activity
+  Activity,
+  Bot
 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -150,6 +152,10 @@ const CaseDetail = () => {
                       <Activity className="h-4 w-4" />
                       Activity Log
                     </TabsTrigger>
+                    <TabsTrigger value="playbook" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
+                      <Bot className="h-4 w-4" />
+                      Agent Playbook
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="timeline">
@@ -172,6 +178,10 @@ const CaseDetail = () => {
                         <p>No activity recorded yet</p>
                       </div>
                     )}
+                  </TabsContent>
+
+                  <TabsContent value="playbook">
+                    <AgentPlaybook caseData={caseData} />
                   </TabsContent>
                 </Tabs>
               </CardContent>
