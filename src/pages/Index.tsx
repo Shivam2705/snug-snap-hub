@@ -62,8 +62,8 @@ const Index = () => {
     description: "EXL's Text AI leverages advanced NLP to automate document processing, email triage, invoice extraction, and knowledge synthesis with enterprise-grade accuracy."
   }, {
     icon: Image,
-    title: "Visual Recognition",
-    description: "Analyze images for product recommendations, extract visual data, and identify fashion trends."
+    title: "Visual AI",
+    description: "EXL's Visual AI powers intelligent image recognition, product attribute extraction, visual search, and fashion trend analysis for seamless retail experiences."
   }, {
     icon: Mic,
     title: "Voice Analytics",
