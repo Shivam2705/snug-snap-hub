@@ -58,8 +58,8 @@ const Index = () => {
   // Multi-modal capabilities
   const capabilities = [{
     icon: FileText,
-    title: "Text Intelligence",
-    description: "Process documents, emails, and invoices with advanced NLP for extraction, validation, and knowledge assistance."
+    title: "Text AI",
+    description: "EXL's Text AI leverages advanced NLP to automate document processing, email triage, invoice extraction, and knowledge synthesis with enterprise-grade accuracy."
   }, {
     icon: Image,
     title: "Visual Recognition",
