@@ -199,6 +199,7 @@ const BaseAgents = () => {
   ];
 
   const handleRunAgent = (agentId: string) => {
+    console.log('agentId', agentId);
     if (agentId === "product-recommendation") {
       setShowProductRecommendation(true);
     } else if (agentId === "image-extraction") {
@@ -206,7 +207,7 @@ const BaseAgents = () => {
     } else if (agentId === "email-assist") {
       setShowEmailAssist(true);
     } else if (agentId === "i-audit") {
-      window.location.href = "https://lovable.dev/projects/881a6688-e0d9-46a1-9829-c5840f6204c2";
+      window.location.href = "http://192.168.1.5:8081/";
     } else {
       setSelectedAgent(agentId);
     }

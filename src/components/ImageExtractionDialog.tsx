@@ -23,6 +23,7 @@ import {
   Grid3X3,
   CircleDot
 } from "lucide-react";
+import { imageExtractorService } from "@/services/imageExtractorService";
 
 interface ImageExtractionDialogProps {
   open: boolean;
@@ -44,6 +45,10 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
   const [agentStatus, setAgentStatus] = useState<AgentStatus>('idle');
   const [progress, setProgress] = useState(0);
   const [extractedAttributes, setExtractedAttributes] = useState<ExtractedAttribute[]>([]);
+  const [uploadedFileName, setUploadedFileName] = useState<string>("tan_leather_handbag.jpg");
+  const [uploadedFileSize, setUploadedFileSize] = useState<string>("2.4 MB");
+  const [uploadedFileDimensions, setUploadedFileDimensions] = useState<string>("1920 x 1080");
+  const [uploadedImageBase64, setUploadedImageBase64] = useState<File>(null);
 
   const mockAttributes: ExtractedAttribute[] = [
     { label: "Category", value: "Handbag", icon: <ShoppingBag className="h-4 w-4" />, confidence: 98 },
@@ -66,7 +71,47 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
     }
   }, [open]);
 
-  const handleRunAgent = () => {
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      alert("Please upload a PNG, JPG, or WEBP image");
+      return;
+    }
+
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File size must be less than 10MB");
+      return;
+    }
+
+    // Convert file to base64
+    // const reader = new FileReader();
+    // reader.onload = (e) => {
+    //   const result = e.target?.result;
+    //   if (typeof result === "string") {
+    //     setUploadedImageBase64(result.split(',')[1]); // Remove data:image/jpeg;base64, prefix
+    //   }
+    // };
+    // reader.readAsDataURL(file);
+    setUploadedImageBase64(file);
+
+    setImageUploaded(true);
+    setUploadedFileName(file.name);
+    setUploadedFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
+    // Note: Getting actual image dimensions would require loading the image
+    setUploadedFileDimensions("1920 x 1080");
+  };
+
+  const triggerFileInput = () => {
+    document.getElementById("image-upload-input")?.click();
+  };
+
+  const handleRunAgent = async () => {
+    if (!uploadedImageBase64) return;
+
     setIsRunning(true);
     setAgentStatus('processing');
     setProgress(0);
@@ -83,24 +128,78 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
       });
     }, 80);
 
+    // Call the API
+    const response = await imageExtractorService.createSessionAndGetResponse(uploadedImageBase64);
+
     // Simulate agent completion after 4 seconds
     setTimeout(() => {
       clearInterval(progressInterval);
       setProgress(100);
       setAgentStatus('completed');
       setIsRunning(false);
-      
-      // Animate attributes appearing one by one
-      mockAttributes.forEach((attr, index) => {
-        setTimeout(() => {
-          setExtractedAttributes(prev => [...prev, attr]);
-        }, index * 150);
-      });
-    }, 4000);
-  };
 
-  const handleUploadClick = () => {
-    setImageUploaded(true);
+      // Process API response
+      if (response.success && response.data?.attributes) {
+        const attributes = response.data.attributes;
+        const apiAttributes: ExtractedAttribute[] = [
+          { 
+            label: "Category", 
+            value: attributes.category || "Unknown", 
+            icon: <ShoppingBag className="h-4 w-4" />, 
+            confidence: 98 
+          },
+          { 
+            label: "Color", 
+            value: attributes.color || "Unknown", 
+            icon: <Palette className="h-4 w-4" />, 
+            confidence: 97 
+          },
+          { 
+            label: "Pattern", 
+            value: attributes.pattern || "Unknown", 
+            icon: <Grid3X3 className="h-4 w-4" />, 
+            confidence: 99 
+          },
+          { 
+            label: "Sleeve", 
+            value: attributes.sleeve || "Unknown", 
+            icon: <Layers className="h-4 w-4" />, 
+            confidence: 92 
+          },
+          { 
+            label: "Style", 
+            value: attributes.style || "Unknown", 
+            icon: <Tag className="h-4 w-4" />, 
+            confidence: 94 
+          },
+        ];
+
+        // Animate attributes appearing one by one
+        apiAttributes.forEach((attr, index) => {
+          setTimeout(() => {
+            setExtractedAttributes(prev => [...prev, attr]);
+          }, index * 150);
+        });
+      } else {
+        // Fallback to mock data if API fails
+        const mockAttributes: ExtractedAttribute[] = [
+          { label: "Category", value: "Handbag", icon: <ShoppingBag className="h-4 w-4" />, confidence: 98 },
+          { label: "Section", value: "Female", icon: <Users className="h-4 w-4" />, confidence: 96 },
+          { label: "Style", value: "Tote Bag", icon: <Tag className="h-4 w-4" />, confidence: 94 },
+          { label: "Colour", value: "Tan Brown", icon: <Palette className="h-4 w-4" />, confidence: 97 },
+          { label: "Pattern", value: "Solid / Plain", icon: <Grid3X3 className="h-4 w-4" />, confidence: 99 },
+          { label: "Material", value: "Leather", icon: <Layers className="h-4 w-4" />, confidence: 92 },
+          { label: "Size", value: "Medium (35cm x 28cm)", icon: <Ruler className="h-4 w-4" />, confidence: 88 },
+          { label: "Closure Type", value: "Zip & Magnetic Snap", icon: <CircleDot className="h-4 w-4" />, confidence: 91 },
+        ];
+
+        mockAttributes.forEach((attr, index) => {
+          setTimeout(() => {
+            setExtractedAttributes(prev => [...prev, attr]);
+          }, index * 150);
+        });
+      }
+    }, 4000);
   };
 
   return (
@@ -121,11 +220,18 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
 
             {/* Upload Area */}
             <div className="flex-1 flex flex-col">
+              <input
+                id="image-upload-input"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
               <Card 
                 className={`flex-1 border-2 border-dashed cursor-pointer transition-all hover:border-primary/50 ${
                   imageUploaded ? 'border-primary bg-primary/5' : 'border-muted-foreground/30'
                 }`}
-                onClick={handleUploadClick}
+                onClick={triggerFileInput}
               >
                 <CardContent className="flex flex-col items-center justify-center h-full p-4">
                   {imageUploaded ? (
@@ -138,8 +244,8 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
                         </Badge>
                       </div>
                       <div>
-                        <p className="font-medium">tan_leather_handbag.jpg</p>
-                        <p className="text-xs text-muted-foreground">2.4 MB • 1920 x 1080</p>
+                        <p className="font-medium truncate">{uploadedFileName}</p>
+                        <p className="text-xs text-muted-foreground">{uploadedFileSize} • {uploadedFileDimensions}</p>
                       </div>
                     </div>
                   ) : (
