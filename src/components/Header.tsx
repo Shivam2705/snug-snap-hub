@@ -1,10 +1,8 @@
 import { Brain, User, Bell, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-
 const Header = () => {
-  return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+  return <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-exl">
@@ -16,17 +14,7 @@ const Header = () => {
           </div>
         </Link>
         
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            Home
-          </Link>
-          <Link to="/cawao" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            CAWAO Process
-          </Link>
-          <Link to="/marketing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            Marketing Agents
-          </Link>
-        </nav>
+        
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">
@@ -43,8 +31,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default Header;

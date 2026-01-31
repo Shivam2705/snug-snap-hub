@@ -1,14 +1,20 @@
 import { EvidenceItem } from "@/data/mockCases";
 import ActorIndicator from "./ActorIndicator";
 import { format } from "date-fns";
-import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
+import { CheckCircle2, AlertTriangle, XCircle, Info, MessageSquare, Mail, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface EvidenceTimelineProps {
   evidence: EvidenceItem[];
 }
 
 const EvidenceTimeline = ({ evidence }: EvidenceTimelineProps) => {
+  const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
+  const [loadingActions, setLoadingActions] = useState<Set<string>>(new Set());
+
   const statusIcons = {
     success: CheckCircle2,
     warning: AlertTriangle,
@@ -16,19 +22,48 @@ const EvidenceTimeline = ({ evidence }: EvidenceTimelineProps) => {
     info: Info
   };
 
+  const actionIcons = {
+    sms: MessageSquare,
+    email: Mail,
+    ticket: Send
+  };
+
+  const handleActionClick = async (actionId: string, type: 'sms' | 'email' | 'ticket', target?: string) => {
+    setLoadingActions(prev => new Set(prev).add(actionId));
+    
+    // Simulate sending action
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    setLoadingActions(prev => {
+      const next = new Set(prev);
+      next.delete(actionId);
+      return next;
+    });
+    
+    setCompletedActions(prev => new Set(prev).add(actionId));
+    
+    if (type === 'sms') {
+      toast.success(`Text message sent to ${target}`);
+    } else if (type === 'email') {
+      toast.success(`Email sent to ${target}`);
+    } else {
+      toast.success('Zendesk ticket created');
+    }
+  };
+
   const statusColors = {
-    success: 'text-emerald-600 bg-emerald-50 border-emerald-200',
-    warning: 'text-amber-600 bg-amber-50 border-amber-200',
-    error: 'text-rose-600 bg-rose-50 border-rose-200',
-    info: 'text-sky-600 bg-sky-50 border-sky-200'
+    success: 'text-[#2ED573] bg-[#2ED573]/10 border-[#2ED573]/20',
+    warning: 'text-[#FFA502] bg-[#FFA502]/10 border-[#FFA502]/20',
+    error: 'text-[#FF4757] bg-[#FF4757]/10 border-[#FF4757]/20',
+    info: 'text-[#4DA3FF] bg-[#4DA3FF]/10 border-[#4DA3FF]/20'
   };
 
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-lg">Evidence Timeline</h3>
+      <h3 className="font-semibold text-lg text-white">Evidence Timeline</h3>
       <div className="relative">
         {/* Timeline line */}
-        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200" />
+        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[#12151B]" />
 
         <div className="space-y-4">
           {evidence.map((item, index) => {
@@ -44,17 +79,17 @@ const EvidenceTimeline = ({ evidence }: EvidenceTimelineProps) => {
                   <StatusIcon className="h-3 w-3" />
                 </div>
 
-                <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 shadow-sm">
+                <div className="bg-[#12151B] border border-[#181C23] rounded-lg p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-4 mb-2">
                     <div className="flex items-center gap-2">
                       <ActorIndicator actor={item.actor} size="sm" />
                       {item.agentName && (
-                        <span className="text-sm font-medium text-violet-700">
+                        <span className="text-sm font-medium text-[#4DA3FF]">
                           {item.agentName}
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    <span className="text-xs text-slate-500 whitespace-nowrap">
                       {format(new Date(item.timestamp), "HH:mm")}
                     </span>
                   </div>
@@ -62,15 +97,70 @@ const EvidenceTimeline = ({ evidence }: EvidenceTimelineProps) => {
                   <p className="font-medium text-white mb-1">{item.action}</p>
                   
                   <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
-                    <span className="px-2 py-0.5 bg-slate-700 rounded text-xs text-slate-300">
+                    <span className="px-2 py-0.5 bg-[#181C23] rounded text-xs text-slate-400">
                       {item.system}
                     </span>
                   </div>
 
-                  <p className="text-sm text-slate-300">{item.result}</p>
+                  {/* Interactive Action Button */}
+                  {item.interactiveAction && (
+                    <div className="mt-3">
+                      {completedActions.has(item.interactiveAction.id) ? (
+                        <div className="flex items-center gap-2 text-[#2ED573]">
+                          <CheckCircle2 className="h-4 w-4" />
+                          <span className="text-sm font-medium">
+                            {item.interactiveAction.type === 'sms' 
+                              ? `Text message sent to ${item.interactiveAction.target}` 
+                              : item.interactiveAction.type === 'email'
+                              ? `Email sent to ${item.interactiveAction.target}`
+                              : 'Ticket created successfully'}
+                          </span>
+                        </div>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => handleActionClick(
+                            item.interactiveAction!.id,
+                            item.interactiveAction!.type,
+                            item.interactiveAction!.target
+                          )}
+                          disabled={loadingActions.has(item.interactiveAction.id)}
+                          className="bg-[#4DA3FF] hover:bg-[#4DA3FF]/90 text-white font-medium"
+                        >
+                          {loadingActions.has(item.interactiveAction.id) ? (
+                            <>
+                              <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                              Sending...
+                            </>
+                          ) : (
+                            <>
+                              {(() => {
+                                const ActionIcon = actionIcons[item.interactiveAction!.type];
+                                return <ActionIcon className="h-4 w-4 mr-2" />;
+                              })()}
+                              {item.interactiveAction.label}
+                            </>
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Show result only if no interactive action or if action is completed */}
+                  {(!item.interactiveAction || completedActions.has(item.interactiveAction?.id || '')) && (
+                    <p className="text-sm text-slate-300 mt-2">{
+                      completedActions.has(item.interactiveAction?.id || '') 
+                        ? (item.interactiveAction?.type === 'sms' 
+                            ? 'Text message sent successfully' 
+                            : item.interactiveAction?.type === 'email'
+                            ? 'Email sent and ticket created'
+                            : item.result)
+                        : item.result
+                    }</p>
+                  )}
                   
-                  {item.details && (
-                    <p className="text-xs text-muted-foreground mt-2 italic">
+                  {item.details && !item.interactiveAction && (
+                    <p className="text-xs text-slate-500 mt-2 italic">
                       {item.details}
                     </p>
                   )}

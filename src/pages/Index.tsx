@@ -58,16 +58,16 @@ const Index = () => {
   // Multi-modal capabilities
   const capabilities = [{
     icon: FileText,
-    title: "Text Intelligence",
-    description: "Process documents, emails, and invoices with advanced NLP for extraction, validation, and knowledge assistance."
+    title: "Text AI",
+    description: "EXL's Text AI leverages advanced NLP to automate document processing, email triage, invoice extraction, and knowledge synthesis with enterprise-grade accuracy."
   }, {
     icon: Image,
-    title: "Visual Recognition",
-    description: "Analyze images for product recommendations, extract visual data, and identify fashion trends."
+    title: "Visual AI",
+    description: "EXL's Visual AI powers intelligent image recognition, product attribute extraction, visual search, and fashion trend analysis for seamless retail experiences."
   }, {
     icon: Mic,
-    title: "Voice Analytics",
-    description: "Transcribe and analyze voice interactions, perform sentiment analysis, and ensure compliance."
+    title: "Voice AI",
+    description: "EXL's Voice AI delivers real-time transcription, sentiment analysis, compliance monitoring, and conversational intelligence for enhanced customer interactions."
   }];
   return <div className="min-h-screen bg-background">
       <Header />
@@ -171,19 +171,15 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary mb-4">
               Enterprise Solutions
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Our Solutions
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              Purpose-built agentic solutions designed for NEXT's unique business challenges—from 
-              fraud detection to hyper-personalized customer experiences.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Agentic Suite for NEXT</h2>
+            <p className="text-muted-foreground text-lg leading-relaxed">Purpose-built agentic solutions designed for NEXT's unique business challenges. 
+Agentic Processes, Powered by the 3R Ideology - Repurposed Intelligence, Reusable Processes, Responsible Automation.</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <SolutionTile title="Agentic Repository" description="Comprehensive library of multi-modal AI agents for text processing, visual analysis, and voice interactions—your foundation for intelligent automation." agents={repositoryAgents} icon={Layers} href="/base-agents" />
             
-            <SolutionTile title="CAWAO" description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation." agents={cawaoAgents} icon={Shield} href="/cawao/agents" processHref="/cawao" />
+            <SolutionTile title="CAWAO-Schedule" description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation." agents={cawaoAgents} icon={Shield} href="/cawao/agents" processHref="/cawao" />
             
             <SolutionTile title="Hyper Personalized Marketing" description="Analyze customer demographics and buying trends to deliver highly personalized product recommendations and drive engagement." agents={marketingAgents} icon={ShoppingBag} href="/marketing/agents" processHref="https://next-hyper-personalization-ui-1037311574972.us-central1.run.app/" />
           </div>
