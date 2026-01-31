@@ -207,7 +207,7 @@ const BaseAgents = () => {
     } else if (agentId === "email-assist") {
       setShowEmailAssist(true);
     } else if (agentId === "i-audit") {
-      window.location.href = "next-iaudit-ui-1037311574972.us-central1.run.app";
+      window.location.href = "https://next-iaudit-ui-1037311574972.us-central1.run.app";
     } else {
       setSelectedAgent(agentId);
     }
