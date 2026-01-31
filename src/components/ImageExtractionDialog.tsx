@@ -49,6 +49,7 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
   const [uploadedFileSize, setUploadedFileSize] = useState<string>("2.4 MB");
   const [uploadedFileDimensions, setUploadedFileDimensions] = useState<string>("1920 x 1080");
   const [uploadedImageBase64, setUploadedImageBase64] = useState<File>(null);
+  const [uploadedImagePreview, setUploadedImagePreview] = useState<string>("");
 
   const mockAttributes: ExtractedAttribute[] = [
     { label: "Category", value: "Handbag", icon: <ShoppingBag className="h-4 w-4" />, confidence: 98 },
@@ -68,8 +69,12 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
       setAgentStatus('idle');
       setProgress(0);
       setExtractedAttributes([]);
+      if (uploadedImagePreview) {
+        URL.revokeObjectURL(uploadedImagePreview);
+        setUploadedImagePreview("");
+      }
     }
-  }, [open]);
+  }, [open, uploadedImagePreview]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -86,6 +91,10 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
       alert("File size must be less than 10MB");
       return;
     }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setUploadedImagePreview(previewUrl);
 
     // Convert file to base64
     // const reader = new FileReader();
@@ -237,7 +246,13 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
                   {imageUploaded ? (
                     <div className="text-center space-y-4 w-full">
                       <div className="relative mx-auto w-full max-w-[200px] aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/40 dark:to-amber-800/40 flex items-center justify-center">
-                        <div className="text-6xl">👜</div>
+                        {uploadedImagePreview && (
+                          <img 
+                            src={uploadedImagePreview} 
+                            alt="Uploaded preview" 
+                            className="w-full h-full object-cover"
+                          />
+                        )}
                         <Badge className="absolute top-2 right-2 bg-green-500">
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Uploaded
