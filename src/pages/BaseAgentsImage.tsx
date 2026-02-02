@@ -2,31 +2,31 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
+import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
+import ImageExtractionDialog from "@/components/ImageExtractionDialog";
 import { ShoppingBag, ScanSearch, TrendingUp } from "lucide-react";
 
 const BaseAgentsImage = () => {
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showNextLens, setShowNextLens] = useState(false);
+  const [showImageExtraction, setShowImageExtraction] = useState(false);
 
   const agents = [
     {
-      id: "product-recommendation",
-      name: "Product Recommendation Agent",
-      purpose: "Upload an image to receive personalized product recommendations from NEXT.co.uk based on visual similarity and style matching.",
+      id: "next-lens",
+      name: "NEXT Lens",
+      purpose: "Upload an image to find similar products from NEXT.co.uk. Extract product attributes and match with inventory for personalized style recommendations.",
       capabilities: [
-        "Visual style matching",
-        "Color palette analysis",
-        "Category identification",
-        "Price range suggestions",
-        "Trend alignment"
+        "Attribute extraction",
+        "Inventory lookup",
+        "Visual similarity matching",
+        "Style recommendations",
+        "Match scoring"
       ],
       savings: ["Instant matches", "Higher conversion"],
       icon: ShoppingBag,
-      sampleInputs: [
-        { label: "Product Category", type: "select", options: ["Dresses", "Tops", "Trousers", "Accessories", "Shoes"] },
-        { label: "Budget Range", type: "select", options: ["Under £30", "£30-£60", "£60-£100", "Over £100"] },
-        { label: "Occasion", type: "select", options: ["Casual", "Work", "Evening", "Sports", "Special Event"] }
-      ]
+      sampleInputs: []
     },
     {
       id: "image-extraction",
@@ -70,6 +70,14 @@ const BaseAgentsImage = () => {
   ];
 
   const handleRunAgent = (agentId: string) => {
+    if (agentId === "next-lens") {
+      setShowNextLens(true);
+      return;
+    }
+    if (agentId === "image-extraction") {
+      setShowImageExtraction(true);
+      return;
+    }
     const agent = agents.find(a => a.id === agentId);
     if (agent) {
       setSelectedAgent(agent);
@@ -108,6 +116,16 @@ const BaseAgentsImage = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         agent={selectedAgent}
+      />
+
+      <ProductRecommendationDialog
+        open={showNextLens}
+        onOpenChange={setShowNextLens}
+      />
+
+      <ImageExtractionDialog
+        open={showImageExtraction}
+        onOpenChange={setShowImageExtraction}
       />
     </div>
   );
