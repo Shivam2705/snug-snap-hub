@@ -61,6 +61,10 @@ const ECommerceAgents = () => {
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
 
   const handleRunAgent = (agentId: string) => {
+    if (agentId === "hyper-personalized-marketing") {
+      window.location.href = "https://lovable.dev/projects/6d51d6f1-0dd3-44dc-83d1-170dae47f8ec";
+      return;
+    }
     if (agentId === "next-lens") {
       setProductDialogOpen(true);
       return;
