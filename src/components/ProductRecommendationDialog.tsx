@@ -177,6 +177,9 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
     // Reset nodes
     setWorkflowNodes(prev => prev.map(node => ({ ...node, status: "pending" as const, output: undefined })));
 
+    // Call API immediately without waiting for animations
+    const apiCallPromise = nextLensService.createSessionAndGetResponse(uploadedImageFile);
+
     // Simulate Attribute Extractor
     await new Promise(resolve => setTimeout(resolve, 800));
     setWorkflowNodes(prev => prev.map(node => 
@@ -205,14 +208,14 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
       } : node
     ));
 
-    // Simulate Fashion Stylist and call API
+    // Simulate Fashion Stylist
     await new Promise(resolve => setTimeout(resolve, 500));
     setWorkflowNodes(prev => prev.map(node => 
       node.id === "stylist" ? { ...node, status: "running" as const } : node
     ));
 
-    // Call the API with the File object
-    const response = await nextLensService.createSessionAndGetResponse(uploadedImageFile);
+    // Wait for API response in parallel with animations
+    const response = await apiCallPromise;
 
     if (response.success && response.data) {
       console.log("API Response - Products Array:", response.data);

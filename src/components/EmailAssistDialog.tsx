@@ -271,7 +271,12 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
     setExecutionComplete(false);
 
     try {
-      // Run both tracks in parallel
+      // Make API call immediately without waiting
+      const apiCallPromise = emailAssistService.createSessionAndGetResponse(
+        uploadedEmail?.content || "",
+      );
+
+      // Run both visualization tracks in parallel
       const runIntentTrack = async () => {
         for (let i = 0; i < intentAgents.length; i++) {
           setIntentAgents((prev) =>
@@ -306,15 +311,12 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
         }
       };
 
-      // Run both tracks in parallel
-      await Promise.all([runIntentTrack(), runVulTrack()]);
-
-      // Run collation agent and API call in parallel
+      // Run API call and visualization tracks in parallel
       setCollationAgent("processing");
-
-      const apiResponse = await emailAssistService.createSessionAndGetResponse(
-        uploadedEmail?.content || "",
-      );
+      const [apiResponse] = await Promise.all([
+        apiCallPromise,
+        Promise.all([runIntentTrack(), runVulTrack()]),
+      ]);
 
       if (apiResponse.success && apiResponse.data) {
         setAgentResponse(apiResponse.data);
@@ -417,18 +419,18 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[85vw] w-[85vw] h-[85vh] p-0 gap-0 overflow-hidden">
-        <div className="flex h-full">
+      <DialogContent className="max-w-[85vw] w-[85vw] max-h-[85vh] h-[85vh] p-0 gap-0 flex flex-col overflow-hidden">
+        <div className="flex flex-1 gap-0 min-h-0">
           {/* Left Column - Email Upload (1/3) */}
-          <div className="w-1/3 border-r bg-muted/30 p-6 flex flex-col">
-            <div className="flex items-center justify-between mb-6">
+          <div className="w-1/3 border-r bg-muted/30 p-4 flex flex-col overflow-hidden min-h-0">
+            <div className="flex items-center justify-between mb-4 flex-shrink-0">
               <div>
-                <h2 className="text-xl font-semibold">Email Assist Agent</h2>
-                <p className="text-sm text-muted-foreground mt-1">
+                <h2 className="text-lg font-semibold">Email Assist Agent</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Upload .eml file to analyze
                 </p>
               </div>
-              <Button variant="ghost" size="icon" onClick={handleClose}>
+              <Button variant="ghost" size="icon" onClick={handleClose} className="h-8 w-8">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -449,72 +451,72 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                 />
                 <div
                   onClick={() => document.getElementById("eml-upload")?.click()}
-                  className="border-2 border-dashed border-muted-foreground/30 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all h-[550px]"
+                  className="border-2 border-dashed border-muted-foreground/30 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all flex-1 min-h-0 p-4"
                 >
-                  <div className="p-4 rounded-full bg-primary/10">
-                    <Upload className="h-8 w-8 text-primary" />
+                  <div className="p-3 rounded-full bg-primary/10">
+                    <Upload className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-center">
-                    <p className="font-medium">Upload .eml file</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Click to upload or drag and drop
+                    <p className="font-medium text-sm">Upload .eml file</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Click to upload
                     </p>
                   </div>
-                  <Badge variant="outline" className="mt-2">
-                    Supports .eml format
+                  <Badge variant="outline" className="mt-1 text-xs">
+                    .eml format
                   </Badge>
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col min-h-0 gap-2">
                 {/* Email Preview */}
-                <div className="flex-1 bg-background rounded-xl border overflow-hidden">
-                  <div className="bg-primary/5 p-4 border-b">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="p-2 rounded-full bg-primary/10">
-                        <Mail className="h-5 w-5 text-primary" />
+                <div className="flex-1 bg-background rounded-lg border overflow-hidden flex flex-col min-h-0">
+                  <div className="bg-primary/5 p-2 border-b flex-shrink-0">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <div className="p-1.5 rounded-full bg-primary/10">
+                        <Mail className="h-3 w-3 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-xs truncate">
                           {uploadedEmail?.subject || mockEmail.subject}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
                           {uploadedEmail?.filename ||
                             "customer_complaint_8847.eml"}
                         </p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div>
-                        <span className="text-muted-foreground">From: </span>
-                        <span className="font-medium">
+                    <div className="grid grid-cols-2 gap-1 text-xs">
+                      <div className="truncate">
+                        <span className="text-muted-foreground text-xs">From: </span>
+                        <span className="font-medium truncate inline-block max-w-[70px] text-xs">
                           {uploadedEmail?.from || mockEmail.from}
                         </span>
                       </div>
-                      <div>
-                        <span className="text-muted-foreground">To: </span>
-                        <span className="font-medium">
+                      <div className="truncate">
+                        <span className="text-muted-foreground text-xs">To: </span>
+                        <span className="font-medium truncate inline-block max-w-[70px] text-xs">
                           {uploadedEmail?.to || mockEmail.to}
                         </span>
                       </div>
-                      <div className="col-span-2">
-                        <span className="text-muted-foreground">Date: </span>
-                        <span className="font-medium">
+                      <div className="col-span-2 truncate">
+                        <span className="text-muted-foreground text-xs">Date: </span>
+                        <span className="font-medium truncate text-xs">
                           {uploadedEmail?.date || mockEmail.date}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <ScrollArea className="h-[300px] p-4">
+                  <ScrollArea className="flex-1 p-2 min-h-0">
                     {uploadedEmail?.isHtml && uploadedEmail?.htmlContent ? (
                       <div
-                        className="text-sm max-w-none [&_*]:!text-foreground [&_div]:!text-foreground [&_p]:!text-foreground [&_span]:!text-foreground"
+                        className="text-xs max-w-none [&_*]:!text-foreground [&_div]:!text-foreground [&_p]:!text-foreground [&_span]:!text-foreground [&_html]:!text-foreground [&_body]:!text-foreground"
                         dangerouslySetInnerHTML={{
                           __html: uploadedEmail.htmlContent,
                         }}
                       />
                     ) : (
-                      <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">
+                      <pre className="text-xs whitespace-pre-wrap font-sans leading-relaxed">
                         {uploadedEmail?.content || mockEmail.content}
                       </pre>
                     )}
@@ -523,20 +525,19 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
                 {/* Run Button */}
                 <Button
-                  className="mt-4 w-full"
-                  size="lg"
+                  className="w-full flex-shrink-0 h-8 text-xs"
                   onClick={runAgentWorkflow}
                   disabled={isRunning}
                 >
                   {isRunning ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing Email...
+                      <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                      Processing...
                     </>
                   ) : (
                     <>
-                      <Play className="mr-2 h-4 w-4" />
-                      Run Agent Analysis
+                      <Play className="mr-1 h-3 w-3" />
+                      Run
                     </>
                   )}
                 </Button>
@@ -545,31 +546,31 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
           </div>
 
           {/* Right Column - Tabs (2/3) */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col overflow-hidden min-h-0">
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
-              className="flex-1 flex flex-col"
+              className="flex-1 flex flex-col min-h-0"
             >
-              <div className="border-b px-6 pt-4">
-                <TabsList className="grid w-full max-w-md grid-cols-2">
+              <div className="border-b px-4 pt-2 flex-shrink-0">
+                <TabsList className="grid w-full max-w-md grid-cols-2 h-8">
                   <TabsTrigger
                     value="execution"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-1 text-xs"
                   >
-                    <GitMerge className="h-4 w-4" />
-                    Agent Execution
+                    <GitMerge className="h-3 w-3" />
+                    Execution
                   </TabsTrigger>
                   <TabsTrigger
                     value="results"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-1 text-xs"
                   >
-                    <Target className="h-4 w-4" />
+                    <Target className="h-3 w-3" />
                     Results
                     {executionComplete && (
                       <Badge
                         variant="default"
-                        className="ml-1 h-5 px-1.5 text-xs"
+                        className="ml-0.5 h-4 px-1 text-xs"
                       >
                         New
                       </Badge>
@@ -580,22 +581,22 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
               <TabsContent
                 value="execution"
-                className="flex-1 m-0 p-6 overflow-y-auto min-h-0"
+                className="flex-1 m-0 p-4 overflow-y-auto min-h-0"
               >
-                <div className="space-y-6">
-                  <h3 className="text-lg font-semibold">
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold">
                     Multi-Agent Workflow
                   </h3>
-                  <div className="flex flex-col items-center gap-6">
-                    <div className="flex flex-col lg:flex-row gap-12 justify-center w-full">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="flex flex-col lg:flex-row gap-8 justify-center w-full">
                       {/* Intent Classification Track */}
                       <div className="flex flex-col items-center">
-                        <div className="mb-4 text-center">
+                        <div className="mb-3 text-center">
                           <Badge
                             variant="outline"
-                            className="mb-2 bg-blue-500/10 text-blue-600 border-blue-500/30"
+                            className="text-xs bg-blue-500/10 text-blue-600 border-blue-500/30"
                           >
-                            <Target className="h-3 w-3 mr-1" />
+                            <Target className="h-2.5 w-2.5 mr-1" />
                             Intent Track
                           </Badge>
                         </div>
@@ -612,12 +613,12 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
                       {/* Vulnerability Classification Track */}
                       <div className="flex flex-col items-center">
-                        <div className="mb-4 text-center">
+                        <div className="mb-3 text-center">
                           <Badge
                             variant="outline"
-                            className="mb-2 bg-orange-500/10 text-orange-600 border-orange-500/30"
+                            className="text-xs bg-orange-500/10 text-orange-600 border-orange-500/30"
                           >
-                            <Shield className="h-3 w-3 mr-1" />
+                            <Shield className="h-2.5 w-2.5 mr-1" />
                             Vulnerability Track
                           </Badge>
                         </div>
@@ -636,14 +637,14 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                     {/* Collation Agent - Connecting both tracks */}
                     <div className="w-full flex justify-center mt-2">
                       <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-8 mb-2">
-                          <div className="h-0.5 w-16 bg-border"></div>
-                          <GitMerge className="h-5 w-5 text-muted-foreground" />
-                          <div className="h-0.5 w-16 bg-border"></div>
+                        <div className="flex items-center gap-6 mb-2">
+                          <div className="h-0.5 w-12 bg-border"></div>
+                          <GitMerge className="h-4 w-4 text-muted-foreground" />
+                          <div className="h-0.5 w-12 bg-border"></div>
                         </div>
                         <div
                           className={cn(
-                            "flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-500 min-w-[250px]",
+                            "flex items-center gap-2 p-3 rounded-lg border-2 transition-all duration-500 min-w-[200px]",
                             collationAgent === "idle" &&
                               "border-muted bg-muted/30",
                             collationAgent === "processing" &&
@@ -654,7 +655,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                         >
                           <div
                             className={cn(
-                              "p-2 rounded-full",
+                              "p-1.5 rounded-full",
                               collationAgent === "idle" && "bg-muted",
                               collationAgent === "processing" &&
                                 "bg-purple-500/20",
@@ -663,17 +664,17 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                             )}
                           >
                             {collationAgent === "processing" ? (
-                              <Loader2 className="h-5 w-5 text-purple-500 animate-spin" />
+                              <Loader2 className="h-4 w-4 text-purple-500 animate-spin" />
                             ) : collationAgent === "completed" ? (
-                              <CheckCircle2 className="h-5 w-5 text-green-500" />
+                              <CheckCircle2 className="h-4 w-4 text-green-500" />
                             ) : (
-                              <GitMerge className="h-5 w-5 text-muted-foreground" />
+                              <GitMerge className="h-4 w-4 text-muted-foreground" />
                             )}
                           </div>
                           <div>
                             <p
                               className={cn(
-                                "font-semibold",
+                                "font-semibold text-xs",
                                 collationAgent === "processing" &&
                                   "text-purple-600",
                                 collationAgent === "completed" &&
@@ -683,7 +684,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                               Collation Agent
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              Merging results from both tracks
+                              Merging results
                             </p>
                           </div>
                           {collationAgent === "processing" && (
@@ -699,10 +700,10 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                     </div>
 
                     {!emailUploaded && (
-                      <div className="flex flex-col items-center justify-center h-64 text-center w-full">
-                        <Mail className="h-12 w-12 text-muted-foreground/30 mb-4" />
-                        <p className="text-muted-foreground">
-                          Upload an email to start the agent workflow
+                      <div className="flex flex-col items-center justify-center h-40 text-center w-full">
+                        <Mail className="h-10 w-10 text-muted-foreground/30 mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          Upload an email to start the workflow
                         </p>
                       </div>
                     )}
@@ -712,92 +713,92 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
 
               <TabsContent
                 value="results"
-                className="flex-1 m-0 p-6 overflow-y-auto"
+                className="flex-1 m-0 p-4 overflow-y-auto min-h-0"
               >
                 {executionComplete ? (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="p-3 rounded-full bg-green-500/10">
-                        <CheckCircle2 className="h-6 w-6 text-green-500" />
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="p-2 rounded-full bg-green-500/10">
+                        <CheckCircle2 className="h-5 w-5 text-green-500" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold">
+                        <h3 className="text-sm font-semibold">
                           Analysis Complete
                         </h3>
-                        <p className="text-sm text-muted-foreground">
-                          Email processed through all agents successfully
+                        <p className="text-xs text-muted-foreground">
+                          Email processed successfully
                         </p>
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-4">
                       {/* Intent Classification Result */}
-                      <div className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border border-blue-500/20 rounded-xl p-6">
-                        <div className="flex items-center gap-3 mb-6">
-                          <div className="p-2 rounded-lg bg-blue-500/10">
-                            <MessageSquare className="h-5 w-5 text-blue-500" />
+                      <div className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="p-1.5 rounded-lg bg-blue-500/10">
+                            <MessageSquare className="h-4 w-4 text-blue-500" />
                           </div>
-                          <h4 className="font-semibold text-blue-600">
+                          <h4 className="font-semibold text-sm text-blue-600">
                             Intent Classification
                           </h4>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           <div>
-                            <p className="text-sm text-muted-foreground mb-2">
+                            <p className="text-xs text-muted-foreground mb-1">
                               Classification
                             </p>
-                            <Badge className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 text-base">
+                            <Badge className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-0.5 text-xs">
                               {agentResponse?.intent_classification ||
                                 "Complaint"}
                             </Badge>
                           </div>
 
                           <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <p className="text-sm text-muted-foreground">
-                                Confidence Score
+                            <div className="flex items-center justify-between mb-1">
+                              <p className="text-xs text-muted-foreground">
+                                Confidence
                               </p>
-                              <span className="text-2xl font-bold text-blue-600">
+                              <span className="text-lg font-bold text-blue-600">
                                 {agentResponse?.intent_score || 8}/10
                               </span>
                             </div>
                             <Progress
-                              value={agentResponse?.intent_score || 80}
-                              className="h-3 bg-blue-100"
+                              value={(agentResponse?.intent_score || 8) * 10}
+                              className="h-2"
                             />
                           </div>
                         </div>
                       </div>
 
                       {/* Vulnerability Classification Result */}
-                      <div className="bg-gradient-to-br from-orange-500/5 to-orange-500/10 border border-orange-500/20 rounded-xl p-6">
-                        <div className="flex items-center gap-3 mb-6">
-                          <div className="p-2 rounded-lg bg-orange-500/10">
-                            <AlertTriangle className="h-5 w-5 text-orange-500" />
+                      <div className="bg-gradient-to-br from-orange-500/5 to-orange-500/10 border border-orange-500/20 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="p-1.5 rounded-lg bg-orange-500/10">
+                            <AlertTriangle className="h-4 w-4 text-orange-500" />
                           </div>
-                          <h4 className="font-semibold text-orange-600">
-                            Vulnerability Classification
+                          <h4 className="font-semibold text-sm text-orange-600">
+                            Vulnerability
                           </h4>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           <div>
-                            <p className="text-sm text-muted-foreground mb-2">
+                            <p className="text-xs text-muted-foreground mb-1">
                               Classification
                             </p>
-                            <Badge className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 text-base">
+                            <Badge className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-0.5 text-xs">
                               {agentResponse?.vul_classification ||
                                 "Vulnerable"}
                             </Badge>
                           </div>
 
                           <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <p className="text-sm text-muted-foreground">
-                                Vulnerability Score
+                            <div className="flex items-center justify-between mb-1">
+                              <p className="text-xs text-muted-foreground">
+                                Confidence
                               </p>
-                              <span className="text-2xl font-bold text-orange-600">
+                              <span className="text-lg font-bold text-orange-600">
                                 {agentResponse?.vul_score || 9}/10
                               </span>
                             </div>
@@ -807,7 +808,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                                   ? agentResponse.vul_score * 10
                                   : 90
                               }
-                              className="h-3 bg-orange-100"
+                              className="h-2"
                             />
                           </div>
                         </div>
@@ -815,25 +816,25 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                     </div>
 
                     {/* Summary Card */}
-                    <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border rounded-xl p-6 mt-6">
-                      <h4 className="font-semibold mb-4 flex items-center gap-2">
-                        <Sparkles className="h-5 w-5 text-primary" />
+                    <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border rounded-lg p-4 mt-4">
+                      <h4 className="font-semibold text-xs mb-3 flex items-center gap-1.5">
+                        <Sparkles className="h-4 w-4 text-primary" />
                         Analysis Summary
                       </h4>
-                      <div className="max-h-[300px] overflow-y-auto space-y-4">
-                        <div className="pt-4 border-t border-primary/20">
-                          <p className="text-xs text-muted-foreground mb-2">
-                            Intent Analysis Reason
+                      <div className="max-h-[200px] overflow-y-auto space-y-3">
+                        <div className="pt-2 border-t border-primary/20">
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Intent Analysis
                           </p>
-                          <p className="text-sm leading-relaxed">
+                          <p className="text-xs leading-relaxed">
                             {agentResponse?.intent_reason}
                           </p>
                         </div>
-                        <div className="border-t border-primary/20 pt-4">
-                          <p className="text-xs text-muted-foreground mb-2">
-                            Vulnerability Analysis Reason
+                        <div className="border-t border-primary/20 pt-2">
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Vulnerability Analysis
                           </p>
-                          <p className="text-sm leading-relaxed">
+                          <p className="text-xs leading-relaxed">
                             {agentResponse?.vul_reason}
                           </p>
                         </div>
@@ -841,10 +842,10 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-center">
-                    <Target className="h-12 w-12 text-muted-foreground/30 mb-4" />
-                    <p className="text-muted-foreground">
-                      Results will appear here after agent execution completes
+                  <div className="flex flex-col items-center justify-center h-40 text-center">
+                    <Target className="h-10 w-10 text-muted-foreground/30 mb-2" />
+                    <p className="text-xs text-muted-foreground">
+                      Results will appear here after execution completes
                     </p>
                   </div>
                 )}

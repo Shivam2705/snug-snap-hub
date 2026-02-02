@@ -71,7 +71,7 @@ const ContactCenterAgents = () => {
 
   const handleRunAgent = (agentId: string) => {
     if (agentId === "i-audit") {
-      window.location.href = "https://lovable.dev/projects/881a6688-e0d9-46a1-9829-c5840f6204c2";
+      window.location.href = "https://next-iaudit-ui-1037311574972.us-central1.run.app";
       return;
     }
     

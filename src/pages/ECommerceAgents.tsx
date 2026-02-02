@@ -62,7 +62,7 @@ const ECommerceAgents = () => {
 
   const handleRunAgent = (agentId: string) => {
     if (agentId === "hyper-personalized-marketing") {
-      window.location.href = "https://lovable.dev/projects/e0f295af-4664-4f46-9741-76b621db4d2d";
+      window.location.href = "https://next-hyper-personalization-ui-1037311574972.us-central1.run.app/";
       return;
     }
     if (agentId === "next-lens") {
