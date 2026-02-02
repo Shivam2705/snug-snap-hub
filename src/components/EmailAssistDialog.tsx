@@ -48,6 +48,8 @@ interface EmailData {
   date: string;
   content: string;
   filename: string;
+  htmlContent?: string;
+  isHtml?: boolean;
 }
 
 interface AgentResponse {
@@ -173,6 +175,7 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
       let to = "";
       let date = "";
       let body = "";
+      let htmlContent = "";
 
       const lines = content.split("\n");
       let headerEnd = 0;
@@ -196,10 +199,43 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
       }
 
       // Get body content
-      body = lines
-        .slice(headerEnd + 1)
-        .join("\n")
-        .trim();
+      const bodyContent = lines.slice(headerEnd + 1).join("\n").trim();
+
+      // Helper function to decode quoted-printable encoding
+      const decodeQuotedPrintable = (str: string): string => {
+        return str
+          .replace(/=\r?\n/g, "") // Remove soft line breaks (CRLF or LF)
+          .replace(/=([0-9A-F]{2})/gi, (match, hex) => {
+            // Decode any hex-encoded byte
+            return String.fromCharCode(parseInt(hex, 16));
+          });
+      };
+
+      // Check if the email contains multipart/alternative (both plain text and HTML)
+      const htmlMatch = bodyContent.match(/<html[\s\S]*?<\/html>/i);
+      if (htmlMatch) {
+        // Extract and decode HTML content
+        htmlContent = decodeQuotedPrintable(htmlMatch[0]);
+        // Also extract plain text version for the API call
+        const textMatch = bodyContent.match(
+          /Content-Type: text\/plain[\s\S]*?(?=--_|$)/i,
+        );
+        if (textMatch) {
+          body = decodeQuotedPrintable(
+            textMatch[0]
+              .replace(/Content-Type: text\/plain[^\n]*\n/i, "")
+              .replace(/Content-Transfer-Encoding[^\n]*\n/i, "")
+              .trim(),
+          );
+        } else {
+          // If no plain text, extract from HTML
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = htmlContent;
+          body = tempDiv.textContent || "";
+        }
+      } else {
+        body = bodyContent;
+      }
 
       return {
         subject: subject || "(No Subject)",
@@ -207,6 +243,8 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
         to: to || "(No Recipient)",
         date: date || "(No Date)",
         content: body || "(No Content)",
+        htmlContent: htmlContent || undefined,
+        isHtml: !!htmlContent,
         filename: "uploaded_email.eml",
       };
     } catch (error) {
@@ -468,9 +506,18 @@ const EmailAssistDialog = ({ open, onOpenChange }: EmailAssistDialogProps) => {
                     </div>
                   </div>
                   <ScrollArea className="h-[300px] p-4">
-                    <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">
-                      {uploadedEmail?.content || mockEmail.content}
-                    </pre>
+                    {uploadedEmail?.isHtml && uploadedEmail?.htmlContent ? (
+                      <div
+                        className="text-sm max-w-none [&_*]:!text-foreground [&_div]:!text-foreground [&_p]:!text-foreground [&_span]:!text-foreground"
+                        dangerouslySetInnerHTML={{
+                          __html: uploadedEmail.htmlContent,
+                        }}
+                      />
+                    ) : (
+                      <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">
+                        {uploadedEmail?.content || mockEmail.content}
+                      </pre>
+                    )}
                   </ScrollArea>
                 </div>
 
