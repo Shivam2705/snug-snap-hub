@@ -55,6 +55,11 @@ const BaseAgentsVoice = () => {
   ];
 
   const handleRunAgent = (agentId: string) => {
+    if (agentId === "i-audit") {
+      window.location.href = "https://lovable.dev/projects/881a6688-e0d9-46a1-9829-c5840f6204c2";
+      return;
+    }
+    
     const agent = agents.find(a => a.id === agentId);
     if (agent) {
       setSelectedAgent(agent);
