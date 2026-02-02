@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import EmailAssistDialog from "@/components/EmailAssistDialog";
-import { Mail, FileSpreadsheet, FileText, MessageSquare } from "lucide-react";
+import { Mail, FileSpreadsheet, FileText, MessageSquare, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const BaseAgentsText = () => {
+  const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [showEmailAssist, setShowEmailAssist] = useState(false);
@@ -108,14 +111,25 @@ const BaseAgentsText = () => {
       <Header />
       
       <div className="container py-8">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate("/")} 
+          className="mb-6 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Home
+        </Button>
+
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
-            Base Agents
+            Text AI
           </div>
-          <h1 className="text-3xl font-bold mb-2">Text Agents</h1>
-          <p className="text-muted-foreground max-w-2xl">
-            Process emails, invoices, and documents with intelligent extraction, validation, 
-            and knowledge assistance capabilities.
+          <h1 className="text-3xl font-bold mb-4">Text Agents</h1>
+          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+            Text AI is revolutionizing retail and ecommerce by automating high-volume document workflows—from processing 
+            thousands of customer emails daily to extracting invoice data in seconds. Our intelligent agents reduce manual 
+            review time by up to 80%, enabling faster customer response, seamless order reconciliation, and instant access 
+            to product knowledge across your entire catalog.
           </p>
         </div>
 

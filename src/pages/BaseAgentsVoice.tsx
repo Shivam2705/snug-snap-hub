@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
-import { Headphones, ClipboardCheck } from "lucide-react";
+import { Headphones, ClipboardCheck, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const BaseAgentsVoice = () => {
+  const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -64,14 +67,25 @@ const BaseAgentsVoice = () => {
       <Header />
       
       <div className="container py-8">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate("/")} 
+          className="mb-6 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Home
+        </Button>
+
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
-            Base Agents
+            Voice AI
           </div>
-          <h1 className="text-3xl font-bold mb-2">Voice Agents</h1>
-          <p className="text-muted-foreground max-w-2xl">
-            Transcribe and analyze voice interactions, perform post-call analysis, 
-            and identify customer sentiment and compliance issues.
+          <h1 className="text-3xl font-bold mb-4">Voice Agents</h1>
+          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+            Voice AI is redefining customer experience in retail by turning every call into actionable intelligence. 
+            Our agents transcribe and analyze 100% of customer interactions in real-time, automatically detecting 
+            vulnerable customers, ensuring compliance, and surfacing insights that help agents deliver exceptional 
+            service while protecting your brand reputation.
           </p>
         </div>
 

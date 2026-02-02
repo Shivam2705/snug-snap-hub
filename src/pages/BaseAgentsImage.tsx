@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
 import ImageExtractionDialog from "@/components/ImageExtractionDialog";
-import { ShoppingBag, ScanSearch, TrendingUp } from "lucide-react";
+import { ShoppingBag, ScanSearch, TrendingUp, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const BaseAgentsImage = () => {
+  const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [showNextLens, setShowNextLens] = useState(false);
@@ -90,14 +93,25 @@ const BaseAgentsImage = () => {
       <Header />
       
       <div className="container py-8">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate("/")} 
+          className="mb-6 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Home
+        </Button>
+
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
-            Base Agents
+            Visual AI
           </div>
-          <h1 className="text-3xl font-bold mb-2">Image Agents</h1>
-          <p className="text-muted-foreground max-w-2xl">
-            Analyze images for product recommendations, extract visual information, 
-            and identify fashion trends for buying decisions.
+          <h1 className="text-3xl font-bold mb-4">Image Agents</h1>
+          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+            Visual AI is transforming retail and ecommerce through intelligent image understanding. From enabling 
+            customers to search products by simply uploading a photo, to helping buyers identify emerging fashion 
+            trends from social media—our agents drive higher conversion rates, smarter merchandising decisions, 
+            and personalized shopping experiences that keep customers coming back.
           </p>
         </div>
 
