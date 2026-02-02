@@ -1,60 +1,36 @@
 import Header from "@/components/Header";
 import SolutionTile from "@/components/SolutionTile";
 import PartnerSlider from "@/components/PartnerSlider";
-import { Brain, Shield, Sparkles, FileText, Image, Mic, ShoppingBag, Layers, Cpu, Zap, Database } from "lucide-react";
+import { Brain, Shield, Sparkles, FileText, Image, Mic, ShoppingBag, Headphones, DollarSign, Cpu, Zap, Database } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 const Index = () => {
   const navigate = useNavigate();
-  // Agentic Repository - consolidates all base agents
-  const repositoryAgents = [{
-    name: "Email Assist Agent"
-  }, {
-    name: "Invoice Agent"
-  }, {
-    name: "Text Extraction Agent"
-  }, {
-    name: "Knowledge Assist Agent"
-  }, {
-    name: "Product Recommendation Agent"
-  }, {
-    name: "Image Extraction Agent"
-  }, {
-    name: "Buyer Assist Agent"
+  // Contact Center Agents
+  const contactCenterAgents = [{
+    name: "i-Audit"
   }, {
     name: "i-Assist"
   }, {
-    name: "i-Audit"
+    name: "Email Assist Agent"
+  }, {
+    name: "Knowledge Assist Agent"
   }];
 
-  // CAWAO Agents
-  const cawaoAgents = [{
-    name: "Customer Verification"
+  // E-Commerce Agents
+  const ecommerceAgents = [{
+    name: "Hyper Personalized Marketing"
   }, {
-    name: "Fraud Detection"
+    name: "NEXT Lens"
   }, {
-    name: "Address Verification"
-  }, {
-    name: "Email Agent"
-  }, {
-    name: "Messaging Agent"
+    name: "Buyer Assist Agent"
   }];
 
-  // Marketing Agents
-  const marketingAgents = [{
-    name: "Customer 360° Intelligence"
+  // Finance & Auditing Agents
+  const financeAgents = [{
+    name: "CAWAO-Schedule"
   }, {
-    name: "Hyper-Personalized Apparel"
-  }, {
-    name: "Spend Affordability"
-  }, {
-    name: "Omnichannel Orchestration"
-  }, {
-    name: "Predictive Next-Best-Product"
-  }, {
-    name: "Campaign Personalization"
-  }, {
-    name: "Loyalty & Lifecycle"
+    name: "Invoice Agent"
   }];
 
   // Multi-modal capabilities
@@ -188,11 +164,11 @@ Agentic Processes, Powered by the 3R Ideology - Repurposed Intelligence, Reusab
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <SolutionTile title="Agentic Repository" description="Comprehensive library of multi-modal AI agents for text processing, visual analysis, and voice interactions—your foundation for intelligent automation." agents={repositoryAgents} icon={Layers} href="/base-agents" />
+            <SolutionTile title="Contact Center" description="AI-powered agents for call transcription, compliance auditing, email processing, and intelligent knowledge assistance—transforming every customer interaction." agents={contactCenterAgents} icon={Headphones} href="/contact-center" />
             
-            <SolutionTile title="CAWAO-Schedule" description="Credit Account Investigation without orders. Multi-agent verification workflows for fraud detection through CIFAS, authentication codes, and customer validation." agents={cawaoAgents} icon={Shield} href="/cawao/agents" processHref="/cawao" />
+            <SolutionTile title="E-Commerce" description="Hyper-personalized marketing, visual product search, and trend analysis agents that drive engagement, conversions, and smarter merchandising decisions." agents={ecommerceAgents} icon={ShoppingBag} href="/ecommerce" />
             
-            <SolutionTile title="Hyper Personalized Marketing" description="Analyze customer demographics and buying trends to deliver highly personalized product recommendations and drive engagement." agents={marketingAgents} icon={ShoppingBag} href="/marketing/agents" processHref="https://next-hyper-personalization-ui-1037311574972.us-central1.run.app/" />
+            <SolutionTile title="Finance & Auditing" description="Automated credit investigation, fraud detection, and invoice processing agents ensuring compliance, accuracy, and financial control." agents={financeAgents} icon={DollarSign} href="/finance" />
           </div>
         </div>
       </section>
