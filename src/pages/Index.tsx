@@ -3,7 +3,9 @@ import SolutionTile from "@/components/SolutionTile";
 import PartnerSlider from "@/components/PartnerSlider";
 import { Brain, Shield, Sparkles, FileText, Image, Mic, ShoppingBag, Layers, Cpu, Zap, Database } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 const Index = () => {
+  const navigate = useNavigate();
   // Agentic Repository - consolidates all base agents
   const repositoryAgents = [{
     name: "Email Assist Agent"
@@ -59,15 +61,18 @@ const Index = () => {
   const capabilities = [{
     icon: FileText,
     title: "Text AI",
-    description: "EXL's Text AI leverages advanced NLP to automate document processing, email triage, invoice extraction, and knowledge synthesis with enterprise-grade accuracy."
+    description: "EXL's Text AI leverages advanced NLP to automate document processing, email triage, invoice extraction, and knowledge synthesis with enterprise-grade accuracy.",
+    href: "/base-agents/text"
   }, {
     icon: Image,
     title: "Visual AI",
-    description: "EXL's Visual AI powers intelligent image recognition, product attribute extraction, visual search, and fashion trend analysis for seamless retail experiences."
+    description: "EXL's Visual AI powers intelligent image recognition, product attribute extraction, visual search, and fashion trend analysis for seamless retail experiences.",
+    href: "/base-agents/image"
   }, {
     icon: Mic,
     title: "Voice AI",
-    description: "EXL's Voice AI delivers real-time transcription, sentiment analysis, compliance monitoring, and conversational intelligence for enhanced customer interactions."
+    description: "EXL's Voice AI delivers real-time transcription, sentiment analysis, compliance monitoring, and conversational intelligence for enhanced customer interactions.",
+    href: "/base-agents/voice"
   }];
   return <div className="min-h-screen bg-background">
       <Header />
@@ -150,7 +155,12 @@ const Index = () => {
         </div>
         
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {capabilities.map((cap, index) => <Card key={index} className="card-glow bg-card/30 border-border/50 text-center">
+          {capabilities.map((cap, index) => (
+            <Card 
+              key={index} 
+              className="card-glow bg-card/30 border-border/50 text-center cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+              onClick={() => navigate(cap.href)}
+            >
               <CardHeader className="pb-4">
                 <div className="h-14 w-14 rounded-xl gradient-primary flex items-center justify-center mx-auto mb-4 glow-primary">
                   <cap.icon className="h-7 w-7 text-white" />
@@ -160,7 +170,8 @@ const Index = () => {
                   {cap.description}
                 </CardDescription>
               </CardHeader>
-            </Card>)}
+            </Card>
+          ))}
         </div>
       </section>
 
