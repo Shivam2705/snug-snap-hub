@@ -75,6 +75,11 @@ const ContactCenterAgents = () => {
       return;
     }
     
+    if (agentId === "knowledge-assist") {
+      navigate("/knowledge-assist");
+      return;
+    }
+    
     const agent = contactCenterAgentsList.find(a => a.id === agentId);
     if (agent) {
       setSelectedAgent(agent);
