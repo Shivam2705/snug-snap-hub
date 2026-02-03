@@ -3,11 +3,11 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { mockCases, FinalOutcome, QueueType } from "@/data/mockCases";
 import StatusBadge from "@/components/StatusBadge";
 import RiskBadge from "@/components/investigation/RiskBadge";
-import CustomerDetailsPanel from "@/components/investigation/CustomerDetailsPanel";
+import CollapsibleCustomerDetails from "@/components/investigation/CollapsibleCustomerDetails";
 import AIRecommendationPanel from "@/components/investigation/AIRecommendationPanel";
 import EvidenceTimeline from "@/components/investigation/EvidenceTimeline";
 import ActivityLog from "@/components/investigation/ActivityLog";
-import AgentPlaybook from "@/components/investigation/AgentPlaybook";
+import LiveAgentPlaybook from "@/components/investigation/LiveAgentPlaybook";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -52,7 +52,6 @@ const CaseDetail = () => {
   }
 
   const handleCompleteCase = () => {
-    // Update the case in mockCases (in real app this would be an API call)
     const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
     if (caseIndex !== -1) {
       mockCases[caseIndex] = {
@@ -109,7 +108,6 @@ const CaseDetail = () => {
             </div>
             
             <div className="flex items-center gap-3">
-              {/* Show final outcome for completed cases */}
               {isCompleted && outcome && OutcomeIcon && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${outcome.bgColor}`}>
                   <OutcomeIcon className={`h-5 w-5 ${outcome.color}`} />
@@ -117,7 +115,6 @@ const CaseDetail = () => {
                 </div>
               )}
               
-              {/* Complete Button for non-completed cases */}
               {!isCompleted && (
                 <Button 
                   onClick={handleCompleteCase}
@@ -131,19 +128,21 @@ const CaseDetail = () => {
           </div>
         </div>
 
-        {/* Three Panel Layout */}
-        <div className="grid lg:grid-cols-12 gap-6">
-          {/* Left Panel - Customer Details */}
-          <div className="lg:col-span-3 space-y-6">
-            <CustomerDetailsPanel caseData={caseData} />
-          </div>
+        {/* Collapsible Customer Details at Top */}
+        <CollapsibleCustomerDetails caseData={caseData} />
 
-          {/* Center Panel - Evidence Timeline */}
-          <div className="lg:col-span-6">
+        {/* Two Panel Layout */}
+        <div className="grid lg:grid-cols-12 gap-6">
+          {/* Main Panel - Tabs with Playbook Default */}
+          <div className="lg:col-span-9">
             <Card className="border-0 shadow-md bg-[#181C23] border-[#12151B]">
               <CardContent className="p-6">
-                <Tabs defaultValue="timeline">
+                <Tabs defaultValue="playbook">
                   <TabsList className="mb-4 bg-[#12151B]">
+                    <TabsTrigger value="playbook" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
+                      <Bot className="h-4 w-4" />
+                      Agent Playbook
+                    </TabsTrigger>
                     <TabsTrigger value="timeline" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
                       <FileText className="h-4 w-4" />
                       Evidence
@@ -152,11 +151,11 @@ const CaseDetail = () => {
                       <Activity className="h-4 w-4" />
                       Activity Log
                     </TabsTrigger>
-                    <TabsTrigger value="playbook" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
-                      <Bot className="h-4 w-4" />
-                      Agent Playbook
-                    </TabsTrigger>
                   </TabsList>
+
+                  <TabsContent value="playbook">
+                    <LiveAgentPlaybook caseData={caseData} />
+                  </TabsContent>
 
                   <TabsContent value="timeline">
                     {caseData.evidenceTimeline && caseData.evidenceTimeline.length > 0 ? (
@@ -178,10 +177,6 @@ const CaseDetail = () => {
                         <p>No activity recorded yet</p>
                       </div>
                     )}
-                  </TabsContent>
-
-                  <TabsContent value="playbook">
-                    <AgentPlaybook caseData={caseData} />
                   </TabsContent>
                 </Tabs>
               </CardContent>
