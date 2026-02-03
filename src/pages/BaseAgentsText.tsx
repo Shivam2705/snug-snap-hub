@@ -99,6 +99,10 @@ const BaseAgentsText = () => {
       setShowEmailAssist(true);
       return;
     }
+    if (agentId === "knowledge-assist") {
+      navigate("/knowledge-assist");
+      return;
+    }
     const agent = agents.find(a => a.id === agentId);
     if (agent) {
       setSelectedAgent(agent);
