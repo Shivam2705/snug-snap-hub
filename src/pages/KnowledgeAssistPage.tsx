@@ -352,7 +352,7 @@ const KnowledgeAssistPage = () => {
         <div className="grid lg:grid-cols-2 gap-6">
           <ChatInterface
             title="EXL Knowledge Assist"
-            description="Advanced RAG-powered chatbot"
+            description="Advanced EXL Engine based RAG-Powered Chatbot"
             chat={exlChat}
             setChat={setExlChat}
             fileInputRef={exlFileInputRef}
