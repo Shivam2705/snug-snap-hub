@@ -138,35 +138,35 @@ const InvoiceAgentDialog = ({ open, onOpenChange }: InvoiceAgentDialogProps) => 
               });
 
               // Check for final result
-              if (data.result) {
+              if (data.done && data.result) {
                 const result: InvoiceResult = {
                   non_tabular: {
-                    invoiceNumber: data.result.invoice_number || '',
-                    invoiceDate: data.result.invoice_date || '',
-                    clientName: data.result.client_name || '',
-                    clientAddress: data.result.client_address || '',
-                    shippingAddress: data.result.shipping_address || '',
-                    billingAddress: data.result.billing_address || '',
+                    invoiceNumber: data.result.non_tabular?.invoice_number || '',
+                    invoiceDate: data.result.non_tabular?.invoice_date || '',
+                    clientName: data.result.non_tabular?.client_name || '',
+                    clientAddress: data.result.non_tabular?.client_address || '',
+                    shippingAddress: data.result.non_tabular?.next_shipping_address || '',
+                    billingAddress: data.result.non_tabular?.next_billing_address || '',
                   },
                   tabular: {
-                    line_items: (data.result.line_items || []).map((item: any, index: number) => ({
+                    line_items: (data.result.tabular?.line_items || []).map((item: any) => ({
                       id: crypto.randomUUID(),
-                      customerPO: item.customer_po || '',
+                      customerPO: item.customer_PO || '',
                       sellerArticleNumber: item.seller_article_number || '',
                       description: item.description || '',
-                      quantity: item.quantity || 0,
-                      unitPrice: item.unit_price || 0,
-                      discount: item.discount || 0,
-                      total: item.total || 0,
+                      quantity: parseFloat(String(item.qty || 0).replace(/,/g, '')) || 0,
+                      unitPrice: parseFloat(String(item.unit_price || 0).replace(/[$,%]/g, '')) || 0,
+                      discount: parseFloat(String(item.discount || 0).replace(/[$,%]/g, '')) || 0,
+                      total: parseFloat(String(item.total || 0).replace(/[$,]/g, '')) || 0,
                     })),
                     final_values: {
-                      subtotal: data.result.subtotal || 0,
-                      freight: data.result.freight || 0,
-                      vat: data.result.vat || 0,
-                      totalUnits: data.result.total_units || 0,
-                      totalUSD: data.result.total_usd || 0,
-                      advancePayment: data.result.advance_payment || 0,
-                      netTotal: data.result.net_total || 0,
+                      subtotal: parseFloat(String(data.result.tabular?.final_values?.Subtotal || 0).replace(/[$,]/g, '')) || 0,
+                      freight: parseFloat(String(data.result.tabular?.final_values?.Freight || 0).replace(/[$,]/g, '')) || 0,
+                      vat: parseFloat(String(data.result.tabular?.final_values?.VAT || 0).replace(/[$,]/g, '')) || 0,
+                      totalUnits: parseFloat(String(data.result.tabular?.final_values?.total_units || 0).replace(/,/g, '')) || 0,
+                      totalUSD: parseFloat(String(data.result.tabular?.final_values?.total_usd || 0).replace(/[$,]/g, '')) || 0,
+                      advancePayment: parseFloat(String(data.result.tabular?.final_values?.advance_payment || 0).replace(/[$,]/g, '')) || 0,
+                      netTotal: parseFloat(String(data.result.tabular?.final_values?.net_total || 0).replace(/[$,]/g, '')) || 0,
                     },
                   },
                 };

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -8,20 +8,35 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import {
+  queryKnowledgeAssistant,
+  uploadDocumentToKnowledgeAssistant,
+  resetKnowledgeAssistantChat,
+  generateUserToken,
+} from "@/services/knowledgeAssistService";
 
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
+interface UploadedDocument {
+  file_id: string;
+  filename: string;
+}
+
 interface ChatSection {
   messages: ChatMessage[];
   isProcessing: boolean;
   processingTime: number | null;
-  uploadedFile: File | null;
+  uploadedDocuments: UploadedDocument[];
   isFileProcessing: boolean;
   fileProcessingProgress: number;
+  userToken: string;
 }
+
+const SESSION_STORAGE_KEY_EXL = "knowledge_assist_user_token_exl";
+const SESSION_STORAGE_KEY_TRADITIONAL = "knowledge_assist_user_token_traditional";
 
 const KnowledgeAssistPage = () => {
   const navigate = useNavigate();
@@ -31,26 +46,46 @@ const KnowledgeAssistPage = () => {
     messages: [],
     isProcessing: false,
     processingTime: null,
-    uploadedFile: null,
+    uploadedDocuments: [],
     isFileProcessing: false,
     fileProcessingProgress: 0,
+    userToken: "",
   });
   
   const [traditionalChat, setTraditionalChat] = useState<ChatSection>({
     messages: [],
     isProcessing: false,
     processingTime: null,
-    uploadedFile: null,
+    uploadedDocuments: [],
     isFileProcessing: false,
     fileProcessingProgress: 0,
+    userToken: "",
   });
 
   const exlFileInputRef = useRef<HTMLInputElement>(null);
   const traditionalFileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (
+  // Initialize tokens from sessionStorage
+  useEffect(() => {
+    let exlToken = sessionStorage.getItem(SESSION_STORAGE_KEY_EXL);
+    if (!exlToken) {
+      exlToken = generateUserToken();
+      sessionStorage.setItem(SESSION_STORAGE_KEY_EXL, exlToken);
+    }
+    setExlChat((prev) => ({ ...prev, userToken: exlToken }));
+
+    let tradToken = sessionStorage.getItem(SESSION_STORAGE_KEY_TRADITIONAL);
+    if (!tradToken) {
+      tradToken = generateUserToken();
+      sessionStorage.setItem(SESSION_STORAGE_KEY_TRADITIONAL, tradToken);
+    }
+    setTraditionalChat((prev) => ({ ...prev, userToken: tradToken }));
+  }, []);
+
+  const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
     setChat: React.Dispatch<React.SetStateAction<ChatSection>>,
+    chat: ChatSection,
     isExl: boolean
   ) => {
     const file = event.target.files?.[0];
@@ -64,31 +99,45 @@ const KnowledgeAssistPage = () => {
       return;
     }
 
-    setChat(prev => ({ ...prev, uploadedFile: file, isFileProcessing: true, fileProcessingProgress: 0 }));
+    setChat(prev => ({ ...prev, isFileProcessing: true, fileProcessingProgress: 0 }));
 
-    // Simulate file processing with different speeds
-    const processingSpeed = isExl ? 50 : 200; // EXL is faster
-    let progress = 0;
-    
-    const interval = setInterval(() => {
-      progress += 10;
-      setChat(prev => ({ ...prev, fileProcessingProgress: progress }));
+    try {
+      const response = await uploadDocumentToKnowledgeAssistant(file, chat.userToken);
       
-      if (progress >= 100) {
-        clearInterval(interval);
-        setChat(prev => ({ ...prev, isFileProcessing: false }));
-        toast.success(`Document "${file.name}" processed successfully`);
-      }
-    }, processingSpeed);
+      setChat(prev => ({
+        ...prev,
+        uploadedDocuments: [
+          ...prev.uploadedDocuments,
+          {
+            file_id: response.file_id,
+            filename: response.filename || file.name,
+          },
+        ],
+        isFileProcessing: false,
+        fileProcessingProgress: 100,
+      }));
+      
+      toast.success(`Document "${file.name}" uploaded successfully`);
+    } catch (error) {
+      console.error("Upload error:", error);
+      setChat(prev => ({ ...prev, isFileProcessing: false }));
+      toast.error("Failed to upload document");
+    }
 
     event.target.value = "";
   };
 
-  const handleSendMessage = (
+  const handleSendMessage = async (
     setChat: React.Dispatch<React.SetStateAction<ChatSection>>,
+    chat: ChatSection,
     isExl: boolean
   ) => {
     if (!question.trim()) return;
+
+    if (chat.uploadedDocuments.length === 0) {
+      toast.error("Please upload a document first");
+      return;
+    }
 
     const userMessage: ChatMessage = { role: "user", content: question };
     
@@ -100,15 +149,18 @@ const KnowledgeAssistPage = () => {
     }));
 
     const startTime = Date.now();
-    const responseTime = isExl ? 800 : 5600; // EXL is 7x faster
 
-    setTimeout(() => {
+    try {
+      const response = await queryKnowledgeAssistant(question, chat.userToken, {
+        history: true,
+        model: isExl ? "groq" : "openai",
+        fileId: chat.uploadedDocuments[0]?.file_id,
+      });
+
       const endTime = Date.now();
       const aiResponse: ChatMessage = {
         role: "assistant",
-        content: isExl 
-          ? "Based on the uploaded document, I found the relevant information quickly using our advanced RAG architecture. The policy states that returns are accepted within 30 days with original receipt."
-          : "After processing through traditional methods... I have analyzed the document. The return policy mentioned in the document indicates a 30-day window for returns with proof of purchase.",
+        content: response.answer || "Sorry, I couldn't generate a response.",
       };
 
       setChat(prev => ({
@@ -117,9 +169,60 @@ const KnowledgeAssistPage = () => {
         isProcessing: false,
         processingTime: endTime - startTime,
       }));
-    }, responseTime);
+    } catch (error) {
+      console.error("Query error:", error);
+      const endTime = Date.now();
+      
+      setChat(prev => ({
+        ...prev,
+        messages: [
+          ...prev.messages,
+          {
+            role: "assistant",
+            content: "Error processing query. Please try again.",
+          },
+        ],
+        isProcessing: false,
+        processingTime: endTime - startTime,
+      }));
+      
+      toast.error("Failed to process query");
+    }
 
     setQuestion("");
+  };
+
+  const handleResetChat = async (
+    setChat: React.Dispatch<React.SetStateAction<ChatSection>>,
+    chat: ChatSection,
+    storageKey: string,
+    isExl: boolean
+  ) => {
+    try {
+      await resetKnowledgeAssistantChat(
+        chat.userToken,
+        chat.uploadedDocuments[0]?.file_id
+      );
+
+      sessionStorage.removeItem(storageKey);
+      const newToken = generateUserToken();
+      sessionStorage.setItem(storageKey, newToken);
+
+      setChat({
+        messages: [],
+        isProcessing: false,
+        processingTime: null,
+        uploadedDocuments: [],
+        isFileProcessing: false,
+        fileProcessingProgress: 0,
+        userToken: newToken,
+      });
+
+      toast.success("Chat reset successfully");
+    } catch (error) {
+      console.error("Reset error:", error);
+      toast.error("Failed to reset chat");
+    }
   };
 
   const advantages = [
@@ -137,6 +240,7 @@ const KnowledgeAssistPage = () => {
     fileInputRef,
     isExl,
     accentColor,
+    storageKey,
   }: {
     title: string;
     description: string;
@@ -145,17 +249,8 @@ const KnowledgeAssistPage = () => {
     fileInputRef: React.RefObject<HTMLInputElement>;
     isExl: boolean;
     accentColor: string;
-  }) => {
-    const handleClearChat = () => {
-      setChat(prev => ({
-        ...prev,
-        messages: [],
-        processingTime: null,
-      }));
-      toast.success("Chat cleared");
-    };
-
-    return (
+    storageKey: string;
+  }) => (
       <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -170,10 +265,9 @@ const KnowledgeAssistPage = () => {
             </div>
             <Button
               variant="ghost"
-              size="icon"
-              onClick={handleClearChat}
-              disabled={chat.messages.length === 0}
-              title="Clear chat"
+              size="sm"
+              onClick={() => handleResetChat(setChat, chat, storageKey, isExl)}
+              className="h-8 w-8 p-0"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -195,7 +289,7 @@ const KnowledgeAssistPage = () => {
             type="file"
             accept=".txt,.pdf,.doc,.docx"
             className="hidden"
-            onChange={(e) => handleFileUpload(e, setChat, isExl)}
+            onChange={(e) => handleFileUpload(e, setChat, chat, isExl)}
           />
           <Button
             variant="outline"
@@ -204,7 +298,7 @@ const KnowledgeAssistPage = () => {
             disabled={chat.isFileProcessing}
           >
             <Upload className="h-4 w-4" />
-            {chat.uploadedFile ? chat.uploadedFile.name : "Upload Document (TXT, PDF, DOC)"}
+            {chat.uploadedDocuments.length > 0 ? chat.uploadedDocuments[0].filename : "Upload Document (TXT, PDF, DOC)"}
           </Button>
           
           {chat.isFileProcessing && (
@@ -212,7 +306,7 @@ const KnowledgeAssistPage = () => {
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Loader2 className="h-3 w-3 animate-spin" />
-                  Processing document...
+                  Uploading document...
                 </span>
                 <span>{chat.fileProcessingProgress}%</span>
               </div>
@@ -220,7 +314,7 @@ const KnowledgeAssistPage = () => {
             </div>
           )}
           
-          {chat.uploadedFile && !chat.isFileProcessing && (
+          {chat.uploadedDocuments.length > 0 && !chat.isFileProcessing && (
             <div className="flex items-center gap-2 text-xs text-green-600">
               <CheckCircle2 className="h-3 w-3" />
               <span>Document ready for queries</span>
@@ -256,7 +350,7 @@ const KnowledgeAssistPage = () => {
             <div className="flex justify-start">
               <div className="bg-background border rounded-lg px-3 py-2 text-sm flex items-center gap-2">
                 <Loader2 className="h-3 w-3 animate-spin" />
-                <span>Thinking...</span>
+                <span>Processing...</span>
               </div>
             </div>
           )}
@@ -277,20 +371,20 @@ const KnowledgeAssistPage = () => {
             placeholder="Ask a question about your document..."
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage(setChat, isExl)}
-            disabled={!chat.uploadedFile || chat.isProcessing || chat.isFileProcessing}
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage(setChat, chat, isExl)}
+            disabled={chat.uploadedDocuments.length === 0 || chat.isProcessing || chat.isFileProcessing}
           />
           <Button
             size="icon"
-            onClick={() => handleSendMessage(setChat, isExl)}
-            disabled={!chat.uploadedFile || chat.isProcessing || chat.isFileProcessing || !question.trim()}
+            onClick={() => handleSendMessage(setChat, chat, isExl)}
+            disabled={chat.uploadedDocuments.length === 0 || chat.isProcessing || chat.isFileProcessing || !question.trim()}
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
       </CardContent>
     </Card>
-  );};
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -358,6 +452,7 @@ const KnowledgeAssistPage = () => {
             fileInputRef={exlFileInputRef}
             isExl={true}
             accentColor="primary"
+            storageKey={SESSION_STORAGE_KEY_EXL}
           />
           
           <ChatInterface
@@ -368,6 +463,7 @@ const KnowledgeAssistPage = () => {
             fileInputRef={traditionalFileInputRef}
             isExl={false}
             accentColor="muted"
+            storageKey={SESSION_STORAGE_KEY_TRADITIONAL}
           />
         </div>
       </div>

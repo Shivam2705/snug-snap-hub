@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
+import EmailAssistDialog from "@/components/EmailAssistDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Headphones, FileText, BookOpen, Mic, Shield } from "lucide-react";
 
@@ -68,10 +69,16 @@ const ContactCenterAgents = () => {
   const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<typeof contactCenterAgentsList[0] | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
 
   const handleRunAgent = (agentId: string) => {
     if (agentId === "i-audit") {
       window.location.href = "https://next-iaudit-ui-1037311574972.us-central1.run.app";
+      return;
+    }
+    
+    if (agentId === "email-assist") {
+      setEmailDialogOpen(true);
       return;
     }
     
@@ -145,6 +152,11 @@ const ContactCenterAgents = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         agent={selectedAgent}
+      />
+
+      <EmailAssistDialog 
+        open={emailDialogOpen} 
+        onOpenChange={setEmailDialogOpen} 
       />
     </div>
   );

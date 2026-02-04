@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import EmailAssistDialog from "@/components/EmailAssistDialog";
+import InvoiceAgentDialog from "@/components/invoice-agent/InvoiceAgentDialog";
 import { Mail, FileSpreadsheet, FileText, MessageSquare, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +13,7 @@ const BaseAgentsText = () => {
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [showEmailAssist, setShowEmailAssist] = useState(false);
+  const [showInvoiceAgent, setShowInvoiceAgent] = useState(false);
 
   const agents = [
     {
@@ -99,6 +101,10 @@ const BaseAgentsText = () => {
       setShowEmailAssist(true);
       return;
     }
+    if (agentId === "invoice-agent") {
+      setShowInvoiceAgent(true);
+      return;
+    }
     if (agentId === "knowledge-assist") {
       navigate("/knowledge-assist");
       return;
@@ -157,6 +163,11 @@ const BaseAgentsText = () => {
       <EmailAssistDialog
         open={showEmailAssist}
         onOpenChange={setShowEmailAssist}
+      />
+
+      <InvoiceAgentDialog
+        open={showInvoiceAgent}
+        onOpenChange={setShowInvoiceAgent}
       />
     </div>
   );
