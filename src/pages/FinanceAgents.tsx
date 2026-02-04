@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
+import InvoiceAgentDialog from "@/components/invoice-agent/InvoiceAgentDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, DollarSign, FileText, Shield, Calculator } from "lucide-react";
 
@@ -42,10 +43,16 @@ const FinanceAgents = () => {
   const navigate = useNavigate();
   const [selectedAgent, setSelectedAgent] = useState<typeof financeAgentsList[0] | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
 
   const handleRunAgent = (agentId: string) => {
     if (agentId === "cawao-schedule") {
       navigate("/cawao");
+      return;
+    }
+    
+    if (agentId === "invoice-agent") {
+      setInvoiceDialogOpen(true);
       return;
     }
     
@@ -114,6 +121,11 @@ const FinanceAgents = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         agent={selectedAgent}
+      />
+
+      <InvoiceAgentDialog
+        open={invoiceDialogOpen}
+        onOpenChange={setInvoiceDialogOpen}
       />
     </div>
   );
