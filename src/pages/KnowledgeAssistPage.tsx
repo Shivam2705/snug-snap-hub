@@ -211,23 +211,65 @@ const KnowledgeAssistPage = () => {
     }));
 
     const startTime = Date.now();
+    let aiResponse = "";
 
     try {
       const response = await queryKnowledgeAssistant(question, exlChat.userToken, {
+        stream: false,
         history: true,
         model: "groq",
         fileId: exlChat.uploadedDocuments[0]?.file_id,
+        onChunk: (chunk: string) => {
+          // Update the last message (assistant response) as chunks arrive (only for streaming)
+          aiResponse += chunk;
+          setExlChat(prev => {
+            const updatedMessages = [...prev.messages];
+            const lastMessage = updatedMessages[updatedMessages.length - 1];
+            
+            if (lastMessage && lastMessage.role === "assistant") {
+              lastMessage.content = aiResponse;
+            } else {
+              updatedMessages.push({
+                role: "assistant",
+                content: aiResponse,
+              });
+            }
+            
+            return {
+              ...prev,
+              messages: updatedMessages,
+            };
+          });
+        }
       });
 
       const endTime = Date.now();
-      const aiResponse: ChatMessage = {
-        role: "assistant",
-        content: response.answer || "Sorry, I couldn't generate a response.",
-      };
+      
+      // If not streaming, use the full response
+      if (!aiResponse && response.answer) {
+        aiResponse = response.answer;
+        setExlChat(prev => {
+          const updatedMessages = [...prev.messages];
+          const lastMessage = updatedMessages[updatedMessages.length - 1];
+          
+          if (lastMessage && lastMessage.role === "assistant") {
+            lastMessage.content = aiResponse;
+          } else {
+            updatedMessages.push({
+              role: "assistant",
+              content: aiResponse,
+            });
+          }
+          
+          return {
+            ...prev,
+            messages: updatedMessages,
+          };
+        });
+      }
 
       setExlChat(prev => ({
         ...prev,
-        messages: [...prev.messages, aiResponse],
         isProcessing: false,
         processingTime: endTime - startTime,
       }));
@@ -250,8 +292,6 @@ const KnowledgeAssistPage = () => {
       
       toast.error("Failed to process query");
     }
-
-    setExlQuestion("");
   }, [exlChat.uploadedDocuments, exlChat.userToken]);
 
   const handleTraditionalSend = useCallback(async (question: string) => {
@@ -272,23 +312,65 @@ const KnowledgeAssistPage = () => {
     }));
 
     const startTime = Date.now();
+    let aiResponse = "";
 
     try {
       const response = await queryKnowledgeAssistant(question, traditionalChat.userToken, {
+        stream: false,
         history: true,
         model: "openai",
         fileId: traditionalChat.uploadedDocuments[0]?.file_id,
+        onChunk: (chunk: string) => {
+          // Update the last message (assistant response) as chunks arrive (only for streaming)
+          aiResponse += chunk;
+          setTraditionalChat(prev => {
+            const updatedMessages = [...prev.messages];
+            const lastMessage = updatedMessages[updatedMessages.length - 1];
+            
+            if (lastMessage && lastMessage.role === "assistant") {
+              lastMessage.content = aiResponse;
+            } else {
+              updatedMessages.push({
+                role: "assistant",
+                content: aiResponse,
+              });
+            }
+            
+            return {
+              ...prev,
+              messages: updatedMessages,
+            };
+          });
+        }
       });
 
       const endTime = Date.now();
-      const aiResponse: ChatMessage = {
-        role: "assistant",
-        content: response.answer || "Sorry, I couldn't generate a response.",
-      };
+      
+      // If not streaming, use the full response
+      if (!aiResponse && response.answer) {
+        aiResponse = response.answer;
+        setTraditionalChat(prev => {
+          const updatedMessages = [...prev.messages];
+          const lastMessage = updatedMessages[updatedMessages.length - 1];
+          
+          if (lastMessage && lastMessage.role === "assistant") {
+            lastMessage.content = aiResponse;
+          } else {
+            updatedMessages.push({
+              role: "assistant",
+              content: aiResponse,
+            });
+          }
+          
+          return {
+            ...prev,
+            messages: updatedMessages,
+          };
+        });
+      }
 
       setTraditionalChat(prev => ({
         ...prev,
-        messages: [...prev.messages, aiResponse],
         isProcessing: false,
         processingTime: endTime - startTime,
       }));
@@ -311,8 +393,6 @@ const KnowledgeAssistPage = () => {
       
       toast.error("Failed to process query");
     }
-
-    setTraditionalQuestion("");
   }, [traditionalChat.uploadedDocuments, traditionalChat.userToken]);
 
   const handleExlReset = useCallback(async () => {
