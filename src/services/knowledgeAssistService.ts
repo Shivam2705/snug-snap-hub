@@ -1,7 +1,7 @@
 // Knowledge Assist Agent Service
 // Service for interacting with the Knowledge Assist Agent API
 
-const BASE_URL = import.meta.env.VITE_KNOWLEDGE_ASSIST_BASE_URL || "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_KNOWLEDGE_ASSIST_BASE_URL || "https://2tvyko1og8.execute-api.us-east-1.amazonaws.com/";
 
 export interface QueryResponse {
   answer: string;
