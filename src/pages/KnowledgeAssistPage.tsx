@@ -362,7 +362,7 @@ const KnowledgeAssistPage = () => {
           
           <ChatInterface
             title="Traditional Chatbot"
-            description="Standard keyword-based search"
+            description="Standard RAG based chatbot"
             chat={traditionalChat}
             setChat={setTraditionalChat}
             fileInputRef={traditionalFileInputRef}
