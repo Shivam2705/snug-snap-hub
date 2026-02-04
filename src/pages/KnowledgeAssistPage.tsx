@@ -297,12 +297,19 @@ const KnowledgeAssistPage = () => {
               <p className="text-muted-foreground">Intelligent Document Q&A with Advanced RAG</p>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-4xl leading-relaxed mb-6">
+          <p className="text-muted-foreground max-w-4xl leading-relaxed mb-4">
             EXL's Knowledge Assist Agent leverages cutting-edge Retrieval-Augmented Generation (RAG) 
             technology to provide instant, accurate answers from your documents. Unlike traditional 
             chatbots that rely on basic keyword matching, our agent understands context, semantics, 
             and relationships within your documents for superior query resolution.
           </p>
+          
+          <Button 
+            onClick={() => window.open("https://finance-exleratortest1.exlservice.com/s4/knowledge-assist/know-your-documents", "_blank")}
+            className="mb-6"
+          >
+            Go to Knowledge Assist
+          </Button>
 
           {/* Advantages */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
