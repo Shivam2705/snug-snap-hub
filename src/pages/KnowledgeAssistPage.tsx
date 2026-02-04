@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, Send, Bot, Clock, Zap, Shield, DollarSign, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Send, Bot, Clock, Zap, Shield, DollarSign, Loader2, CheckCircle2, RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -145,26 +145,47 @@ const KnowledgeAssistPage = () => {
     fileInputRef: React.RefObject<HTMLInputElement>;
     isExl: boolean;
     accentColor: string;
-  }) => (
-    <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-3">
-          <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
-            <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
+  }) => {
+    const handleClearChat = () => {
+      setChat(prev => ({
+        ...prev,
+        messages: [],
+        processingTime: null,
+      }));
+      toast.success("Chat cleared");
+    };
+
+    return (
+      <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
+                <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
+              </div>
+              <div>
+                <CardTitle className="text-lg">{title}</CardTitle>
+                <CardDescription className="text-xs">{description}</CardDescription>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleClearChat}
+              disabled={chat.messages.length === 0}
+              title="Clear chat"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
           </div>
-          <div>
-            <CardTitle className="text-lg">{title}</CardTitle>
-            <CardDescription className="text-xs">{description}</CardDescription>
-          </div>
-        </div>
-        {isExl && (
-          <div className="flex flex-wrap gap-2 mt-3">
-            <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">7X Faster</Badge>
-            <Badge variant="secondary" className="bg-green-500/10 text-green-600 text-xs">Low Cost</Badge>
-            <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 text-xs">Compliant</Badge>
-          </div>
-        )}
-      </CardHeader>
+          {isExl && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">7X Faster</Badge>
+              <Badge variant="secondary" className="bg-green-500/10 text-green-600 text-xs">Low Cost</Badge>
+              <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 text-xs">Compliant</Badge>
+            </div>
+          )}
+        </CardHeader>
       
       <CardContent className="flex-1 flex flex-col gap-4">
         {/* File Upload */}
@@ -269,7 +290,7 @@ const KnowledgeAssistPage = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  );};
 
   return (
     <div className="min-h-screen bg-background">
