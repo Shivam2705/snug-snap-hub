@@ -244,7 +244,7 @@ const ChatInterface = memo(({
           <div className={`flex items-center gap-2 text-xs ${isExl ? "text-green-600" : "text-orange-600"}`}>
             <Clock className="h-3 w-3" />
             <span>Response time: {(chat.processingTime / 1000).toFixed(2)}s</span>
-            {!isExl && <span className="text-muted-foreground">(~7x slower)</span>}
+            {/* {!isExl && <span className="text-muted-foreground">(~7x slower)</span>} */}
           </div>
         )}
 
@@ -518,27 +518,43 @@ const KnowledgeAssistPage = () => {
         fullText = response.answer;
       }
       
-      // Display the full text immediately (no gradual typing for non-streaming)
-      setTraditionalChat(prev => {
-        const updatedMessages = [...prev.messages];
-        const lastMessage = updatedMessages[updatedMessages.length - 1];
-        
-        if (lastMessage && lastMessage.role === "assistant") {
-          lastMessage.content = fullText;
-        } else {
-          updatedMessages.push({
-            role: "assistant",
-            content: fullText,
+      // Apply gradual typing with streaming
+      let charIndex = 0;
+      const typeCharacter = () => {
+        if (charIndex < fullText.length) {
+          charIndex++;
+          const displayText = fullText.substring(0, charIndex);
+          
+          setTraditionalChat(prev => {
+            const updatedMessages = [...prev.messages];
+            const lastMessage = updatedMessages[updatedMessages.length - 1];
+            
+            if (lastMessage && lastMessage.role === "assistant") {
+              lastMessage.content = displayText;
+            } else {
+              updatedMessages.push({
+                role: "assistant",
+                content: displayText,
+              });
+            }
+            
+            return {
+              ...prev,
+              messages: updatedMessages,
+            };
           });
+          
+          setTimeout(typeCharacter, 50);
+        } else {
+          setTraditionalChat(prev => ({
+            ...prev,
+            isProcessing: false,
+            processingTime: endTime - startTime,
+          }));
         }
-        
-        return {
-          ...prev,
-          messages: updatedMessages,
-          isProcessing: false,
-          processingTime: endTime - startTime,
-        };
-      });
+      };
+      
+      typeCharacter();
     } catch (error) {
       console.error("Query error:", error);
       const endTime = Date.now();
