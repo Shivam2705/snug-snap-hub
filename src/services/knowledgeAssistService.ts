@@ -3,6 +3,9 @@
 
 const BASE_URL = import.meta.env.VITE_KNOWLEDGE_ASSIST_BASE_URL || "https://2tvyko1og8.execute-api.us-east-1.amazonaws.com";
 
+// Helper for non-blocking delay
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export interface QueryResponse {
   answer: string;
   sources?: string[];
@@ -104,9 +107,10 @@ export async function queryKnowledgeAssistant(
                 jsonData = JSON.parse(line);
               }
               
-              // Accumulate streaming chunks
+              // The body is the FULL incremental text, not a delta
+              // Pass the full body as-is to the callback
               if (jsonData.body) {
-                fullAnswer += jsonData.body;
+                fullAnswer = jsonData.body; // Replace, don't concatenate
                 onChunk?.(jsonData.body);
               }
               if (jsonData.references) {
@@ -132,7 +136,7 @@ export async function queryKnowledgeAssistant(
             }
             
             if (jsonData.body) {
-              fullAnswer += jsonData.body;
+              fullAnswer = jsonData.body; // Replace, don't concatenate
               onChunk?.(jsonData.body);
             }
             if (jsonData.references) {

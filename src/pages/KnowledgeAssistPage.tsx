@@ -38,64 +38,59 @@ interface ChatSection {
 const SESSION_STORAGE_KEY_EXL = "knowledge_assist_user_token_exl";
 const SESSION_STORAGE_KEY_TRADITIONAL = "knowledge_assist_user_token_traditional";
 
+// Add delay for streaming effect
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 interface ChatInputProps {
   onSendMessage: (question: string) => Promise<void>;
   isDisabled: boolean;
-  initialValue?: string;
-  onClear?: () => void;
+  value: string;
+  onChange: (value: string) => void;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
-const ChatInput = memo(({ onSendMessage, isDisabled, initialValue = "", onClear }: ChatInputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [localValue, setLocalValue] = useState(initialValue);
-
-  useEffect(() => {
-    if (initialValue === "" && inputRef.current) {
-      setLocalValue("");
-      inputRef.current.value = "";
-    }
-  }, [initialValue]);
+const ChatInput = memo(({ onSendMessage, isDisabled, value, onChange, inputRef }: ChatInputProps) => {
+  const internalRef = useRef<HTMLInputElement>(null);
+  const ref = inputRef || internalRef;
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      const value = inputRef.current?.value || "";
       if (value.trim()) {
         onSendMessage(value);
-        setLocalValue("");
-        if (inputRef.current) inputRef.current.value = "";
+        onChange("");
+        setTimeout(() => ref.current?.focus(), 0);
       }
     }
-  }, [onSendMessage]);
+  }, [onSendMessage, value, onChange, ref]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalValue(e.target.value);
-  }, []);
+    onChange(e.target.value);
+  }, [onChange]);
 
   const handleClick = useCallback(() => {
-    const value = inputRef.current?.value || "";
     if (value.trim()) {
       onSendMessage(value);
-      setLocalValue("");
-      if (inputRef.current) inputRef.current.value = "";
+      onChange("");
+      setTimeout(() => ref.current?.focus(), 0);
     }
-  }, [onSendMessage]);
+  }, [onSendMessage, value, onChange, ref]);
 
   return (
     <div className="flex gap-2">
       <Input
-        ref={inputRef}
+        ref={ref}
         placeholder="Ask a question about your document..."
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         disabled={isDisabled}
         autoComplete="off"
-        defaultValue={initialValue}
+        value={value}
       />
       <Button
         size="icon"
         onClick={handleClick}
-        disabled={isDisabled || !localValue.trim()}
+        disabled={isDisabled || !value.trim()}
       >
         <Send className="h-4 w-4" />
       </Button>
@@ -104,6 +99,169 @@ const ChatInput = memo(({ onSendMessage, isDisabled, initialValue = "", onClear 
 });
 
 ChatInput.displayName = "ChatInput";
+
+interface ChatInterfaceProps {
+  title: string;
+  description: string;
+  chat: ChatSection;
+  setChat: React.Dispatch<React.SetStateAction<ChatSection>>;
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  isExl: boolean;
+  accentColor: string;
+  onSend: (question: string) => Promise<void>;
+  onReset: () => Promise<void>;
+  inputValue: string;
+  onInputChange: (value: string) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>, setChat: React.Dispatch<React.SetStateAction<ChatSection>>, chat: ChatSection, isExl: boolean) => Promise<void>;
+}
+
+const ChatInterface = memo(({
+  title,
+  description,
+  chat,
+  setChat,
+  fileInputRef,
+  isExl,
+  accentColor,
+  onSend,
+  onReset,
+  inputValue,
+  onInputChange,
+  inputRef,
+  onFileUpload,
+}: ChatInterfaceProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
+      <CardHeader className="pb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
+              <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
+            </div>
+            <div>
+              <CardTitle className="text-lg">{title}</CardTitle>
+              <CardDescription className="text-xs">{description}</CardDescription>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="h-8 w-8 p-0"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        </div>
+        {isExl && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">7X Faster</Badge>
+            <Badge variant="secondary" className="bg-green-500/10 text-green-600 text-xs">Low Cost</Badge>
+            <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 text-xs">Compliant</Badge>
+          </div>
+        )}
+      </CardHeader>
+    
+      <CardContent className="flex-1 flex flex-col gap-4">
+        {/* File Upload */}
+        <div className="space-y-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".txt,.pdf,.doc,.docx"
+            className="hidden"
+            onChange={(e) => onFileUpload(e, setChat, chat, isExl)}
+          />
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={chat.isFileProcessing}
+          >
+            <Upload className="h-4 w-4" />
+            {chat.uploadedDocuments.length > 0 ? chat.uploadedDocuments[0].filename : "Upload Document (TXT, PDF, DOC)"}
+          </Button>
+          
+          {chat.isFileProcessing && (
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Uploading document...
+                </span>
+                <span>{chat.fileProcessingProgress}%</span>
+              </div>
+              <Progress value={chat.fileProcessingProgress} className="h-1" />
+            </div>
+          )}
+          
+          {chat.uploadedDocuments.length > 0 && !chat.isFileProcessing && (
+            <div className="flex items-center gap-2 text-xs text-green-600">
+              <CheckCircle2 className="h-3 w-3" />
+              <span>Document ready for queries</span>
+            </div>
+          )}
+        </div>
+
+        {/* Chat Messages */}
+        <div ref={containerRef} className="flex-1 min-h-[200px] max-h-[300px] overflow-y-auto space-y-3 p-3 bg-muted/30 rounded-lg flex flex-col-reverse">
+          {chat.isProcessing && (
+            <div className="flex justify-start">
+              <div className="bg-background border rounded-lg px-3 py-2 text-sm flex items-center gap-2">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>Processing...</span>
+              </div>
+            </div>
+          )}
+          {chat.messages.length === 0 && !chat.isProcessing ? (
+            <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+              Upload a document and ask questions
+            </div>
+          ) : (
+            [...chat.messages].reverse().map((msg, idx) => (
+              <div
+                key={chat.messages.length - 1 - idx}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                    msg.role === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-background border"
+                  }`}
+                >
+                  {msg.content}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Processing Time Display */}
+        {chat.processingTime !== null && (
+          <div className={`flex items-center gap-2 text-xs ${isExl ? "text-green-600" : "text-orange-600"}`}>
+            <Clock className="h-3 w-3" />
+            <span>Response time: {(chat.processingTime / 1000).toFixed(2)}s</span>
+            {!isExl && <span className="text-muted-foreground">(~7x slower)</span>}
+          </div>
+        )}
+
+        {/* Input */}
+        <ChatInput
+          onSendMessage={onSend}
+          isDisabled={chat.uploadedDocuments.length === 0 || chat.isProcessing || chat.isFileProcessing}
+          value={inputValue}
+          onChange={onInputChange}
+          inputRef={inputRef}
+        />
+      </CardContent>
+    </Card>
+  );
+});
+
+ChatInterface.displayName = "ChatInterface";
 
 const KnowledgeAssistPage = () => {
   const navigate = useNavigate();
@@ -127,6 +285,27 @@ const KnowledgeAssistPage = () => {
     fileProcessingProgress: 0,
     userToken: "",
   });
+
+  // Separate input states for each chat
+  const [exlInputValue, setExlInputValue] = useState("");
+  const [traditionalInputValue, setTraditionalInputValue] = useState("");
+
+  // Refs for input focus management
+  const exlInputRef = useRef<HTMLInputElement>(null);
+  const traditionalInputRef = useRef<HTMLInputElement>(null);
+
+  // Maintain focus on inputs when messages update
+  useEffect(() => {
+    if (exlInputRef.current) {
+      setTimeout(() => exlInputRef.current?.focus(), 0);
+    }
+  }, [exlChat.messages]);
+
+  useEffect(() => {
+    if (traditionalInputRef.current) {
+      setTimeout(() => traditionalInputRef.current?.focus(), 0);
+    }
+  }, [traditionalChat.messages]);
 
   const exlFileInputRef = useRef<HTMLInputElement>(null);
   const traditionalFileInputRef = useRef<HTMLInputElement>(null);
@@ -211,27 +390,49 @@ const KnowledgeAssistPage = () => {
     }));
 
     const startTime = Date.now();
-    let aiResponse = "";
+    let lastChunk: any = null;
 
     try {
       const response = await queryKnowledgeAssistant(question, exlChat.userToken, {
-        stream: false,
+        stream: true,
         history: true,
         model: "groq",
         fileId: exlChat.uploadedDocuments[0]?.file_id,
-        onChunk: (chunk: string) => {
-          // Update the last message (assistant response) as chunks arrive (only for streaming)
-          aiResponse += chunk;
+        onChunk: (chunk: any) => {
+          // Store the last chunk (most complete one)
+          lastChunk = chunk;
+        }
+      });
+
+      const endTime = Date.now();
+      
+      // Extract text from the last chunk
+      let fullText = "";
+      if (lastChunk && typeof lastChunk === 'object') {
+        fullText = lastChunk.content || lastChunk.text || lastChunk.answer || JSON.stringify(lastChunk);
+      } else if (lastChunk && typeof lastChunk === 'string') {
+        fullText = lastChunk;
+      } else if (response.answer) {
+        fullText = response.answer;
+      }
+      
+      // Apply gradual typing only when streaming
+      let charIndex = 0;
+      const typeCharacter = () => {
+        if (charIndex < fullText.length) {
+          charIndex++;
+          const displayText = fullText.substring(0, charIndex);
+          
           setExlChat(prev => {
             const updatedMessages = [...prev.messages];
             const lastMessage = updatedMessages[updatedMessages.length - 1];
             
             if (lastMessage && lastMessage.role === "assistant") {
-              lastMessage.content = aiResponse;
+              lastMessage.content = displayText;
             } else {
               updatedMessages.push({
                 role: "assistant",
-                content: aiResponse,
+                content: displayText,
               });
             }
             
@@ -240,39 +441,18 @@ const KnowledgeAssistPage = () => {
               messages: updatedMessages,
             };
           });
-        }
-      });
-
-      const endTime = Date.now();
-      
-      // If not streaming, use the full response
-      if (!aiResponse && response.answer) {
-        aiResponse = response.answer;
-        setExlChat(prev => {
-          const updatedMessages = [...prev.messages];
-          const lastMessage = updatedMessages[updatedMessages.length - 1];
           
-          if (lastMessage && lastMessage.role === "assistant") {
-            lastMessage.content = aiResponse;
-          } else {
-            updatedMessages.push({
-              role: "assistant",
-              content: aiResponse,
-            });
-          }
-          
-          return {
+          setTimeout(typeCharacter, 15);
+        } else {
+          setExlChat(prev => ({
             ...prev,
-            messages: updatedMessages,
-          };
-        });
-      }
-
-      setExlChat(prev => ({
-        ...prev,
-        isProcessing: false,
-        processingTime: endTime - startTime,
-      }));
+            isProcessing: false,
+            processingTime: endTime - startTime,
+          }));
+        }
+      };
+      
+      typeCharacter();
     } catch (error) {
       console.error("Query error:", error);
       const endTime = Date.now();
@@ -312,68 +492,53 @@ const KnowledgeAssistPage = () => {
     }));
 
     const startTime = Date.now();
-    let aiResponse = "";
+    let lastChunk: any = null;
 
     try {
       const response = await queryKnowledgeAssistant(question, traditionalChat.userToken, {
-        stream: false,
+        stream: true,
         history: true,
         model: "openai",
         fileId: traditionalChat.uploadedDocuments[0]?.file_id,
-        onChunk: (chunk: string) => {
-          // Update the last message (assistant response) as chunks arrive (only for streaming)
-          aiResponse += chunk;
-          setTraditionalChat(prev => {
-            const updatedMessages = [...prev.messages];
-            const lastMessage = updatedMessages[updatedMessages.length - 1];
-            
-            if (lastMessage && lastMessage.role === "assistant") {
-              lastMessage.content = aiResponse;
-            } else {
-              updatedMessages.push({
-                role: "assistant",
-                content: aiResponse,
-              });
-            }
-            
-            return {
-              ...prev,
-              messages: updatedMessages,
-            };
-          });
+        onChunk: (chunk: any) => {
+          // Store the last chunk
+          lastChunk = chunk;
         }
       });
 
       const endTime = Date.now();
       
-      // If not streaming, use the full response
-      if (!aiResponse && response.answer) {
-        aiResponse = response.answer;
-        setTraditionalChat(prev => {
-          const updatedMessages = [...prev.messages];
-          const lastMessage = updatedMessages[updatedMessages.length - 1];
-          
-          if (lastMessage && lastMessage.role === "assistant") {
-            lastMessage.content = aiResponse;
-          } else {
-            updatedMessages.push({
-              role: "assistant",
-              content: aiResponse,
-            });
-          }
-          
-          return {
-            ...prev,
-            messages: updatedMessages,
-          };
-        });
+      // Extract text from the last chunk or response
+      let fullText = "";
+      if (lastChunk && typeof lastChunk === 'object') {
+        fullText = lastChunk.content || lastChunk.text || lastChunk.answer || JSON.stringify(lastChunk);
+      } else if (lastChunk && typeof lastChunk === 'string') {
+        fullText = lastChunk;
+      } else if (response.answer) {
+        fullText = response.answer;
       }
-
-      setTraditionalChat(prev => ({
-        ...prev,
-        isProcessing: false,
-        processingTime: endTime - startTime,
-      }));
+      
+      // Display the full text immediately (no gradual typing for non-streaming)
+      setTraditionalChat(prev => {
+        const updatedMessages = [...prev.messages];
+        const lastMessage = updatedMessages[updatedMessages.length - 1];
+        
+        if (lastMessage && lastMessage.role === "assistant") {
+          lastMessage.content = fullText;
+        } else {
+          updatedMessages.push({
+            role: "assistant",
+            content: fullText,
+          });
+        }
+        
+        return {
+          ...prev,
+          messages: updatedMessages,
+          isProcessing: false,
+          processingTime: endTime - startTime,
+        };
+      });
     } catch (error) {
       console.error("Query error:", error);
       const endTime = Date.now();
@@ -458,151 +623,6 @@ const KnowledgeAssistPage = () => {
     { icon: CheckCircle2, label: "Data Compliance", description: "GDPR Compliant" },
   ];
 
-  const ChatInterface = ({
-    title,
-    description,
-    chat,
-    setChat,
-    fileInputRef,
-    isExl,
-    accentColor,
-    onSend,
-    onReset,
-  }: {
-    title: string;
-    description: string;
-    chat: ChatSection;
-    setChat: React.Dispatch<React.SetStateAction<ChatSection>>;
-    fileInputRef: React.RefObject<HTMLInputElement>;
-    isExl: boolean;
-    accentColor: string;
-    onSend: (question: string) => Promise<void>;
-    onReset: () => Promise<void>;
-  }) => (
-      <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
-                <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
-              </div>
-              <div>
-                <CardTitle className="text-lg">{title}</CardTitle>
-                <CardDescription className="text-xs">{description}</CardDescription>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onReset}
-              className="h-8 w-8 p-0"
-            >
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-          </div>
-          {isExl && (
-            <div className="flex flex-wrap gap-2 mt-3">
-              <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">7X Faster</Badge>
-              <Badge variant="secondary" className="bg-green-500/10 text-green-600 text-xs">Low Cost</Badge>
-              <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 text-xs">Compliant</Badge>
-            </div>
-          )}
-        </CardHeader>
-      
-      <CardContent className="flex-1 flex flex-col gap-4">
-        {/* File Upload */}
-        <div className="space-y-2">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".txt,.pdf,.doc,.docx"
-            className="hidden"
-            onChange={(e) => handleFileUpload(e, setChat, chat, isExl)}
-          />
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={chat.isFileProcessing}
-          >
-            <Upload className="h-4 w-4" />
-            {chat.uploadedDocuments.length > 0 ? chat.uploadedDocuments[0].filename : "Upload Document (TXT, PDF, DOC)"}
-          </Button>
-          
-          {chat.isFileProcessing && (
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                  Uploading document...
-                </span>
-                <span>{chat.fileProcessingProgress}%</span>
-              </div>
-              <Progress value={chat.fileProcessingProgress} className="h-1" />
-            </div>
-          )}
-          
-          {chat.uploadedDocuments.length > 0 && !chat.isFileProcessing && (
-            <div className="flex items-center gap-2 text-xs text-green-600">
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Document ready for queries</span>
-            </div>
-          )}
-        </div>
-
-        {/* Chat Messages */}
-        <div className="flex-1 min-h-[200px] max-h-[300px] overflow-y-auto space-y-3 p-3 bg-muted/30 rounded-lg">
-          {chat.messages.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-              Upload a document and ask questions
-            </div>
-          ) : (
-            chat.messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-background border"
-                  }`}
-                >
-                  {msg.content}
-                </div>
-              </div>
-            ))
-          )}
-          {chat.isProcessing && (
-            <div className="flex justify-start">
-              <div className="bg-background border rounded-lg px-3 py-2 text-sm flex items-center gap-2">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                <span>Processing...</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Processing Time Display */}
-        {chat.processingTime !== null && (
-          <div className={`flex items-center gap-2 text-xs ${isExl ? "text-green-600" : "text-orange-600"}`}>
-            <Clock className="h-3 w-3" />
-            <span>Response time: {(chat.processingTime / 1000).toFixed(2)}s</span>
-            {!isExl && <span className="text-muted-foreground">(~7x slower)</span>}
-          </div>
-        )}
-
-        {/* Input */}
-        <ChatInput
-          onSendMessage={onSend}
-          isDisabled={chat.uploadedDocuments.length === 0 || chat.isProcessing || chat.isFileProcessing}
-          initialValue=""
-        />
-      </CardContent>
-    </Card>
-  );
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -671,6 +691,10 @@ const KnowledgeAssistPage = () => {
             accentColor="primary"
             onSend={handleExlSend}
             onReset={handleExlReset}
+            inputValue={exlInputValue}
+            onInputChange={setExlInputValue}
+            inputRef={exlInputRef}
+            onFileUpload={handleFileUpload}
           />
           
           <ChatInterface
@@ -683,6 +707,10 @@ const KnowledgeAssistPage = () => {
             accentColor="muted"
             onSend={handleTraditionalSend}
             onReset={handleTraditionalReset}
+            inputValue={traditionalInputValue}
+            onInputChange={setTraditionalInputValue}
+            inputRef={traditionalInputRef}
+            onFileUpload={handleFileUpload}
           />
         </div>
       </div>
