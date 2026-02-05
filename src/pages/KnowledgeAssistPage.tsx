@@ -633,7 +633,7 @@ const KnowledgeAssistPage = () => {
   }, [traditionalChat.userToken, traditionalChat.uploadedDocuments]);
 
   const advantages = [
-    { icon: Zap, label: "7X Faster Response", description: "Lightning-fast retrieval with optimized vector search" },
+    { icon: Zap, label: "Faster Response", description: "Lightning-fast retrieval with optimized vector search" },
     { icon: DollarSign, label: "Low Cost", description: "Reduced infrastructure and operational costs" },
     { icon: Shield, label: "Highly Secure", description: "Enterprise-grade security and encryption" },
     { icon: CheckCircle2, label: "Data Compliance", description: "GDPR Compliant" },
