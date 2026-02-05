@@ -157,7 +157,7 @@ const ChatInterface = memo(({
         </div>
         {isExl && (
           <div className="flex flex-wrap gap-2 mt-3">
-            <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">7X Faster</Badge>
+            <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">Faster</Badge>
             <Badge variant="secondary" className="bg-green-500/10 text-green-600 text-xs">Low Cost</Badge>
             <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 text-xs">Compliant</Badge>
           </div>
