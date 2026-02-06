@@ -13,6 +13,7 @@ import {
   Unlock,
   AlertTriangle,
   Phone,
+  Play,
   LucideIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -229,15 +230,17 @@ const getInitialAgents = (config: ScenarioConfig): AgentNode[] => [
 
 interface DynamicAgentFlowchartProps {
   caseId: string;
+  isRunning: boolean;
   onWorkflowComplete?: (summary: string) => void;
 }
 
-const DynamicAgentFlowchart = ({ caseId, onWorkflowComplete }: DynamicAgentFlowchartProps) => {
+const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: DynamicAgentFlowchartProps) => {
   const config = scenarioConfigs[caseId];
   const [agents, setAgents] = useState<AgentNode[]>(() => getInitialAgents(config));
   const [liveMessage, setLiveMessage] = useState<{ from: string; to: string; message: string } | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const TOTAL_DURATION = 15000;
   const FRAUD_ACTIONS_COUNT = 7;
@@ -246,19 +249,21 @@ const DynamicAgentFlowchart = ({ caseId, onWorkflowComplete }: DynamicAgentFlowc
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // Start the workflow
+  // Start the workflow only when isRunning becomes true
   useEffect(() => {
+    if (!isRunning || hasStarted) return;
+    setHasStarted(true);
     setAgents(prev => {
       const updated = [...prev];
       updated[0] = { ...updated[0], status: 'in-progress' };
       return updated;
     });
     setLiveMessage(config.messages[0]);
-  }, []);
+  }, [isRunning, hasStarted]);
 
   // Progress bar animation
   useEffect(() => {
-    if (isComplete) return;
+    if (isComplete || !isRunning || !hasStarted) return;
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) { clearInterval(interval); return 100; }
@@ -266,11 +271,11 @@ const DynamicAgentFlowchart = ({ caseId, onWorkflowComplete }: DynamicAgentFlowc
       });
     }, 100);
     return () => clearInterval(interval);
-  }, [isComplete]);
+  }, [isComplete, isRunning, hasStarted]);
 
   // Main workflow progression
   useEffect(() => {
-    if (isComplete) return;
+    if (isComplete || !isRunning || !hasStarted) return;
 
     const runWorkflow = async () => {
       // Agent 0: Case Initiation
@@ -399,6 +404,21 @@ const DynamicAgentFlowchart = ({ caseId, onWorkflowComplete }: DynamicAgentFlowc
         return 'bg-red-500/20 text-red-400 border-red-500/30';
     }
   };
+
+  // Show waiting state when agent hasn't been triggered
+  if (!isRunning && !hasStarted) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="p-4 bg-[#12151B] rounded-full mb-4">
+          <Play className="h-10 w-10 text-slate-500" />
+        </div>
+        <h3 className="text-lg font-semibold text-white mb-2">Agent Workflow Ready</h3>
+        <p className="text-sm text-slate-400 max-w-md">
+          Click <span className="text-[#4DA3FF] font-medium">"Run Agent"</span> to start the automated investigation workflow. The AI agents will execute sequentially to analyze this case.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

@@ -1,4 +1,4 @@
-export type CaseStatus = 'Completed' | 'Review Required' | 'In Progress' | 'Not Started' | 'Pending' | 'Awaiting Customer';
+export type CaseStatus = 'Completed' | 'Review Required' | 'In Progress' | 'Not Started' | 'Pending' | 'Awaiting Customer' | 'New';
 
 export type QueueType = 'day-0' | 'day-7' | 'day-28';
 
@@ -705,10 +705,9 @@ const baseCases = [
     authenticateCode: 4 as const,
     zown: false,
     receivedDateTime: "2024-01-15T11:00:00",
-    completionDateTime: new Date().toISOString(),
+    completionDateTime: null,
     assignTo: "AI Agent",
-    status: "Completed" as CaseStatus,
-    finalOutcome: 'awaiting-customer' as FinalOutcome,
+    status: "New" as CaseStatus,
     queue: "day-0" as QueueType,
     aiSummary: "Customer verification completed. CIFAS protective registration found at historical address requiring clarification. NOC flag present indicating name discrepancy. Customer contacted via SMS and email for additional documentation. Awaiting customer response.",
     aiRecommendation: {
@@ -737,10 +736,9 @@ const baseCases = [
     authenticateCode: 2 as const,
     zown: false,
     receivedDateTime: "2024-01-15T12:30:00",
-    completionDateTime: new Date().toISOString(),
+    completionDateTime: null,
     assignTo: "AI Agent",
-    status: "Completed" as CaseStatus,
-    finalOutcome: 'escalated' as FinalOutcome,
+    status: "New" as CaseStatus,
     queue: "day-0" as QueueType,
     aiSummary: "CIFAS match detected at historical address 355 Montagu Road - Case 16218601: False Identity (01). Fraud Detection Agent flagged potential identity fraud. Case escalated to AIT team for specialist investigation with 92% confidence.",
     aiRecommendation: {
@@ -891,10 +889,9 @@ const baseCases = [
     authenticateCode: 2 as const,
     zown: false,
     receivedDateTime: "2024-01-15T16:00:00",
-    completionDateTime: new Date().toISOString(),
+    completionDateTime: null,
     assignTo: "AI Agent",
-    status: "Completed" as CaseStatus,
-    finalOutcome: 'approved' as FinalOutcome,
+    status: "New" as CaseStatus,
     queue: "day-0" as QueueType,
     aiSummary: "All verification checks passed successfully. Customer identity verified via iGuide Mainframe. Address history retrieved from Experian and TransUnion. CIFAS check completed with no fraud flags detected. Credit account unblocked automatically by AI Agent with 95% confidence.",
     aiRecommendation: {

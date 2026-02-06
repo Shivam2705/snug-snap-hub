@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { mockCases, FinalOutcome, QueueType } from "@/data/mockCases";
+import { mockCases, FinalOutcome, QueueType, CaseStatus } from "@/data/mockCases";
 import StatusBadge from "@/components/StatusBadge";
 import RiskBadge from "@/components/investigation/RiskBadge";
 import CollapsibleCustomerDetails from "@/components/investigation/CollapsibleCustomerDetails";
@@ -15,12 +15,20 @@ import {
   CheckCircle2,
   Ban,
   AlertTriangle,
-  Phone
+  Phone,
+  Play,
+  RotateCcw
 } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const DYNAMIC_CASES = ['CAW-2024-009', 'CAW-2024-004', 'CAW-2024-003'];
+
+const SCENARIO_OUTCOMES: Record<string, { status: CaseStatus; finalOutcome: FinalOutcome }> = {
+  'CAW-2024-009': { status: 'Completed', finalOutcome: 'approved' },
+  'CAW-2024-004': { status: 'Completed', finalOutcome: 'escalated' },
+  'CAW-2024-003': { status: 'Completed', finalOutcome: 'awaiting-customer' },
+};
 
 const outcomeConfig: Record<FinalOutcome, { icon: React.ElementType; label: string; color: string; bgColor: string }> = {
   blocked: { icon: Ban, label: 'Account Blocked', color: 'text-[#FF4757]', bgColor: 'bg-[#FF4757]/10 border-[#FF4757]/20' },
@@ -34,6 +42,9 @@ const CaseDetail = () => {
   const navigate = useNavigate();
   const [caseData, setCaseData] = useState(() => mockCases.find(c => c.caseId === caseId));
   const [workflowSummary, setWorkflowSummary] = useState<string | null>(null);
+  const [isAgentRunning, setIsAgentRunning] = useState(false);
+  const [hasCompleted, setHasCompleted] = useState(false);
+  const [runKey, setRunKey] = useState(0);
 
   if (!caseData) {
     return (
@@ -50,6 +61,57 @@ const CaseDetail = () => {
   }
 
   const isDynamicCase = DYNAMIC_CASES.includes(caseData.caseId);
+
+  const handleRunAgent = () => {
+    setIsAgentRunning(true);
+    // Update status to "In Progress" in mockCases for session persistence
+    const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
+    if (caseIndex !== -1) {
+      mockCases[caseIndex] = {
+        ...mockCases[caseIndex],
+        status: 'In Progress' as CaseStatus
+      };
+      setCaseData({ ...mockCases[caseIndex] });
+    }
+  };
+
+  const handleRerunAgent = () => {
+    setRunKey(prev => prev + 1);
+    setIsAgentRunning(true);
+    setHasCompleted(false);
+    setWorkflowSummary(null);
+    // Reset status to "In Progress"
+    const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
+    if (caseIndex !== -1) {
+      mockCases[caseIndex] = {
+        ...mockCases[caseIndex],
+        status: 'In Progress' as CaseStatus,
+        finalOutcome: undefined,
+        completionDateTime: null
+      };
+      setCaseData({ ...mockCases[caseIndex] });
+    }
+  };
+
+  const handleWorkflowComplete = useCallback((summary: string) => {
+    setWorkflowSummary(summary);
+    setHasCompleted(true);
+    
+    // Update mockCases array for session persistence
+    const scenarioOutcome = SCENARIO_OUTCOMES[caseData.caseId];
+    if (scenarioOutcome) {
+      const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
+      if (caseIndex !== -1) {
+        mockCases[caseIndex] = {
+          ...mockCases[caseIndex],
+          status: scenarioOutcome.status,
+          finalOutcome: scenarioOutcome.finalOutcome,
+          completionDateTime: new Date().toISOString()
+        };
+        setCaseData({ ...mockCases[caseIndex] });
+      }
+    }
+  }, [caseData.caseId, caseId]);
 
   const handleCompleteCase = () => {
     const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
@@ -70,6 +132,7 @@ const CaseDetail = () => {
   const outcome = caseData.finalOutcome ? outcomeConfig[caseData.finalOutcome] : null;
   const OutcomeIcon = outcome?.icon;
   const isCompleted = caseData.status === 'Completed';
+  const isNew = caseData.status === 'New';
 
   return (
     <div className="min-h-screen bg-[#0B0D10]">
@@ -108,6 +171,28 @@ const CaseDetail = () => {
             </div>
             
             <div className="flex items-center gap-3">
+              {/* Run Agent / Re-run Agent button for dynamic cases */}
+              {isDynamicCase && !isAgentRunning && !hasCompleted && (
+                <Button 
+                  onClick={handleRunAgent}
+                  className="bg-[#4DA3FF] hover:bg-[#4DA3FF]/90 text-white font-semibold"
+                >
+                  <Play className="mr-2 h-4 w-4" />
+                  Run Agent
+                </Button>
+              )}
+
+              {isDynamicCase && hasCompleted && (
+                <Button 
+                  onClick={handleRerunAgent}
+                  variant="outline"
+                  className="border-[#4DA3FF]/30 text-[#4DA3FF] hover:bg-[#4DA3FF]/10 bg-transparent font-semibold"
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  Re-run Agent
+                </Button>
+              )}
+
               {isCompleted && outcome && OutcomeIcon && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${outcome.bgColor}`}>
                   <OutcomeIcon className={`h-5 w-5 ${outcome.color}`} />
@@ -115,7 +200,7 @@ const CaseDetail = () => {
                 </div>
               )}
               
-              {!isCompleted && (
+              {!isCompleted && !isDynamicCase && (
                 <Button 
                   onClick={handleCompleteCase}
                   className="bg-[#2ED573] hover:bg-[#2ED573]/90 text-black font-semibold"
@@ -139,8 +224,10 @@ const CaseDetail = () => {
               <CardContent className="p-6">
                 {isDynamicCase ? (
                   <DynamicAgentFlowchart 
+                    key={runKey}
                     caseId={caseData.caseId} 
-                    onWorkflowComplete={setWorkflowSummary} 
+                    isRunning={isAgentRunning}
+                    onWorkflowComplete={handleWorkflowComplete} 
                   />
                 ) : (
                   <AgentFlowchart caseData={caseData} />
