@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { mockCases, FinalOutcome, QueueType, CaseStatus } from "@/data/mockCases";
+import { mockCases, FinalOutcome, QueueType, CaseStatus, AIRecommendation, RecommendationAction } from "@/data/mockCases";
 import StatusBadge from "@/components/StatusBadge";
 import RiskBadge from "@/components/investigation/RiskBadge";
 import CollapsibleCustomerDetails from "@/components/investigation/CollapsibleCustomerDetails";
@@ -28,6 +28,45 @@ const SCENARIO_OUTCOMES: Record<string, { status: CaseStatus; finalOutcome: Fina
   'CAW-2024-009': { status: 'Completed', finalOutcome: 'approved' },
   'CAW-2024-004': { status: 'Completed', finalOutcome: 'escalated' },
   'CAW-2024-003': { status: 'Completed', finalOutcome: 'awaiting-customer' },
+};
+
+const SCENARIO_RECOMMENDATIONS: Record<string, AIRecommendation> = {
+  'CAW-2024-009': {
+    action: 'await' as RecommendationAction,
+    label: 'Account Unblocked',
+    reasoning: 'All verification checks passed. Customer identity confirmed via Experian and TransUnion. No fraud markers found in CIFAS National Fraud Database. Account has been autonomously unblocked.',
+    supportingEvidence: [
+      'Identity verified against Experian records — full match on name, DOB, and address',
+      'TransUnion credit history shows 8+ years of consistent activity',
+      'CIFAS check returned no fraud markers or warnings',
+      'Mainframe records confirm authentic contact details',
+      'Risk score within acceptable threshold for auto-approval'
+    ]
+  },
+  'CAW-2024-004': {
+    action: 'escalate' as RecommendationAction,
+    label: 'Escalate to AIT',
+    reasoning: 'Multiple fraud indicators detected during investigation. CIFAS flag confirmed with active fraud marker. Authentication level elevated to Auth2. Case requires Advanced Investigation Team review for potential coordinated fraud activity.',
+    supportingEvidence: [
+      'CIFAS National Fraud Database returned active fraud marker',
+      'Address discrepancy found between Experian and mainframe records',
+      'Authentication level elevated to Auth2 due to suspicious activity',
+      'Multiple recent applications detected across different institutions',
+      'Contact details partially match known fraud ring patterns'
+    ]
+  },
+  'CAW-2024-003': {
+    action: 'await' as RecommendationAction,
+    label: 'Awaiting Customer Information',
+    reasoning: 'Investigation partially completed but requires additional customer verification. NOC flag raised during address verification. Customer needs to provide updated proof of address and identity documentation before case can proceed.',
+    supportingEvidence: [
+      'NOC (Notice of Correction) flag detected on credit file',
+      'Address on application differs from TransUnion records',
+      'Customer phone number verified but email bounced',
+      'CIFAS check returned monitoring flag — not a confirmed fraud marker',
+      'Insufficient documentation to make final determination'
+    ]
+  }
 };
 
 const outcomeConfig: Record<FinalOutcome, { icon: React.ElementType; label: string; color: string; bgColor: string }> = {
@@ -87,7 +126,9 @@ const CaseDetail = () => {
         ...mockCases[caseIndex],
         status: 'In Progress' as CaseStatus,
         finalOutcome: undefined,
-        completionDateTime: null
+        completionDateTime: null,
+        aiRecommendation: undefined,
+        confidenceScore: undefined
       };
       setCaseData({ ...mockCases[caseIndex] });
     }
@@ -97,8 +138,9 @@ const CaseDetail = () => {
     setWorkflowSummary(summary);
     setHasCompleted(true);
     
-    // Update mockCases array for session persistence
+    // Update mockCases array for session persistence with scenario outcome and recommendation
     const scenarioOutcome = SCENARIO_OUTCOMES[caseData.caseId];
+    const scenarioRecommendation = SCENARIO_RECOMMENDATIONS[caseData.caseId];
     if (scenarioOutcome) {
       const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
       if (caseIndex !== -1) {
@@ -106,7 +148,9 @@ const CaseDetail = () => {
           ...mockCases[caseIndex],
           status: scenarioOutcome.status,
           finalOutcome: scenarioOutcome.finalOutcome,
-          completionDateTime: new Date().toISOString()
+          completionDateTime: new Date().toISOString(),
+          confidenceScore: 95,
+          aiRecommendation: scenarioRecommendation,
         };
         setCaseData({ ...mockCases[caseIndex] });
       }
@@ -255,9 +299,30 @@ const CaseDetail = () => {
             )}
           </div>
 
-          {/* Right Panel - AI Recommendation */}
+          {/* Right Panel - AI Recommendation (hidden for dynamic cases until workflow completes) */}
           <div className="lg:col-span-3">
-            <AIRecommendationPanel caseData={caseData} />
+            {isDynamicCase ? (
+              hasCompleted ? (
+                <div className="animate-fade-in">
+                  <AIRecommendationPanel caseData={caseData} />
+                </div>
+              ) : (
+                <Card className="border-0 shadow-md bg-[#181C23] border-[#12151B]">
+                  <CardContent className="p-6 flex flex-col items-center justify-center text-center min-h-[200px]">
+                    <div className="p-3 bg-[#4DA3FF]/10 rounded-full mb-3">
+                      <Brain className="h-6 w-6 text-[#4DA3FF]" />
+                    </div>
+                    <p className="text-sm text-slate-400">
+                      {isAgentRunning 
+                        ? 'AI recommendation will appear once the agent workflow completes...' 
+                        : 'Run the agent to generate AI recommendations'}
+                    </p>
+                  </CardContent>
+                </Card>
+              )
+            ) : (
+              <AIRecommendationPanel caseData={caseData} />
+            )}
           </div>
         </div>
       </main>
