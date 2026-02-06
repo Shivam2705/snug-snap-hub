@@ -377,7 +377,7 @@ const ChatInterface = memo(({
             [...chat.messages].reverse().map((msg, idx) => (
               <div
                 key={chat.messages.length - 1 - idx}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} mb-4`}
               >
                 <div
                   className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
@@ -405,7 +405,7 @@ const ChatInterface = memo(({
         {/* Input */}
         <ChatInput
           onSendMessage={handleSend}
-          isDisabled={chat.uploadedDocuments.length === 0 || chat.isProcessing || chat.isFileProcessing}
+          isDisabled={chat.isProcessing || chat.isFileProcessing}
           value={inputValue}
           onChange={onInputChange}
           inputRef={inputRef}
@@ -531,11 +531,6 @@ const KnowledgeAssistPage = () => {
   const handleExlSend = useCallback(async (question: string, agents: string[]) => {
     if (!question.trim()) return;
 
-    if (exlChat.uploadedDocuments.length === 0) {
-      toast.error("Please upload a document first");
-      return;
-    }
-
     const userMessage: ChatMessage = { role: "user", content: question };
     
     setExlChat(prev => ({
@@ -553,7 +548,7 @@ const KnowledgeAssistPage = () => {
         stream: true,
         history: true,
         model: agents.includes("Finetuned SLM returns Agent") ? "groq" : "openai",
-        fileId: exlChat.uploadedDocuments[0]?.file_id,
+        fileId: exlChat.uploadedDocuments.length > 0 ? exlChat.uploadedDocuments[0]?.file_id : undefined,
         onChunk: (chunk: any) => {
           // Store the last chunk (most complete one)
           lastChunk = chunk;
@@ -633,11 +628,6 @@ const KnowledgeAssistPage = () => {
   const handleTraditionalSend = useCallback(async (question: string, agents: string[]) => {
     if (!question.trim()) return;
 
-    if (traditionalChat.uploadedDocuments.length === 0) {
-      toast.error("Please upload a document first");
-      return;
-    }
-
     const userMessage: ChatMessage = { role: "user", content: question };
     
     setTraditionalChat(prev => ({
@@ -655,7 +645,7 @@ const KnowledgeAssistPage = () => {
         stream: true,
         history: true,
         model: agents.includes("Finetuned SLM returns Agent") ? "groq" : "openai",
-        fileId: traditionalChat.uploadedDocuments[0]?.file_id,
+        fileId: traditionalChat.uploadedDocuments.length > 0 ? traditionalChat.uploadedDocuments[0]?.file_id : undefined,
         onChunk: (chunk: any) => {
           // Store the last chunk
           lastChunk = chunk;

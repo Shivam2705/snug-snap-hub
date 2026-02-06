@@ -39,6 +39,7 @@ export async function queryKnowledgeAssistant(
     history?: boolean;
     model?: "openai" | "groq";
     fileId?: string;
+    agents?: string[];
     onChunk?: (chunk: string) => void;
   } = {}
 ): Promise<QueryResponse> {
@@ -47,6 +48,7 @@ export async function queryKnowledgeAssistant(
     history = true,
     model = "groq",
     fileId,
+    agents = [],
     onChunk
   } = options;
 
@@ -61,6 +63,13 @@ export async function queryKnowledgeAssistant(
 
     if (fileId) {
       params.append("file_id", fileId);
+    }
+
+    // Add agents to the query parameters
+    if (agents && agents.length > 0) {
+      agents.forEach(agent => {
+        params.append("agents", agent);
+      });
     }
 
     const response = await fetch(`${BASE_URL}/query?${params.toString()}`, {
