@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, Send, Bot, Clock, Zap, Shield, DollarSign, Loader2, CheckCircle2, RotateCcw } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Send, Bot, Clock, Zap, Shield, DollarSign, Loader2, CheckCircle2, RotateCcw, ChevronDown, Paperclip } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import {
   queryKnowledgeAssistant,
@@ -33,6 +35,7 @@ interface ChatSection {
   isFileProcessing: boolean;
   fileProcessingProgress: number;
   userToken: string;
+  selectedAgents: string[];
 }
 
 const SESSION_STORAGE_KEY_EXL = "knowledge_assist_user_token_exl";
@@ -102,13 +105,13 @@ ChatInput.displayName = "ChatInput";
 
 interface ChatInterfaceProps {
   title: string;
-  description: string;
+  description?: string;
   chat: ChatSection;
   setChat: React.Dispatch<React.SetStateAction<ChatSection>>;
   fileInputRef: React.RefObject<HTMLInputElement>;
   isExl: boolean;
   accentColor: string;
-  onSend: (question: string) => Promise<void>;
+  onSend: (question: string, agents: string[]) => Promise<void>;
   onReset: () => Promise<void>;
   inputValue: string;
   onInputChange: (value: string) => void;
@@ -118,7 +121,7 @@ interface ChatInterfaceProps {
 
 const ChatInterface = memo(({
   title,
-  description,
+  description = "",
   chat,
   setChat,
   fileInputRef,
@@ -132,6 +135,28 @@ const ChatInterface = memo(({
   onFileUpload,
 }: ChatInterfaceProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  const agentOptions = [
+    "Content Extraction Agent",
+    "RAG Agent",
+    "Finetuned SLM returns Agent"
+  ];
+
+  const handleAgentToggle = (agent: string) => {
+    setChat(prev => {
+      const isSelected = prev.selectedAgents.includes(agent);
+      return {
+        ...prev,
+        selectedAgents: isSelected
+          ? prev.selectedAgents.filter(a => a !== agent)
+          : [...prev.selectedAgents, agent]
+      };
+    });
+  };
+
+  const handleSend = async (question: string) => {
+    await onSend(question, chat.selectedAgents);
+  };
 
   return (
     <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
@@ -155,34 +180,78 @@ const ChatInterface = memo(({
             <RotateCcw className="h-4 w-4" />
           </Button>
         </div>
-        {isExl && (
+        {/* {isExl && (
           <div className="flex flex-wrap gap-2 mt-3">
             <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">Faster</Badge>
             <Badge variant="secondary" className="bg-green-500/10 text-green-600 text-xs">Low Cost</Badge>
             <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 text-xs">Compliant</Badge>
           </div>
-        )}
+        )} */}
       </CardHeader>
     
       <CardContent className="flex-1 flex flex-col gap-4">
-        {/* File Upload */}
+        {/* Agent Selection and File Upload - Side by Side */}
         <div className="space-y-2">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".txt,.pdf,.doc,.docx"
-            className="hidden"
-            onChange={(e) => onFileUpload(e, setChat, chat, isExl)}
-          />
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={chat.isFileProcessing}
-          >
-            <Upload className="h-4 w-4" />
-            {chat.uploadedDocuments.length > 0 ? chat.uploadedDocuments[0].filename : "Upload Document (TXT, PDF, DOC)"}
-          </Button>
+          <div className="flex gap-2">
+            {/* Agent Selection Dropdown */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex-1 justify-between"
+                  disabled={chat.isFileProcessing}
+                >
+                  <span className="text-sm">
+                    {chat.selectedAgents.length > 0
+                      ? `${chat.selectedAgents.length} agent${chat.selectedAgents.length > 1 ? 's' : ''} selected`
+                      : "Select Agents"}
+                  </span>
+                  <ChevronDown className="h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-2" align="start">
+                <div className="space-y-2">
+                  {agentOptions.map((agent) => (
+                    <div
+                      key={agent}
+                      className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent cursor-pointer"
+                      onClick={() => handleAgentToggle(agent)}
+                    >
+                      <Checkbox
+                        id={agent}
+                        checked={chat.selectedAgents.includes(agent)}
+                        onCheckedChange={() => handleAgentToggle(agent)}
+                      />
+                      <label
+                        htmlFor={agent}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+                      >
+                        {agent}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            {/* File Upload Button */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".txt,.pdf,.doc,.docx"
+              className="hidden"
+              onChange={(e) => onFileUpload(e, setChat, chat, isExl)}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={chat.isFileProcessing}
+              title={chat.uploadedDocuments.length > 0 ? chat.uploadedDocuments[0].filename : "Upload Document"}
+            >
+              <Paperclip className="h-4 w-4" />
+            </Button>
+          </div>
           
           {chat.isFileProcessing && (
             <div className="space-y-1">
@@ -250,7 +319,7 @@ const ChatInterface = memo(({
 
         {/* Input */}
         <ChatInput
-          onSendMessage={onSend}
+          onSendMessage={handleSend}
           isDisabled={chat.uploadedDocuments.length === 0 || chat.isProcessing || chat.isFileProcessing}
           value={inputValue}
           onChange={onInputChange}
@@ -274,6 +343,7 @@ const KnowledgeAssistPage = () => {
     isFileProcessing: false,
     fileProcessingProgress: 0,
     userToken: "",
+    selectedAgents: ["Content Extraction Agent", "RAG Agent"],
   });
   
   const [traditionalChat, setTraditionalChat] = useState<ChatSection>({
@@ -284,6 +354,7 @@ const KnowledgeAssistPage = () => {
     isFileProcessing: false,
     fileProcessingProgress: 0,
     userToken: "",
+    selectedAgents: ["Content Extraction Agent", "RAG Agent"],
   });
 
   // Separate input states for each chat
@@ -372,7 +443,7 @@ const KnowledgeAssistPage = () => {
     event.target.value = "";
   };
 
-  const handleExlSend = useCallback(async (question: string) => {
+  const handleExlSend = useCallback(async (question: string, agents: string[]) => {
     if (!question.trim()) return;
 
     if (exlChat.uploadedDocuments.length === 0) {
@@ -398,6 +469,7 @@ const KnowledgeAssistPage = () => {
         history: true,
         model: "groq",
         fileId: exlChat.uploadedDocuments[0]?.file_id,
+        agents: agents,
         onChunk: (chunk: any) => {
           // Store the last chunk (most complete one)
           lastChunk = chunk;
@@ -474,7 +546,7 @@ const KnowledgeAssistPage = () => {
     }
   }, [exlChat.uploadedDocuments, exlChat.userToken]);
 
-  const handleTraditionalSend = useCallback(async (question: string) => {
+  const handleTraditionalSend = useCallback(async (question: string, agents: string[]) => {
     if (!question.trim()) return;
 
     if (traditionalChat.uploadedDocuments.length === 0) {
@@ -500,6 +572,7 @@ const KnowledgeAssistPage = () => {
         history: true,
         model: "openai",
         fileId: traditionalChat.uploadedDocuments[0]?.file_id,
+        agents: agents,
         onChunk: (chunk: any) => {
           // Store the last chunk
           lastChunk = chunk;
@@ -595,6 +668,7 @@ const KnowledgeAssistPage = () => {
         isFileProcessing: false,
         fileProcessingProgress: 0,
         userToken: newToken,
+        selectedAgents: ["Content Extraction Agent", "RAG Agent"],
       });
 
       toast.success("Chat reset successfully");
@@ -623,6 +697,7 @@ const KnowledgeAssistPage = () => {
         isFileProcessing: false,
         fileProcessingProgress: 0,
         userToken: newToken,
+        selectedAgents: ["Content Extraction Agent", "RAG Agent"],
       });
 
       toast.success("Chat reset successfully");
@@ -698,8 +773,8 @@ const KnowledgeAssistPage = () => {
         {/* Chat Comparison Section */}
         <div className="grid lg:grid-cols-2 gap-6">
           <ChatInterface
-            title="EXL Knowledge Assist"
-            description="Advanced EXL Engine based RAG-Powered Chatbot"
+            title="Next Helpsite"
+            // description="Advanced EXL Engine based RAG-Powered Chatbot"
             chat={exlChat}
             setChat={setExlChat}
             fileInputRef={exlFileInputRef}
@@ -714,8 +789,8 @@ const KnowledgeAssistPage = () => {
           />
           
           <ChatInterface
-            title="Traditional Chatbot"
-            description="Standard RAG based chatbot"
+            title="Next Helpsite"
+            // description="Standard RAG based chatbot"
             chat={traditionalChat}
             setChat={setTraditionalChat}
             fileInputRef={traditionalFileInputRef}
