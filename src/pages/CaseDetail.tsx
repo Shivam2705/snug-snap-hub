@@ -237,7 +237,8 @@ const CaseDetail = () => {
                 </Button>
               )}
 
-              {isCompleted && outcome && OutcomeIcon && (
+              {/* Show outcome badge: for dynamic cases only after workflow completes, for others when case is completed */}
+              {((isDynamicCase && hasCompleted) || (!isDynamicCase && isCompleted)) && outcome && OutcomeIcon && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${outcome.bgColor}`}>
                   <OutcomeIcon className={`h-5 w-5 ${outcome.color}`} />
                   <span className={`font-semibold ${outcome.color}`}>{outcome.label}</span>
