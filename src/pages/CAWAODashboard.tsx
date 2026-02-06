@@ -27,11 +27,9 @@ const CAWAODashboard = () => {
     const total = cases.length;
     const inProgress = cases.filter(c => c.status === 'In Progress').length;
     const completed = cases.filter(c => c.status === 'Completed').length;
-    const reviewRequired = cases.filter(c => c.status === 'Review Required').length;
-    const notStarted = cases.filter(c => c.status === 'Not Started').length;
-    const awaitingCustomer = cases.filter(c => c.status === 'Awaiting Customer').length;
+    const newCases = cases.filter(c => c.status === 'New').length;
 
-    return { total, inProgress, completed, reviewRequired, notStarted, awaitingCustomer };
+    return { total, inProgress, completed, newCases };
   }, [cases]);
 
   const flags = useMemo(() => {
