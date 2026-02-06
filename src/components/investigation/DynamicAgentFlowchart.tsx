@@ -526,8 +526,8 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
                     )}
                   </div>
 
-                  {/* Accordion for Actions & Findings */}
-                  {(agent.status === 'in-progress' || agent.status === 'completed') && (
+                  {/* Accordion for Actions & Findings - show all agents once workflow starts */}
+                  {(hasStarted || agent.status === 'in-progress' || agent.status === 'completed') && (
                     <Accordion
                       type="multiple"
                       defaultValue={['actions']}
