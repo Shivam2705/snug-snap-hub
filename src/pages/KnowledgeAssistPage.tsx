@@ -245,12 +245,12 @@ const ChatInterface = memo(({
   };
 
   return (
-    <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
+    <Card className={`h-full flex flex-col ${true ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
-              <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
+            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${true ? "gradient-primary" : "bg-muted"}`}>
+              <Bot className={`h-5 w-5 ${true ? "text-white" : "text-muted-foreground"}`} />
             </div>
             <div>
               <CardTitle className="text-lg">{title}</CardTitle>
