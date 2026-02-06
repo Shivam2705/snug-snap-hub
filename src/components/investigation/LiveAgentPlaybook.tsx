@@ -22,6 +22,7 @@ import {
 import { CustomerCase } from "@/data/mockCases";
 import { cn } from "@/lib/utils";
 import AgentFlowchart from "./AgentFlowchart";
+import CAW009AgentFlowchart from "./CAW009AgentFlowchart";
 
 interface LiveAgentPlaybookProps {
   caseData: CustomerCase;
@@ -416,7 +417,11 @@ const LiveAgentPlaybook = ({ caseData }: LiveAgentPlaybookProps) => {
       </TabsContent>
 
       <TabsContent value="flowchart">
-        <AgentFlowchart caseData={caseData} />
+        {caseData.caseId === 'CAW-2024-009' ? (
+          <CAW009AgentFlowchart />
+        ) : (
+          <AgentFlowchart caseData={caseData} />
+        )}
       </TabsContent>
     </Tabs>
   );
