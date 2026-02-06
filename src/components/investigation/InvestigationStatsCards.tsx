@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Loader2, CheckCircle2, AlertCircle, CircleDashed, UserCheck } from "lucide-react";
+import { FileText, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { CaseStatus } from "@/data/mockCases";
 import { cn } from "@/lib/utils";
 
@@ -10,9 +10,7 @@ interface InvestigationStatsCardsProps {
     total: number;
     inProgress: number;
     completed: number;
-    reviewRequired: number;
-    notStarted: number;
-    awaitingCustomer: number;
+    newCases: number;
   };
 }
 
@@ -43,33 +41,17 @@ const InvestigationStatsCards = ({ onFilterChange, activeFilter, stats }: Invest
       filterValue: 'Completed' as CaseStatus
     },
     {
-      label: 'Review Required',
-      value: stats.reviewRequired,
+      label: 'New',
+      value: stats.newCases,
       icon: AlertCircle,
-      color: 'text-[#FFA502]',
-      bgColor: 'bg-[#FFA502]/10',
-      filterValue: 'Review Required' as CaseStatus
-    },
-    {
-      label: 'Not Started',
-      value: stats.notStarted,
-      icon: CircleDashed,
-      color: 'text-slate-500',
-      bgColor: 'bg-slate-800',
-      filterValue: 'Not Started' as CaseStatus
-    },
-    {
-      label: 'Awaiting Customer',
-      value: stats.awaitingCustomer,
-      icon: UserCheck,
-      color: 'text-[#4DA3FF]',
-      bgColor: 'bg-[#4DA3FF]/10',
-      filterValue: 'Awaiting Customer' as CaseStatus
+      color: 'text-[#A855F7]',
+      bgColor: 'bg-[#A855F7]/10',
+      filterValue: 'New' as CaseStatus
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {statCards.map((stat) => {
         const isActive = activeFilter === stat.filterValue;
         
