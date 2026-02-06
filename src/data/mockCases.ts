@@ -887,21 +887,25 @@ const baseCases = [
     authenticateCode: 2 as const,
     zown: false,
     receivedDateTime: "2024-01-15T16:00:00",
-    completionDateTime: null,
-    assignTo: "Unassigned",
-    status: "Not Started" as CaseStatus,
+    completionDateTime: new Date().toISOString(),
+    assignTo: "AI Agent",
+    status: "Completed" as CaseStatus,
+    finalOutcome: 'approved' as FinalOutcome,
     queue: "day-0" as QueueType,
+    aiSummary: "All verification checks passed successfully. Customer identity verified via iGuide Mainframe. Address history retrieved from Experian and TransUnion. CIFAS check completed with no fraud flags detected. Credit account unblocked automatically by AI Agent with 95% confidence.",
     aiRecommendation: {
-      action: 'block' as RecommendationAction,
-      label: 'Block Account',
-      reasoning: 'Address verification failed. Application address does not match any known addresses in credit bureau records.',
+      action: 'await' as RecommendationAction,
+      label: 'Account Unblocked',
+      reasoning: 'All fraud detection checks passed. Customer verified successfully across all systems. No CIFAS flags detected on any historical addresses. Account has been automatically unblocked.',
       supportingEvidence: [
-        'Address not found in Experian/TransUnion',
-        'Phone number: Previously linked to fraud case',
-        'Email domain flagged as high-risk'
+        'All 7 fraud checkpoints verified successfully',
+        'No CIFAS flag detected on any address',
+        'Experian: 2 addresses verified clean',
+        'TransUnion: 2 addresses verified clean',
+        'Action Agent unblocked credit account'
       ]
     },
-    confidenceScore: 78
+    confidenceScore: 95
   },
   {
     caseId: "CAW-2024-010",

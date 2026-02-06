@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bot, CheckCircle2, AlertTriangle, Phone, Ban, MessageSquare, Mail, Send, Loader2 } from "lucide-react";
+import { Bot, CheckCircle2, AlertTriangle, Phone, Ban, MessageSquare, Mail, Send, Loader2, Unlock, RotateCcw } from "lucide-react";
 import { CustomerCase, RecommendationAction, EvidenceAction } from "@/data/mockCases";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -14,6 +14,12 @@ const actionConfig: Record<RecommendationAction, { icon: React.ElementType; colo
   escalate: { icon: AlertTriangle, color: 'text-[#FFA502]', bgColor: 'bg-[#FFA502]/10 border-[#FFA502]/20' },
   await: { icon: Phone, color: 'text-[#4DA3FF]', bgColor: 'bg-[#4DA3FF]/10 border-[#4DA3FF]/20' },
   block: { icon: Ban, color: 'text-[#FF4757]', bgColor: 'bg-[#FF4757]/10 border-[#FF4757]/20' }
+};
+
+// Check if this is an "unblocked" case (CAW-2024-009 style)
+const isUnblockedAction = (caseData: CustomerCase) => {
+  return caseData.aiRecommendation?.label === 'Account Unblocked' || 
+         (caseData.finalOutcome === 'approved' && caseData.caseId === 'CAW-2024-009');
 };
 
 const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
@@ -101,15 +107,44 @@ const AIRecommendationPanel = ({ caseData }: AIRecommendationPanelProps) => {
 
         {/* Recommendation Action */}
         {recommendation && config && (
-          <div className={cn('p-4 rounded-lg border', config.bgColor)}>
+          <div className={cn(
+            'p-4 rounded-lg border',
+            isUnblockedAction(caseData) 
+              ? 'bg-[#2ED573]/10 border-[#2ED573]/20' 
+              : config.bgColor
+          )}>
             <div className="flex items-center gap-2 mb-2">
-              <ActionIcon className={cn('h-5 w-5', config.color)} />
-              <span className={cn('font-semibold', config.color)}>
+              {isUnblockedAction(caseData) ? (
+                <Unlock className="h-5 w-5 text-[#2ED573]" />
+              ) : (
+                <ActionIcon className={cn('h-5 w-5', config.color)} />
+              )}
+              <span className={cn(
+                'font-semibold',
+                isUnblockedAction(caseData) ? 'text-[#2ED573]' : config.color
+              )}>
                 {recommendation.label}
               </span>
             </div>
             <p className="text-sm text-slate-300 leading-relaxed">
               {recommendation.reasoning}
+            </p>
+          </div>
+        )}
+
+        {/* Revert Action for Completed Unblocked Cases */}
+        {isCompleted && isUnblockedAction(caseData) && (
+          <div className="pt-2">
+            <Button 
+              variant="outline"
+              className="w-full border-[#FFA502]/30 text-[#FFA502] hover:bg-[#FFA502]/10 bg-transparent"
+              onClick={() => toast.info('Revert action requested. This will require supervisor approval.')}
+            >
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Revert Action
+            </Button>
+            <p className="text-xs text-slate-500 text-center mt-2">
+              Reverting will re-block the account and require manual review
             </p>
           </div>
         )}
