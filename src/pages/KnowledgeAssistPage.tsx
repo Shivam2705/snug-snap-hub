@@ -143,6 +143,7 @@ const ChatInterface = memo(({
   ];
 
   const handleAgentToggle = (agent: string) => {
+    if(agent === 'Content Extraction Agent' || agent === 'RAG Agent') return
     setChat(prev => {
       const isSelected = prev.selectedAgents.includes(agent);
       return {
@@ -159,12 +160,12 @@ const ChatInterface = memo(({
   };
 
   return (
-    <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
+    <Card className={`h-full flex flex-col ${true ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
-              <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
+            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${true ? "gradient-primary" : "bg-muted"}`}>
+              <Bot className={`h-5 w-5 ${true ? "text-white" : "text-muted-foreground"}`} />
             </div>
             <div>
               <CardTitle className="text-lg">{title}</CardTitle>
@@ -467,9 +468,8 @@ const KnowledgeAssistPage = () => {
       const response = await queryKnowledgeAssistant(question, exlChat.userToken, {
         stream: true,
         history: true,
-        model: "groq",
+        model: agents.includes("Finetuned SLM returns Agent") ? "groq" : "openai",
         fileId: exlChat.uploadedDocuments[0]?.file_id,
-        agents: agents,
         onChunk: (chunk: any) => {
           // Store the last chunk (most complete one)
           lastChunk = chunk;
@@ -514,7 +514,7 @@ const KnowledgeAssistPage = () => {
             };
           });
           
-          setTimeout(typeCharacter, 15);
+          setTimeout(typeCharacter, 10);
         } else {
           setExlChat(prev => ({
             ...prev,
@@ -570,9 +570,8 @@ const KnowledgeAssistPage = () => {
       const response = await queryKnowledgeAssistant(question, traditionalChat.userToken, {
         stream: true,
         history: true,
-        model: "openai",
+        model: agents.includes("Finetuned SLM returns Agent") ? "groq" : "openai",
         fileId: traditionalChat.uploadedDocuments[0]?.file_id,
-        agents: agents,
         onChunk: (chunk: any) => {
           // Store the last chunk
           lastChunk = chunk;
@@ -617,7 +616,7 @@ const KnowledgeAssistPage = () => {
             };
           });
           
-          setTimeout(typeCharacter, 50);
+          setTimeout(typeCharacter, 10);
         } else {
           setTraditionalChat(prev => ({
             ...prev,

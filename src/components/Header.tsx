@@ -27,7 +27,7 @@ const Header = () => {
             <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
               <User className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="text-sm font-medium hidden lg:block">Investigator</span>
+            <span className="text-sm font-medium hidden lg:block">User</span>
           </div>
         </div>
       </div>
