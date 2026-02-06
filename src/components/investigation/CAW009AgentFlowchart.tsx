@@ -366,56 +366,6 @@ const CAW009AgentFlowchart = () => {
         </div>
       )}
 
-      {/* AI Summary - Shows after completion */}
-      {showAISummary && (
-        <Card className="border-[#2ED573]/30 bg-gradient-to-br from-[#2ED573]/5 to-[#4DA3FF]/5 animate-fade-in">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-[#2ED573]/20 rounded-lg">
-                <Brain className="h-5 w-5 text-[#2ED573]" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h4 className="font-semibold text-white">AI Investigation Summary</h4>
-                  <Sparkles className="h-4 w-4 text-[#FFA502]" />
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed mb-3">
-                  All verification checks passed successfully. Customer identity verified via iGuide Mainframe using Customer Number "Y123456". 
-                  Address history retrieved from Experian (2 addresses) and TransUnion (2 addresses). 
-                  CIFAS check completed with <span className="text-[#2ED573] font-semibold">no fraud flags detected</span>. 
-                  Credit account automatically unblocked by Action Agent.
-                </p>
-                
-                <div className="bg-[#2ED573]/10 rounded-lg p-3 border border-[#2ED573]/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Unlock className="h-4 w-4 text-[#2ED573]" />
-                      <span className="font-semibold text-[#2ED573]">AI Recommendation: Account Unblocked</span>
-                    </div>
-                    <Badge className="bg-[#2ED573]/20 text-[#2ED573] border-[#2ED573]/30">
-                      95% Confidence
-                    </Badge>
-                  </div>
-                  <ul className="space-y-1 text-xs text-slate-400">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-3 w-3 text-[#2ED573]" />
-                      All 7 fraud checkpoints verified successfully
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-3 w-3 text-[#2ED573]" />
-                      No CIFAS flag detected on any address
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-3 w-3 text-[#2ED573]" />
-                      4 historical addresses verified clean (Experian + TransUnion)
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Flowchart */}
       <ScrollArea className="h-[500px]">
