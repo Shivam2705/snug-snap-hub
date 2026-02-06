@@ -121,7 +121,7 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
     {
       id: "inventory",
       name: "Inventory Lookup Agent", 
-      description: "Searching NEXT.co.uk catalog for matching products based on extracted attributes",
+      description: "Searching product inventory for matching products based on extracted attributes",
       icon: <Database className="h-5 w-5" />,
       status: "pending"
     },
