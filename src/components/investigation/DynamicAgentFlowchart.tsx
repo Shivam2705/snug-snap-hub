@@ -273,19 +273,23 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
     return () => clearInterval(interval);
   }, [isComplete, isRunning, hasStarted]);
 
-  // Main workflow progression
+  // Main workflow progression - runs when hasStarted becomes true
   useEffect(() => {
     if (isComplete || !isRunning || !hasStarted) return;
+
+    let cancelled = false;
 
     const runWorkflow = async () => {
       // Agent 0: Case Initiation
       await delay(REGULAR_AGENT_TIME);
+      if (cancelled) return;
       completeAgent(0);
       startAgent(1);
       setLiveMessage(config.messages[0]);
 
       // Agent 1: Data Extraction
       await delay(REGULAR_AGENT_TIME);
+      if (cancelled) return;
       completeAgent(1);
       startAgent(2);
       setLiveMessage(config.messages[1]);
@@ -293,6 +297,7 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
       // Agent 2: Fraud Detection - tick actions one by one
       for (let i = 0; i < FRAUD_ACTIONS_COUNT; i++) {
         await delay(FRAUD_ACTION_TIME);
+        if (cancelled) return;
         tickFraudAction(i);
       }
       completeAgent(2);
@@ -301,24 +306,28 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
 
       // Agent 3: Experian
       await delay(REGULAR_AGENT_TIME);
+      if (cancelled) return;
       completeAgent(3);
       startAgent(4);
       setLiveMessage(config.messages[3]);
 
       // Agent 4: Transunion
       await delay(REGULAR_AGENT_TIME);
+      if (cancelled) return;
       completeAgent(4);
       startAgent(5);
       setLiveMessage(config.messages[4]);
 
       // Agent 5: CIFAS
       await delay(REGULAR_AGENT_TIME);
+      if (cancelled) return;
       completeAgent(5);
       startAgent(6);
       setLiveMessage(config.messages[5]);
 
       // Agent 6: Action Agent
       await delay(REGULAR_AGENT_TIME);
+      if (cancelled) return;
       completeAgent(6);
       setLiveMessage(config.messages[6]);
 
@@ -328,11 +337,14 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
 
       // Trigger summary callback
       await delay(500);
+      if (cancelled) return;
       onWorkflowComplete?.(config.summary);
     };
 
     runWorkflow();
-  }, []);
+
+    return () => { cancelled = true; };
+  }, [hasStarted]);
 
   const completeAgent = (index: number) => {
     setAgents(prev => {
