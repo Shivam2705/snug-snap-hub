@@ -700,27 +700,29 @@ const baseCases = [
     emailAddress: "r.taylor@outlook.com",
     mobileNumber: "+44 7700 900789",
     address: "78 River Road, Birmingham, B1 3CD",
-    cifas: false,
-    noc: false,
+    cifas: true,
+    noc: true,
     authenticateCode: 4 as const,
     zown: false,
     receivedDateTime: "2024-01-15T11:00:00",
-    completionDateTime: null,
-    assignTo: "Emma Williams",
-    status: "Review Required" as CaseStatus,
+    completionDateTime: new Date().toISOString(),
+    assignTo: "AI Agent",
+    status: "Completed" as CaseStatus,
+    finalOutcome: 'awaiting-customer' as FinalOutcome,
     queue: "day-0" as QueueType,
-    aiSummary: "Multiple customers found with similar phone number in iGuide. Relationship status unclear. Manual review required.",
+    aiSummary: "Customer verification completed. CIFAS protective registration found at historical address requiring clarification. NOC flag present indicating name discrepancy. Customer contacted via SMS and email for additional documentation. Awaiting customer response.",
     aiRecommendation: {
-      action: 'escalate' as RecommendationAction,
-      label: 'Escalate to AIT Team',
-      reasoning: 'Phone number matches 3 other customer records in mainframe. Unable to determine if legitimate family/business connection or potential fraud ring. Specialist review required.',
+      action: 'await' as RecommendationAction,
+      label: 'Awaiting Customer Information',
+      reasoning: 'CIFAS protective registration found at historical address. NOC flag requires name verification. Customer contact initiated for additional documentation.',
       supportingEvidence: [
-        'Phone shared with: Account #4521, #4522, #4523',
-        'Auth Code 4: Strong authentication completed',
-        'Pattern matches known fraud ring indicators'
+        'CIFAS: Protective Registration found at historical address',
+        'NOC: Name discrepancy between application and credit file',
+        'Customer contacted via SMS and Zendesk email',
+        'All address verifications completed via Experian and TransUnion'
       ]
     },
-    confidenceScore: 58
+    confidenceScore: 90
   },
   {
     caseId: "CAW-2024-004",
@@ -735,22 +737,24 @@ const baseCases = [
     authenticateCode: 2 as const,
     zown: false,
     receivedDateTime: "2024-01-15T12:30:00",
-    completionDateTime: null,
+    completionDateTime: new Date().toISOString(),
     assignTo: "AI Agent",
-    status: "Awaiting Customer" as CaseStatus,
+    status: "Completed" as CaseStatus,
+    finalOutcome: 'escalated' as FinalOutcome,
     queue: "day-0" as QueueType,
-    aiSummary: "Customer verification completed. CIFAS match found (Case 16218601) for False Identity at historical address 355 Montagu Road. Customer contacted via SMS and Zendesk email for additional documentation.",
+    aiSummary: "CIFAS match detected at historical address 355 Montagu Road - Case 16218601: False Identity (01). Fraud Detection Agent flagged potential identity fraud. Case escalated to AIT team for specialist investigation with 92% confidence.",
     aiRecommendation: {
-      action: 'await' as RecommendationAction,
-      label: 'Awaiting Customer Information',
-      reasoning: 'Additional documentation required to verify identity. CIFAS record found at historical address requires customer clarification.',
+      action: 'escalate' as RecommendationAction,
+      label: 'Escalated to AIT Team',
+      reasoning: 'CIFAS match found - Case 16218601: False Identity (01) at 355 Montagu Road. Fraud Detection Agent flagged potential identity fraud requiring specialist investigation.',
       supportingEvidence: [
-        '1 CIFAS record found - Case 16218601: False Identity (01)',
-        'DOB Match confirmed across all sources',
-        'Customer contacted via SMS (01406860876) and Email (sarahdavis1234@gmail.com)'
+        'CIFAS match: Case 16218601 - False Identity (01)',
+        'Historical address: 355 Montagu Road, N9 0EU',
+        'DOB confirmed across all sources',
+        'All address checks completed via Experian and TransUnion'
       ]
     },
-    confidenceScore: 95
+    confidenceScore: 92
   },
   {
     caseId: "CAW-2024-005",
@@ -882,7 +886,7 @@ const baseCases = [
     emailAddress: "c.martin@outlook.com",
     mobileNumber: "+44 7700 900567",
     address: "67 Queens Road, Liverpool, L1 5QR",
-    cifas: false,
+    cifas: true,
     noc: false,
     authenticateCode: 2 as const,
     zown: false,
@@ -1002,7 +1006,9 @@ const baseCases = [
 
 // Override risk scores for specific cases
 const riskScoreOverrides: Record<string, number> = {
-  'CAW-2024-009': 95
+  'CAW-2024-009': 95,
+  'CAW-2024-004': 85,
+  'CAW-2024-003': 82
 };
 
 // Build full cases with computed fields

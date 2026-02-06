@@ -250,10 +250,6 @@ const CollapsibleCustomerDetails = ({ caseData, onFlagsChange }: CollapsibleCust
                 <span className="text-xs text-slate-500">Assigned To:</span>
                 <span className="text-xs font-medium text-white">{caseData.assignTo}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500">Days Open:</span>
-                <span className="text-xs font-medium text-white">{caseData.daysSinceReceived}</span>
-              </div>
             </div>
           </CardContent>
         </CollapsibleContent>

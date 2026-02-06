@@ -5,25 +5,22 @@ import StatusBadge from "@/components/StatusBadge";
 import RiskBadge from "@/components/investigation/RiskBadge";
 import CollapsibleCustomerDetails from "@/components/investigation/CollapsibleCustomerDetails";
 import AIRecommendationPanel from "@/components/investigation/AIRecommendationPanel";
-import EvidenceTimeline from "@/components/investigation/EvidenceTimeline";
-import ActivityLog from "@/components/investigation/ActivityLog";
-import LiveAgentPlaybook from "@/components/investigation/LiveAgentPlaybook";
+import DynamicAgentFlowchart from "@/components/investigation/DynamicAgentFlowchart";
+import AgentFlowchart from "@/components/investigation/AgentFlowchart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, 
   Brain,
   CheckCircle2,
   Ban,
   AlertTriangle,
-  Phone,
-  FileText,
-  Activity,
-  Bot
+  Phone
 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
+
+const DYNAMIC_CASES = ['CAW-2024-009', 'CAW-2024-004', 'CAW-2024-003'];
 
 const outcomeConfig: Record<FinalOutcome, { icon: React.ElementType; label: string; color: string; bgColor: string }> = {
   blocked: { icon: Ban, label: 'Account Blocked', color: 'text-[#FF4757]', bgColor: 'bg-[#FF4757]/10 border-[#FF4757]/20' },
@@ -36,6 +33,7 @@ const CaseDetail = () => {
   const { caseId } = useParams<{ caseId: string }>();
   const navigate = useNavigate();
   const [caseData, setCaseData] = useState(() => mockCases.find(c => c.caseId === caseId));
+  const [workflowSummary, setWorkflowSummary] = useState<string | null>(null);
 
   if (!caseData) {
     return (
@@ -50,6 +48,8 @@ const CaseDetail = () => {
       </div>
     );
   }
+
+  const isDynamicCase = DYNAMIC_CASES.includes(caseData.caseId);
 
   const handleCompleteCase = () => {
     const caseIndex = mockCases.findIndex(c => c.caseId === caseId);
@@ -128,62 +128,28 @@ const CaseDetail = () => {
           </div>
         </div>
 
-        {/* Collapsible Customer Details at Top */}
+        {/* Collapsible Customer Details */}
         <CollapsibleCustomerDetails caseData={caseData} />
 
         {/* Two Panel Layout */}
         <div className="grid lg:grid-cols-12 gap-6">
-          {/* Main Panel - Tabs with Playbook Default */}
+          {/* Main Panel - Direct Flowchart */}
           <div className="lg:col-span-9">
             <Card className="border-0 shadow-md bg-[#181C23] border-[#12151B]">
               <CardContent className="p-6">
-                <Tabs defaultValue="playbook">
-                  <TabsList className="mb-4 bg-[#12151B]">
-                    <TabsTrigger value="playbook" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
-                      <Bot className="h-4 w-4" />
-                      Agent Playbook
-                    </TabsTrigger>
-                    <TabsTrigger value="timeline" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
-                      <FileText className="h-4 w-4" />
-                      Evidence
-                    </TabsTrigger>
-                    <TabsTrigger value="activity" className="gap-2 text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white">
-                      <Activity className="h-4 w-4" />
-                      Activity Log
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="playbook">
-                    <LiveAgentPlaybook caseData={caseData} />
-                  </TabsContent>
-
-                  <TabsContent value="timeline">
-                    {caseData.evidenceTimeline && caseData.evidenceTimeline.length > 0 ? (
-                      <EvidenceTimeline evidence={caseData.evidenceTimeline} />
-                    ) : (
-                      <div className="text-center py-12 text-slate-500">
-                        <FileText className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                        <p>No evidence collected yet</p>
-                      </div>
-                    )}
-                  </TabsContent>
-
-                  <TabsContent value="activity">
-                    {caseData.activityLog && caseData.activityLog.length > 0 ? (
-                      <ActivityLog activities={caseData.activityLog} />
-                    ) : (
-                      <div className="text-center py-12 text-slate-500">
-                        <Activity className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                        <p>No activity recorded yet</p>
-                      </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
+                {isDynamicCase ? (
+                  <DynamicAgentFlowchart 
+                    caseId={caseData.caseId} 
+                    onWorkflowComplete={setWorkflowSummary} 
+                  />
+                ) : (
+                  <AgentFlowchart caseData={caseData} />
+                )}
               </CardContent>
             </Card>
 
-            {/* AI Summary */}
-            {caseData.aiSummary && (
+            {/* AI Investigation Summary - appears after workflow completes or from mock data */}
+            {(workflowSummary || (!isDynamicCase && caseData.aiSummary)) && (
               <Card className="border-0 shadow-md mt-6 bg-[#181C23] border-[#12151B]">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base text-white">
@@ -194,13 +160,15 @@ const CaseDetail = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-300 leading-relaxed">{caseData.aiSummary}</p>
+                  <p className="text-slate-300 leading-relaxed">
+                    {workflowSummary || caseData.aiSummary}
+                  </p>
                 </CardContent>
               </Card>
             )}
           </div>
 
-          {/* Right Panel - AI Recommendation & Actions */}
+          {/* Right Panel - AI Recommendation */}
           <div className="lg:col-span-3">
             <AIRecommendationPanel caseData={caseData} />
           </div>
