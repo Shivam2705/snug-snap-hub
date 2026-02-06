@@ -30,13 +30,14 @@ interface AgentNode {
 }
 
 const CAW009AgentFlowchart = () => {
+  // Start with all agents completed for this case
   const [agents, setAgents] = useState<AgentNode[]>([
     {
       id: 'case-initiation',
       name: 'Case Initiation Agent',
       shortName: 'Initiation',
       icon: FileInput,
-      status: 'pending',
+      status: 'completed',
       actions: ['Categorized the case type: CAWAO Day 0'],
       findings: ['Case Type: CAWAO Day 0'],
       linkage: 'Sending case to Data Extraction Agent'
@@ -46,7 +47,7 @@ const CAW009AgentFlowchart = () => {
       name: 'Data Extraction Agent',
       shortName: 'Extraction',
       icon: Database,
-      status: 'pending',
+      status: 'completed',
       actions: ['Fetched details from iGuide using Customer Number "Y123456"'],
       findings: [
         'Email: c.martin@outlook.com',
@@ -63,7 +64,7 @@ const CAW009AgentFlowchart = () => {
       name: 'Fraud Detection Agent',
       shortName: 'Fraud',
       icon: Shield,
-      status: 'pending',
+      status: 'completed',
       decision: 'Pass',
       confidence: 95,
       actions: [
@@ -83,7 +84,7 @@ const CAW009AgentFlowchart = () => {
       name: 'Experian Agent',
       shortName: 'Experian',
       icon: MapPin,
-      status: 'pending',
+      status: 'completed',
       actions: ['Retrieved past Addresses from Experian'],
       findings: [
         '→ 22 Eluna Apartments, 47 Junction Road',
@@ -96,7 +97,7 @@ const CAW009AgentFlowchart = () => {
       name: 'Transunion Agent',
       shortName: 'Transunion',
       icon: MapPin,
-      status: 'pending',
+      status: 'completed',
       actions: ['Retrieved past Addresses from TransUnion'],
       findings: [
         '→ 20 Eluna Apartments, 47 Junction Road',
@@ -109,7 +110,7 @@ const CAW009AgentFlowchart = () => {
       name: 'CIFAS Agent',
       shortName: 'CIFAS',
       icon: Shield,
-      status: 'pending',
+      status: 'completed',
       actions: ['Verified details in CIFAS for all addresses'],
       findings: ['No flag detected!'],
       linkage: 'Sending case to Action Agent'
@@ -119,17 +120,20 @@ const CAW009AgentFlowchart = () => {
       name: 'Action Agent',
       shortName: 'Action',
       icon: Unlock,
-      status: 'pending',
+      status: 'completed',
       decision: 'Approved',
       confidence: 95,
-      actions: ['Unblocked credit account for Sarah Davis'],
+      actions: ['Unblocked credit account for Christopher Martin'],
       findings: ['Completed with 95% confidence']
     }
   ]);
 
-  const [currentAgentIndex, setCurrentAgentIndex] = useState(0);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [liveMessage, setLiveMessage] = useState<{from: string; to: string; message: string} | null>(null);
+  const [liveMessage, setLiveMessage] = useState<{from: string; to: string; message: string} | null>({
+    from: 'action-agent',
+    to: '',
+    message: 'Credit account unblocked successfully with 95% confidence!'
+  });
 
   const messages = [
     { from: 'case-initiation', to: 'data-extraction', message: 'Case categorized as CAWAO Day 0, initiating data extraction...' },
@@ -141,47 +145,15 @@ const CAW009AgentFlowchart = () => {
     { from: 'action-agent', to: '', message: 'Credit account unblocked successfully with 95% confidence!' }
   ];
 
-  // Simulate agent progression
+  // Cycle through messages to show history
   useEffect(() => {
     const interval = setInterval(() => {
-      setAgents(prev => {
-        const updated = [...prev];
-        
-        // Complete current agent and start next
-        if (currentAgentIndex < updated.length) {
-          updated[currentAgentIndex] = { ...updated[currentAgentIndex], status: 'completed' };
-          
-          if (currentAgentIndex + 1 < updated.length) {
-            updated[currentAgentIndex + 1] = { ...updated[currentAgentIndex + 1], status: 'in-progress' };
-          }
-        }
-        
-        return updated;
-      });
-
-      // Update live message
-      if (currentAgentIndex < messages.length) {
-        setLiveMessage(messages[currentAgentIndex]);
-      }
-
-      setCurrentAgentIndex(prev => {
-        if (prev < agents.length - 1) {
-          return prev + 1;
-        }
-        // Reset for demo loop
-        return prev;
-      });
-    }, 3000);
-
-    // Start first agent immediately
-    setAgents(prev => {
-      const updated = [...prev];
-      updated[0] = { ...updated[0], status: 'in-progress' };
-      return updated;
-    });
+      setCurrentMessageIndex(prev => (prev + 1) % messages.length);
+      setLiveMessage(messages[(currentMessageIndex + 1) % messages.length]);
+    }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentMessageIndex]);
 
   const getStatusColor = (status: AgentNode['status']) => {
     switch (status) {
