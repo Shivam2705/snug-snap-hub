@@ -36,6 +36,7 @@ interface ChatSection {
   fileProcessingProgress: number;
   userToken: string;
   selectedAgents: string[];
+  reasoning: string | null;
 }
 
 const SESSION_STORAGE_KEY_EXL = "knowledge_assist_user_token_exl";
@@ -219,7 +220,7 @@ const ChatInterface = memo(({
   onFileUpload,
 }: ChatInterfaceProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  console.log(chat);
   const agentOptions = [
     "Content Extraction Agent",
     "RAG Agent",
@@ -403,13 +404,26 @@ const ChatInterface = memo(({
         )}
 
         {/* Input */}
-        <ChatInput
-          onSendMessage={handleSend}
-          isDisabled={chat.isProcessing || chat.isFileProcessing}
-          value={inputValue}
-          onChange={onInputChange}
-          inputRef={inputRef}
-        />
+        <div className="space-y-2">
+          <ChatInput
+            onSendMessage={handleSend}
+            isDisabled={chat.isProcessing || chat.isFileProcessing}
+            value={inputValue}
+            onChange={onInputChange}
+            inputRef={inputRef}
+          />
+
+          {/* Reasoning Section */}
+          {chat.reasoning && (
+            <div className="p-3 bg-muted/50 rounded-lg border border-muted">
+              <div className="flex items-center gap-2 mb-2">
+                <Bot className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs font-semibold text-muted-foreground">Reasoning</span>
+              </div>
+              <p className="text-xs text-muted-foreground whitespace-pre-wrap">{chat.reasoning}</p>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
@@ -429,6 +443,7 @@ const KnowledgeAssistPage = () => {
     fileProcessingProgress: 0,
     userToken: "",
     selectedAgents: ["Content Extraction Agent", "RAG Agent"],
+    reasoning: null,
   });
   
   const [traditionalChat, setTraditionalChat] = useState<ChatSection>({
@@ -440,6 +455,7 @@ const KnowledgeAssistPage = () => {
     fileProcessingProgress: 0,
     userToken: "",
     selectedAgents: ["Content Extraction Agent", "RAG Agent"],
+    reasoning: null,
   });
 
   // Separate input states for each chat
@@ -538,6 +554,7 @@ const KnowledgeAssistPage = () => {
       messages: [...prev.messages, userMessage],
       isProcessing: true,
       processingTime: null,
+      reasoning: null,
     }));
 
     const startTime = Date.now();
@@ -545,7 +562,7 @@ const KnowledgeAssistPage = () => {
 
     try {
       const response = await queryKnowledgeAssistant(question, exlChat.userToken, {
-        stream: true,
+        stream: false,
         history: true,
         model: agents.includes("Finetuned SLM returns Agent") ? "groq" : "openai",
         fileId: exlChat.uploadedDocuments.length > 0 ? exlChat.uploadedDocuments[0]?.file_id : undefined,
@@ -557,53 +574,128 @@ const KnowledgeAssistPage = () => {
 
       const endTime = Date.now();
       
-      // Extract text from the last chunk
+      // Parse response to extract thoughts and finalResponse
       let fullText = "";
-      if (lastChunk && typeof lastChunk === 'object') {
-        fullText = lastChunk.content || lastChunk.text || lastChunk.answer || JSON.stringify(lastChunk);
-      } else if (lastChunk && typeof lastChunk === 'string') {
-        fullText = lastChunk;
-      } else if (response.answer) {
-        fullText = response.answer;
-      }
+      let reasoning: string | null = null;
       
-      // Apply gradual typing only when streaming
-      let charIndex = 0;
-      const typeCharacter = () => {
-        if (charIndex < fullText.length) {
-          charIndex++;
-          const displayText = fullText.substring(0, charIndex);
+      try {
+        // Handle non-streaming response (stream: false)
+        // Response structure: { body: { thoughts: "...", finalResponse: "..." }, model: "...", references: {...} }
+        if (response.answer) {
+          let responseData: any = response.answer;
           
-          setExlChat(prev => {
-            const updatedMessages = [...prev.messages];
-            const lastMessage = updatedMessages[updatedMessages.length - 1];
-            
-            if (lastMessage && lastMessage.role === "assistant") {
-              lastMessage.content = displayText;
+          // If response.answer is a string, try to parse it
+          if (typeof responseData === 'string') {
+            try {
+              responseData = JSON.parse(responseData);
+            } catch (e) {
+              // If parsing fails, use as plain text
+              fullText = responseData;
+            }
+          }
+          
+          // Check if responseData has a body property
+          if (responseData?.body) {
+            // body can be an object (non-streaming) or a JSON string (streaming)
+            let bodyData: any;
+            if (typeof responseData.body === 'string') {
+              try {
+                bodyData = JSON.parse(responseData.body);
+              } catch (e) {
+                bodyData = responseData.body;
+              }
             } else {
-              updatedMessages.push({
-                role: "assistant",
-                content: displayText,
-              });
+              bodyData = responseData.body;
             }
             
-            return {
-              ...prev,
-              messages: updatedMessages,
-            };
-          });
-          
-          setTimeout(typeCharacter, 10);
-        } else {
-          setExlChat(prev => ({
-            ...prev,
-            isProcessing: false,
-            processingTime: endTime - startTime,
-          }));
+            // Extract thoughts and finalResponse
+            reasoning = bodyData.thoughts || bodyData.Thoughts || null;
+            fullText = bodyData.finalResponse || bodyData.finalresponse || bodyData.answer || "";
+          } else if (responseData.thoughts !== undefined || responseData.finalResponse !== undefined || responseData.finalresponse !== undefined) {
+            // If thoughts/finalResponse are directly on responseData
+            reasoning = responseData.thoughts || responseData.Thoughts || null;
+            fullText = responseData.finalResponse || responseData.finalresponse || responseData.answer || "";
+          } else {
+            // Fallback to existing logic
+            fullText = responseData.content || responseData.text || responseData.answer || JSON.stringify(responseData);
+          }
+        } else if (lastChunk) {
+          // Fallback: try to parse lastChunk
+          if (typeof lastChunk === 'string') {
+            try {
+              const parsed = JSON.parse(lastChunk);
+              if (parsed.body) {
+                const bodyData = typeof parsed.body === 'string' ? JSON.parse(parsed.body) : parsed.body;
+                reasoning = bodyData.thoughts || bodyData.Thoughts || null;
+                fullText = bodyData.finalResponse || bodyData.finalresponse || "";
+              } else {
+                fullText = lastChunk;
+              }
+            } catch (e) {
+              fullText = lastChunk;
+            }
+          } else {
+            fullText = lastChunk.content || lastChunk.text || lastChunk.answer || JSON.stringify(lastChunk);
+          }
         }
-      };
+      } catch (error) {
+        console.error("Error parsing response:", error);
+        // Fallback
+        if (response.answer) {
+          fullText = typeof response.answer === 'string' ? response.answer : JSON.stringify(response.answer);
+        } else if (lastChunk) {
+          fullText = typeof lastChunk === 'string' ? lastChunk : JSON.stringify(lastChunk);
+        }
+      }
       
-      typeCharacter();
+      // Apply gradual typing effect (works for both streaming and non-streaming)
+      if (fullText) {
+        let charIndex = 0;
+        const typeCharacter = () => {
+          if (charIndex < fullText.length) {
+            charIndex++;
+            const displayText = fullText.substring(0, charIndex);
+            
+            setExlChat(prev => {
+              const updatedMessages = [...prev.messages];
+              const lastMessage = updatedMessages[updatedMessages.length - 1];
+              
+              if (lastMessage && lastMessage.role === "assistant") {
+                lastMessage.content = displayText;
+              } else {
+                updatedMessages.push({
+                  role: "assistant",
+                  content: displayText,
+                });
+              }
+              
+              return {
+                ...prev,
+                messages: updatedMessages,
+              };
+            });
+            
+            setTimeout(typeCharacter, 10);
+          } else {
+            setExlChat(prev => ({
+              ...prev,
+              isProcessing: false,
+              processingTime: endTime - startTime,
+              reasoning: reasoning,
+            }));
+          }
+        };
+        
+        typeCharacter();
+      } else {
+        // If no text to display, just mark as done
+        setExlChat(prev => ({
+          ...prev,
+          isProcessing: false,
+          processingTime: endTime - startTime,
+          reasoning: reasoning,
+        }));
+      }
     } catch (error) {
       console.error("Query error:", error);
       const endTime = Date.now();
@@ -619,6 +711,7 @@ const KnowledgeAssistPage = () => {
         ],
         isProcessing: false,
         processingTime: endTime - startTime,
+        reasoning: null,
       }));
       
       toast.error("Failed to process query");
@@ -635,6 +728,7 @@ const KnowledgeAssistPage = () => {
       messages: [...prev.messages, userMessage],
       isProcessing: true,
       processingTime: null,
+      reasoning: null,
     }));
 
     const startTime = Date.now();
@@ -642,7 +736,7 @@ const KnowledgeAssistPage = () => {
 
     try {
       const response = await queryKnowledgeAssistant(question, traditionalChat.userToken, {
-        stream: true,
+        stream: false,
         history: true,
         model: agents.includes("Finetuned SLM returns Agent") ? "groq" : "openai",
         fileId: traditionalChat.uploadedDocuments.length > 0 ? traditionalChat.uploadedDocuments[0]?.file_id : undefined,
@@ -654,53 +748,128 @@ const KnowledgeAssistPage = () => {
 
       const endTime = Date.now();
       
-      // Extract text from the last chunk or response
+      // Parse response to extract thoughts and finalResponse
       let fullText = "";
-      if (lastChunk && typeof lastChunk === 'object') {
-        fullText = lastChunk.content || lastChunk.text || lastChunk.answer || JSON.stringify(lastChunk);
-      } else if (lastChunk && typeof lastChunk === 'string') {
-        fullText = lastChunk;
-      } else if (response.answer) {
-        fullText = response.answer;
-      }
+      let reasoning: string | null = null;
       
-      // Apply gradual typing with streaming
-      let charIndex = 0;
-      const typeCharacter = () => {
-        if (charIndex < fullText.length) {
-          charIndex++;
-          const displayText = fullText.substring(0, charIndex);
+      try {
+        // Handle non-streaming response (stream: false)
+        // Response structure: { body: { thoughts: "...", finalResponse: "..." }, model: "...", references: {...} }
+        if (response.answer) {
+          let responseData: any = response.answer;
           
-          setTraditionalChat(prev => {
-            const updatedMessages = [...prev.messages];
-            const lastMessage = updatedMessages[updatedMessages.length - 1];
-            
-            if (lastMessage && lastMessage.role === "assistant") {
-              lastMessage.content = displayText;
+          // If response.answer is a string, try to parse it
+          if (typeof responseData === 'string') {
+            try {
+              responseData = JSON.parse(responseData);
+            } catch (e) {
+              // If parsing fails, use as plain text
+              fullText = responseData;
+            }
+          }
+          
+          // Check if responseData has a body property
+          if (responseData?.body) {
+            // body can be an object (non-streaming) or a JSON string (streaming)
+            let bodyData: any;
+            if (typeof responseData.body === 'string') {
+              try {
+                bodyData = JSON.parse(responseData.body);
+              } catch (e) {
+                bodyData = responseData.body;
+              }
             } else {
-              updatedMessages.push({
-                role: "assistant",
-                content: displayText,
-              });
+              bodyData = responseData.body;
             }
             
-            return {
-              ...prev,
-              messages: updatedMessages,
-            };
-          });
-          
-          setTimeout(typeCharacter, 10);
-        } else {
-          setTraditionalChat(prev => ({
-            ...prev,
-            isProcessing: false,
-            processingTime: endTime - startTime,
-          }));
+            // Extract thoughts and finalResponse
+            reasoning = bodyData.thoughts || bodyData.Thoughts || null;
+            fullText = bodyData.finalResponse || bodyData.finalresponse || bodyData.answer || "";
+          } else if (responseData.thoughts !== undefined || responseData.finalResponse !== undefined || responseData.finalresponse !== undefined) {
+            // If thoughts/finalResponse are directly on responseData
+            reasoning = responseData.thoughts || responseData.Thoughts || null;
+            fullText = responseData.finalResponse || responseData.finalresponse || responseData.answer || "";
+          } else {
+            // Fallback to existing logic
+            fullText = responseData.content || responseData.text || responseData.answer || JSON.stringify(responseData);
+          }
+        } else if (lastChunk) {
+          // Fallback: try to parse lastChunk
+          if (typeof lastChunk === 'string') {
+            try {
+              const parsed = JSON.parse(lastChunk);
+              if (parsed.body) {
+                const bodyData = typeof parsed.body === 'string' ? JSON.parse(parsed.body) : parsed.body;
+                reasoning = bodyData.thoughts || bodyData.Thoughts || null;
+                fullText = bodyData.finalResponse || bodyData.finalresponse || "";
+              } else {
+                fullText = lastChunk;
+              }
+            } catch (e) {
+              fullText = lastChunk;
+            }
+          } else {
+            fullText = lastChunk.content || lastChunk.text || lastChunk.answer || JSON.stringify(lastChunk);
+          }
         }
-      };
+      } catch (error) {
+        console.error("Error parsing response:", error);
+        // Fallback
+        if (response.answer) {
+          fullText = typeof response.answer === 'string' ? response.answer : JSON.stringify(response.answer);
+        } else if (lastChunk) {
+          fullText = typeof lastChunk === 'string' ? lastChunk : JSON.stringify(lastChunk);
+        }
+      }
       
-      typeCharacter();
+      // Apply gradual typing effect (works for both streaming and non-streaming)
+      if (fullText) {
+        let charIndex = 0;
+        const typeCharacter = () => {
+          if (charIndex < fullText.length) {
+            charIndex++;
+            const displayText = fullText.substring(0, charIndex);
+            
+            setTraditionalChat(prev => {
+              const updatedMessages = [...prev.messages];
+              const lastMessage = updatedMessages[updatedMessages.length - 1];
+              
+              if (lastMessage && lastMessage.role === "assistant") {
+                lastMessage.content = displayText;
+              } else {
+                updatedMessages.push({
+                  role: "assistant",
+                  content: displayText,
+                });
+              }
+              
+              return {
+                ...prev,
+                messages: updatedMessages,
+              };
+            });
+            
+            setTimeout(typeCharacter, 10);
+          } else {
+            setTraditionalChat(prev => ({
+              ...prev,
+              isProcessing: false,
+              processingTime: endTime - startTime,
+              reasoning: reasoning,
+            }));
+          }
+        };
+        
+        typeCharacter();
+      } else {
+        // If no text to display, just mark as done
+        setTraditionalChat(prev => ({
+          ...prev,
+          isProcessing: false,
+          processingTime: endTime - startTime,
+          reasoning: reasoning,
+        }));
+      }
     } catch (error) {
       console.error("Query error:", error);
       const endTime = Date.now();
@@ -716,6 +885,7 @@ const KnowledgeAssistPage = () => {
         ],
         isProcessing: false,
         processingTime: endTime - startTime,
+        reasoning: null,
       }));
       
       toast.error("Failed to process query");
@@ -742,6 +912,7 @@ const KnowledgeAssistPage = () => {
         fileProcessingProgress: 0,
         userToken: newToken,
         selectedAgents: ["Content Extraction Agent", "RAG Agent"],
+        reasoning: null,
       });
 
       toast.success("Chat reset successfully");
@@ -771,6 +942,7 @@ const KnowledgeAssistPage = () => {
         fileProcessingProgress: 0,
         userToken: newToken,
         selectedAgents: ["Content Extraction Agent", "RAG Agent"],
+        reasoning: null,
       });
 
       toast.success("Chat reset successfully");
