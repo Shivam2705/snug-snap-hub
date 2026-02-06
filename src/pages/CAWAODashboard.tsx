@@ -13,7 +13,7 @@ import FileUploadButton from "@/components/investigation/FileUploadButton";
 type TabType = 'schedule' | QueueType;
 
 const CAWAODashboard = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('schedule');
+  const [activeTab, setActiveTab] = useState<TabType>('day-0');
   const [cases, setCases] = useState(mockCases);
   const [statusFilter, setStatusFilter] = useState<CaseStatus | null>(null);
   const [flagFilter, setFlagFilter] = useState<FlagFilter>(null);
@@ -157,16 +157,6 @@ const CAWAODashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <TabsList className="bg-[#181C23] border border-[#12151B]">
               <TabsTrigger 
-                value="schedule" 
-                className="text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white gap-2"
-              >
-                <LayoutGrid className="h-4 w-4" />
-                Schedule
-                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-700 data-[state=active]:bg-white/20 text-slate-300">
-                  {allCases.length}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
                 value="day-0" 
                 className="text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white gap-2"
               >
@@ -194,6 +184,16 @@ const CAWAODashboard = () => {
                 Day-28 Queue
                 <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-700 data-[state=active]:bg-white/20 text-slate-300">
                   {day28Cases.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="schedule" 
+                className="text-slate-300 data-[state=active]:bg-[#4DA3FF] data-[state=active]:text-white gap-2"
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Schedule
+                <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-700 data-[state=active]:bg-white/20 text-slate-300">
+                  {allCases.length}
                 </span>
               </TabsTrigger>
             </TabsList>
