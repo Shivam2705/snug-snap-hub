@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, Send, Bot, Clock, Zap, Shield, DollarSign, Loader2, CheckCircle2, RotateCcw, ChevronDown, Paperclip } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Send, Bot, Clock, Zap, Shield, DollarSign, Loader2, CheckCircle2, RotateCcw, ChevronDown, Paperclip, Mic, MicOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -55,6 +55,53 @@ interface ChatInputProps {
 const ChatInput = memo(({ onSendMessage, isDisabled, value, onChange, inputRef }: ChatInputProps) => {
   const internalRef = useRef<HTMLInputElement>(null);
   const ref = inputRef || internalRef;
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          setIsListening(true);
+        };
+
+        recognition.onresult = (event: any) => {
+          const transcript = Array.from(event.results)
+            .map((result: any) => result[0].transcript)
+            .join('');
+          // Get current value from the input ref to append transcript
+          const currentValue = ref.current?.value || value;
+          onChange(currentValue + (currentValue ? ' ' : '') + transcript);
+          setIsListening(false);
+        };
+
+        recognition.onerror = (event: any) => {
+          console.error('Speech recognition error:', event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+      }
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [ref, value, onChange]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -79,6 +126,27 @@ const ChatInput = memo(({ onSendMessage, isDisabled, value, onChange, inputRef }
     }
   }, [onSendMessage, value, onChange, ref]);
 
+  const handleMicClick = useCallback(() => {
+    if (!recognitionRef.current) {
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+        setIsListening(false);
+      }
+    }
+  }, [isListening]);
+
+  const isSpeechSupported = typeof window !== 'undefined' && 
+    ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
   return (
     <div className="flex gap-2">
       <Input
@@ -90,6 +158,22 @@ const ChatInput = memo(({ onSendMessage, isDisabled, value, onChange, inputRef }
         autoComplete="off"
         value={value}
       />
+      {isSpeechSupported && (
+        <Button
+          size="icon"
+          variant={isListening ? "destructive" : "outline"}
+          onClick={handleMicClick}
+          disabled={isDisabled}
+          className={isListening ? "animate-pulse" : ""}
+          title={isListening ? "Stop recording" : "Start voice input"}
+        >
+          {isListening ? (
+            <MicOff className="h-4 w-4" />
+          ) : (
+            <Mic className="h-4 w-4" />
+          )}
+        </Button>
+      )}
       <Button
         size="icon"
         onClick={handleClick}
@@ -160,12 +244,12 @@ const ChatInterface = memo(({
   };
 
   return (
-    <Card className={`h-full flex flex-col ${true ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
+    <Card className={`h-full flex flex-col ${isExl ? "border-primary/30 bg-gradient-to-br from-primary/5 to-background" : "border-muted"}`}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${true ? "gradient-primary" : "bg-muted"}`}>
-              <Bot className={`h-5 w-5 ${true ? "text-white" : "text-muted-foreground"}`} />
+            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isExl ? "gradient-primary" : "bg-muted"}`}>
+              <Bot className={`h-5 w-5 ${isExl ? "text-white" : "text-muted-foreground"}`} />
             </div>
             <div>
               <CardTitle className="text-lg">{title}</CardTitle>
