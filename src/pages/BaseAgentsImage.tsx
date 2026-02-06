@@ -19,7 +19,7 @@ const BaseAgentsImage = () => {
     {
       id: "next-lens",
       name: "NEXT Lens",
-      purpose: "Upload an image to find similar products from NEXT.co.uk. Extract product attributes and match with inventory for personalized style recommendations.",
+      purpose: "Upload an image to find similar products from product inventory. Extract product attributes and match with inventory for personalized style recommendations.",
       capabilities: [
         "Attribute extraction",
         "Inventory lookup",
