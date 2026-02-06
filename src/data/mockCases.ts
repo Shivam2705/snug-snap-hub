@@ -1000,9 +1000,14 @@ const baseCases = [
   }
 ];
 
+// Override risk scores for specific cases
+const riskScoreOverrides: Record<string, number> = {
+  'CAW-2024-009': 95
+};
+
 // Build full cases with computed fields
 export const mockCases: CustomerCase[] = baseCases.map(c => {
-  const riskScore = calculateRiskScore(c);
+  const riskScore = riskScoreOverrides[c.caseId] ?? calculateRiskScore(c);
   const daysSinceReceived = calculateDaysSince(c.receivedDateTime);
   
   return {
