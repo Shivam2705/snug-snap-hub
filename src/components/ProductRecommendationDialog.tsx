@@ -6,6 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Upload, 
   Play, 
@@ -258,8 +259,9 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] p-0 gap-0 overflow-hidden">
-        <div className="flex h-full flex-col lg:flex-row">
-          {/* Left Panel - Input Section */}
+        <ScrollArea className="h-full">
+          <div className="flex h-full min-h-[90vh] flex-col lg:flex-row">
+            {/* Left Panel - Input Section */}
           <div className="w-full lg:w-1/3 border-b lg:border-b-0 lg:border-r bg-muted/30 p-4 lg:p-6 flex flex-col">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -569,7 +571,8 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
               </TabsContent>
             </Tabs>
           </div>
-        </div>
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
