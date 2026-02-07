@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import AgentProcessFlow from "@/components/AgentProcessFlow";
 import {
   queryKnowledgeAssistant,
   uploadDocumentToKnowledgeAssistant,
@@ -404,26 +405,13 @@ const ChatInterface = memo(({
         )}
 
         {/* Input */}
-        <div className="space-y-2">
-          <ChatInput
-            onSendMessage={handleSend}
-            isDisabled={chat.isProcessing || chat.isFileProcessing}
-            value={inputValue}
-            onChange={onInputChange}
-            inputRef={inputRef}
-          />
-
-          {/* Reasoning Section */}
-          {chat.reasoning && (
-            <div className="p-3 bg-muted/50 rounded-lg border border-muted">
-              <div className="flex items-center gap-2 mb-2">
-                <Bot className="h-4 w-4 text-muted-foreground" />
-                <span className="text-xs font-semibold text-muted-foreground">Reasoning</span>
-              </div>
-              <p className="text-xs text-muted-foreground whitespace-pre-wrap">{chat.reasoning}</p>
-            </div>
-          )}
-        </div>
+        <ChatInput
+          onSendMessage={handleSend}
+          isDisabled={chat.isProcessing || chat.isFileProcessing}
+          value={inputValue}
+          onChange={onInputChange}
+          inputRef={inputRef}
+        />
       </CardContent>
     </Card>
   );
@@ -1047,6 +1035,16 @@ const KnowledgeAssistPage = () => {
             onInputChange={setTraditionalInputValue}
             inputRef={traditionalInputRef}
             onFileUpload={handleFileUpload}
+          />
+        </div>
+
+        {/* Live Agent Process Flow */}
+        <div className="mt-6">
+          <AgentProcessFlow
+            leftAgents={exlChat.selectedAgents}
+            rightAgents={traditionalChat.selectedAgents}
+            leftProcessing={exlChat.isProcessing}
+            rightProcessing={traditionalChat.isProcessing}
           />
         </div>
       </div>
