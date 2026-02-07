@@ -26,7 +26,7 @@ const DYNAMIC_CASES = ['CAW-2024-009', 'CAW-2024-004', 'CAW-2024-003'];
 
 const SCENARIO_OUTCOMES: Record<string, { status: CaseStatus; finalOutcome: FinalOutcome }> = {
   'CAW-2024-009': { status: 'Completed', finalOutcome: 'approved' },
-  'CAW-2024-004': { status: 'Completed', finalOutcome: 'escalated' },
+  'CAW-2024-004': { status: 'Completed', finalOutcome: 'blocked' },
   'CAW-2024-003': { status: 'Completed', finalOutcome: 'awaiting-customer' },
 };
 
@@ -44,15 +44,15 @@ const SCENARIO_RECOMMENDATIONS: Record<string, AIRecommendation> = {
     ]
   },
   'CAW-2024-004': {
-    action: 'escalate' as RecommendationAction,
-    label: 'Escalate to AIT',
-    reasoning: 'Multiple fraud indicators detected during investigation. CIFAS flag confirmed with active fraud marker. Authentication level elevated to Auth2. Case requires Advanced Investigation Team review for potential coordinated fraud activity.',
+    action: 'block' as RecommendationAction,
+    label: 'Block Account',
+    reasoning: 'CIFAS match detected indicating False Identity fraud. Phone and email verified against Mainframe, but CIFAS address does not match Mainframe records. Account has been blocked via iGuide to prevent potential fraudulent activity.',
     supportingEvidence: [
-      'CIFAS National Fraud Database returned active fraud marker',
-      'Address discrepancy found between Experian and mainframe records',
-      'Authentication level elevated to Auth2 due to suspicious activity',
-      'Multiple recent applications detected across different institutions',
-      'Contact details partially match known fraud ring patterns'
+      'CIFAS National Fraud Database returned match - Case 16218601: False Identity (01)',
+      'Phone Number & Email matched with iGuide Mainframe records',
+      'CIFAS address (355 Montagu Road) not matching with Mainframe',
+      'Address discrepancy found between Experian and TransUnion records',
+      'Credit account blocked via iGuide Mainframe'
     ]
   },
   'CAW-2024-003': {
