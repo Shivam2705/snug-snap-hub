@@ -25,6 +25,8 @@ const Index = () => {
     name: "NEXT Lens"
   }, {
     name: "Buyer Assist Agent"
+  }, {
+    name: "Brands Catalogue Review & Publication"
   }];
 
   // Finance & Auditing Agents
