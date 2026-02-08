@@ -672,7 +672,7 @@ const baseCases = [
     firstName: "James",
     lastName: "Mitchell",
     birthDate: "1988-06-15",
-    emailAddress: "james.mitchell92@hotmail.com",
+    emailAddress: "JM12345@secure-payments-support.com",
     mobileNumber: "07845123987",
     address: "28 Riverside Court, Manchester, M3 4JT",
     cifas: true,
