@@ -140,6 +140,32 @@ const scenarioConfigs: Record<string, ScenarioConfig> = {
       { from: 'cifas-agent', to: 'action-agent', message: 'CIFAS protective registration found. Customer contact required...' },
       { from: 'action-agent', to: '', message: 'Customer contacted via SMS and email. Awaiting response.' }
     ]
+  },
+  'CAW-2024-002': {
+    customerName: 'James Mitchell',
+    customerNumber: 'JM456789',
+    email: 'james.mitchell92@hotmail.com',
+    phone: '07845123987',
+    address: '28 Riverside Court, Manchester, M3 4JT',
+    experianAddresses: ['→ 20 Eluna Apartments, 4 Wapping Lane, E1W 2RG', '→ 47, 45-47 Junction Road, N9 7JS'],
+    transunionAddresses: ['→ 355 Montagu Road, N9 0EU', '→ 47 Junction Road, N9 7JS'],
+    cifasFindings: ['CIFAS Match: Case 16218601', 'Type: False Identity (01)', 'Address: 355 Montagu Road, N9 0EU', '✓ Phone Number & Email matched with Mainframe', '✗ CIFAS address not matching with Mainframe'],
+    cifasActions: ['Verified details in CIFAS for all addresses', 'Matching Account details with iGuide Mainframe'],
+    actionIcon: Ban,
+    actionDecision: 'Blocked',
+    actionConfidence: 92,
+    actionText: 'Blocked credit account using iGuide',
+    actionFindings: ['CIFAS match confirmed - account blocked', 'Credit account blocked via iGuide Mainframe', 'Completed with 92% confidence'],
+    summary: 'CIFAS match detected at historical address 355 Montagu Road - Case 16218601: False Identity (01). Phone and email matched with Mainframe records, but CIFAS address does not match Mainframe. Fraud Detection Agent flagged potential identity fraud. Credit account has been blocked using iGuide with 92% confidence.',
+    messages: [
+      { from: 'case-initiation', to: 'data-extraction', message: 'Case categorized as CAWAO Day 0, initiating data extraction...' },
+      { from: 'data-extraction', to: 'fraud-detection', message: 'Customer details retrieved from iGuide, proceeding to fraud checks...' },
+      { from: 'fraud-detection', to: 'experian-agent', message: 'Initial fraud checks passed, retrieving address history...' },
+      { from: 'experian-agent', to: 'transunion-agent', message: '2 addresses found in Experian, cross-checking with TransUnion...' },
+      { from: 'transunion-agent', to: 'cifas-agent', message: '2 addresses found in TransUnion, verifying all addresses in CIFAS...' },
+      { from: 'cifas-agent', to: 'action-agent', message: 'CIFAS match found! Case 16218601 - False Identity detected. Blocking account...' },
+      { from: 'action-agent', to: '', message: 'Credit account blocked via iGuide with 92% confidence.' }
+    ]
   }
 };
 
