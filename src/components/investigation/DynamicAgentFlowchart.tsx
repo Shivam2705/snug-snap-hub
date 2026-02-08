@@ -15,6 +15,7 @@ import {
   AlertTriangle,
   Phone,
   Play,
+  Flag,
   LucideIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ import {
 interface AgentAction {
   text: string;
   completed: boolean;
+  flagged?: boolean;
 }
 
 interface AgentNode {
@@ -207,7 +209,7 @@ const getInitialAgents = (config: ScenarioConfig): AgentNode[] => [
     actions: [
       { text: 'Verify Customer Information with iGuide Mainframe', completed: false },
       { text: 'Multiple credit account with same address', completed: false },
-      { text: 'Invalid or suspicious email address', completed: false },
+      { text: 'Invalid or suspicious email address', completed: false, flagged: !!config.fraudFlags?.length },
       { text: 'New credit account with high value order and delivery far from registered address', completed: false },
       { text: 'Conversion of Cash account to credit along with address change', completed: false },
       { text: 'Address, email, or phone changed before order', completed: false },
@@ -573,8 +575,13 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
                         <AccordionContent>
                           <div className="space-y-1">
                             {agent.actions.map((action, i) => (
-                              <div key={i} className="flex items-start gap-2">
-                                {action.completed ? (
+                              <div key={i} className={cn(
+                                "flex items-start gap-2",
+                                action.flagged && action.completed && "bg-[#FF4757]/10 rounded px-2 py-1 -mx-2"
+                              )}>
+                                {action.flagged && action.completed ? (
+                                  <Flag className="h-3.5 w-3.5 text-[#FF4757] mt-0.5 flex-shrink-0" />
+                                ) : action.completed ? (
                                   <CheckCircle2 className="h-3.5 w-3.5 text-[#2ED573] mt-0.5 flex-shrink-0" />
                                 ) : agent.status === 'in-progress' ? (
                                   <Loader2 className="h-3.5 w-3.5 text-[#4DA3FF] mt-0.5 flex-shrink-0 animate-spin" />
@@ -583,9 +590,12 @@ const DynamicAgentFlowchart = ({ caseId, isRunning, onWorkflowComplete }: Dynami
                                 )}
                                 <span className={cn(
                                   "text-xs",
+                                  action.flagged && action.completed ? "text-[#FF4757] font-medium" :
                                   action.completed ? "text-slate-300" : "text-slate-500"
                                 )}>
-                                  {action.text} {action.completed && <span className="text-[#2ED573]">✓</span>}
+                                  {action.text} 
+                                  {action.completed && !action.flagged && <span className="text-[#2ED573]"> ✓</span>}
+                                  {action.flagged && action.completed && <span className="text-[#FF4757]"> ⚠</span>}
                                 </span>
                               </div>
                             ))}
