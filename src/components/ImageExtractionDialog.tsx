@@ -181,6 +181,30 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
             icon: <Tag className="h-4 w-4" />, 
             confidence: 94 
           },
+          { 
+            label: "Material", 
+            value: attributes.material || "Unknown", 
+            icon: <Ruler className="h-4 w-4" />, 
+            confidence: 93 
+          },
+          { 
+            label: "Occasion", 
+            value: attributes.occasion || "Unknown", 
+            icon: <CircleDot className="h-4 w-4" />, 
+            confidence: 90 
+          },
+          { 
+            label: "Gender", 
+            value: attributes.gender || "Unknown", 
+            icon: <Users className="h-4 w-4" />, 
+            confidence: 96 
+          },
+          { 
+            label: "Wash", 
+            value: attributes.wash || "Unknown", 
+            icon: <Sparkles className="h-4 w-4" />, 
+            confidence: 88 
+          },
         ];
 
         // Animate attributes appearing one by one
@@ -422,7 +446,7 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
                 </div>
 
                 {/* Summary Card */}
-                {extractedAttributes.length === mockAttributes.length && (
+                {agentStatus === 'completed' && extractedAttributes.length > 0 && (
                   <Card className="mt-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/30">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4">
