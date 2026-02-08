@@ -18,58 +18,49 @@ const ecommerceAgentsList = [
       "Customer segmentation",
       "Personalized recommendations",
       "Campaign optimization",
-      "Behavioral analytics"
+      "Behavioral analytics",
     ],
-    savings: ["45% increase in campaign conversion rates"]
+    savings: ["45% increase in campaign conversion rates"],
   },
   {
     id: "next-lens",
     name: "NEXT Lens",
     purpose: "Visual AI-powered product discovery enabling customers to search with images.",
-    capabilities: [
-      "Image-based search",
-      "Visual similarity matching",
-      "Style recommendations",
-      "Trend identification"
-    ],
-    savings: ["30% increase in product discovery"]
+    capabilities: ["Image-based search", "Visual similarity matching", "Style recommendations", "Trend identification"],
+    savings: ["30% increase in product discovery"],
   },
   {
     id: "buyer-assist",
     name: "Buyer Assist Agent",
     purpose: "Intelligent shopping assistant providing personalized product guidance.",
-    capabilities: [
-      "Size recommendations",
-      "Style matching",
-      "Inventory awareness",
-      "Cross-sell suggestions"
-    ],
-    savings: ["20% reduction in returns"]
+    capabilities: ["Size recommendations", "Style matching", "Inventory awareness", "Cross-sell suggestions"],
+    savings: ["20% reduction in returns"],
   },
   {
-    id: "pso-imagery-testing",
-    name: "PSO-Imagery-Testing",
-    purpose: "Fashion catalog verification agent for reviewing supplier product data and approving items for inventory upload.",
+    id: "Catalog review and publication",
+    name: "Catalog review and publication",
+    purpose:
+      "Fashion catalog verification agent for reviewing supplier product data and approving items for inventory upload.",
     capabilities: [
       "Image-to-catalog matching",
       "Attribute verification",
       "Bulk approve/deny workflows",
-      "Supplier notification generation"
+      "Supplier notification generation",
     ],
-    savings: ["60% faster catalog processing"]
-  }
+    savings: ["60% faster catalog processing"],
+  },
 ];
 
 const agentIcons = {
   "hyper-personalized-marketing": Sparkles,
   "next-lens": Camera,
   "buyer-assist": ShoppingCart,
-  "pso-imagery-testing": ScanSearch,
+  "Catalog review and publication": ScanSearch,
 };
 
 const ECommerceAgents = () => {
   const navigate = useNavigate();
-  const [selectedAgent, setSelectedAgent] = useState<typeof ecommerceAgentsList[0] | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<(typeof ecommerceAgentsList)[0] | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
@@ -88,12 +79,12 @@ const ECommerceAgents = () => {
       setImageDialogOpen(true);
       return;
     }
-    if (agentId === "pso-imagery-testing") {
+    if (agentId === "Catalog review and publication") {
       setCatalogDialogOpen(true);
       return;
     }
-    
-    const agent = ecommerceAgentsList.find(a => a.id === agentId);
+
+    const agent = ecommerceAgentsList.find((a) => a.id === agentId);
     if (agent) {
       setSelectedAgent(agent);
       setDialogOpen(true);
@@ -103,12 +94,12 @@ const ECommerceAgents = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <div className="container py-8">
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate("/")} 
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
           className="mb-6 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -127,10 +118,9 @@ const ECommerceAgents = () => {
             </div>
           </div>
           <p className="text-muted-foreground max-w-3xl leading-relaxed">
-            EXL's E-Commerce AI agents transform the online shopping experience through hyper-personalized 
-            marketing, visual product discovery, and intelligent buyer assistance. These agents analyze 
-            customer behavior, predict preferences, and deliver tailored experiences that drive 
-            conversions and customer loyalty.
+            EXL's E-Commerce AI agents transform the online shopping experience through hyper-personalized marketing,
+            visual product discovery, and intelligent buyer assistance. These agents analyze customer behavior, predict
+            preferences, and deliver tailored experiences that drive conversions and customer loyalty.
           </p>
         </div>
 
@@ -154,26 +144,13 @@ const ECommerceAgents = () => {
         </div>
       </div>
 
-      <RunAgentDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        agent={selectedAgent}
-      />
+      <RunAgentDialog open={dialogOpen} onOpenChange={setDialogOpen} agent={selectedAgent} />
 
-      <ProductRecommendationDialog
-        open={productDialogOpen}
-        onOpenChange={setProductDialogOpen}
-      />
+      <ProductRecommendationDialog open={productDialogOpen} onOpenChange={setProductDialogOpen} />
 
-      <ImageExtractionDialog
-        open={imageDialogOpen}
-        onOpenChange={setImageDialogOpen}
-      />
+      <ImageExtractionDialog open={imageDialogOpen} onOpenChange={setImageDialogOpen} />
 
-      <CatalogVerificationDialog
-        open={catalogDialogOpen}
-        onOpenChange={setCatalogDialogOpen}
-      />
+      <CatalogVerificationDialog open={catalogDialogOpen} onOpenChange={setCatalogDialogOpen} />
     </div>
   );
 };
