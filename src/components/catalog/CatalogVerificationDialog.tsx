@@ -57,13 +57,9 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
   };
 
   const handleApprove = (id: string) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, decision: "approved" as const } : item
-      )
-    );
+    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, decision: "approved" as const } : item)));
     if (detailItem?.id === id) {
-      setDetailItem((prev) => prev ? { ...prev, decision: "approved" as const } : null);
+      setDetailItem((prev) => (prev ? { ...prev, decision: "approved" as const } : null));
     }
   };
 
@@ -74,9 +70,7 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
 
   const handleBulkApprove = () => {
     setItems((prev) =>
-      prev.map((item) =>
-        selectedIds.has(item.id) ? { ...item, decision: "approved" as const } : item
-      )
+      prev.map((item) => (selectedIds.has(item.id) ? { ...item, decision: "approved" as const } : item)),
     );
     setSelectedIds(new Set());
   };
@@ -91,11 +85,13 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
       prev.map((item) =>
         pendingDenyIds.includes(item.id)
           ? { ...item, decision: "denied" as const, denyReason: reason, denyComment: comment }
-          : item
-      )
+          : item,
+      ),
     );
     if (detailItem && pendingDenyIds.includes(detailItem.id)) {
-      setDetailItem((prev) => prev ? { ...prev, decision: "denied" as const, denyReason: reason, denyComment: comment } : null);
+      setDetailItem((prev) =>
+        prev ? { ...prev, decision: "denied" as const, denyReason: reason, denyComment: comment } : null,
+      );
     }
     setSelectedIds(new Set());
     setPendingDenyIds([]);
@@ -125,7 +121,7 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
               <DialogHeader className="mb-4">
                 <DialogTitle className="flex items-center gap-2 text-foreground">
                   <FileSpreadsheet className="h-5 w-5 text-primary" />
-                  PSO Imagery Testing
+                  Catalog Review and Publication
                 </DialogTitle>
               </DialogHeader>
               <CatalogUploadScreen onUpload={handleUpload} />
@@ -142,21 +138,31 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
                   </Button>
                   <div>
                     <h2 className="text-sm font-semibold text-foreground">Catalog Preview & Review</h2>
-                    <p className="text-xs text-muted-foreground">{supplierName} — {items.length} items</p>
+                    <p className="text-xs text-muted-foreground">
+                      {supplierName} — {items.length} items
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="text-xs bg-success/10 text-success border-success/20">
                     {approvedCount} Approved
                   </Badge>
-                  <Badge variant="secondary" className="text-xs bg-destructive/10 text-destructive border-destructive/20">
+                  <Badge
+                    variant="secondary"
+                    className="text-xs bg-destructive/10 text-destructive border-destructive/20"
+                  >
                     {deniedItems.length} Denied
                   </Badge>
                   <Badge variant="secondary" className="text-xs">
                     {pendingCount} Pending
                   </Badge>
                   {deniedItems.length > 0 && (
-                    <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setScreen("notification")}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setScreen("notification")}
+                    >
                       <Send className="mr-1 h-3 w-3" />
                       Supplier Notification
                     </Button>
@@ -213,10 +219,7 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
                   <DialogTitle className="text-foreground">Supplier Notification</DialogTitle>
                 </div>
               </DialogHeader>
-              <SupplierNotificationPreview
-                supplierName={supplierName}
-                deniedItems={deniedItems}
-              />
+              <SupplierNotificationPreview supplierName={supplierName} deniedItems={deniedItems} />
             </div>
           )}
         </DialogContent>
