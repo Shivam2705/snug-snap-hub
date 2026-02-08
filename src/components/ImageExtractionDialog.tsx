@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Upload, 
   Play, 
@@ -328,7 +329,8 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
           </div>
 
           {/* Right Column - Agent Execution & Results (2/3) */}
-          <div className="w-2/3 p-6 overflow-y-auto">
+          <ScrollArea className="w-2/3">
+          <div className="p-6">
             <div className="mb-6">
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -418,7 +420,7 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-3">
                   {extractedAttributes.map((attr, index) => (
                     <Card 
                       key={attr.label}
@@ -482,6 +484,7 @@ const ImageExtractionDialog = ({ open, onOpenChange }: ImageExtractionDialogProp
               </div>
             )}
           </div>
+          </ScrollArea>
         </div>
       </DialogContent>
     </Dialog>
