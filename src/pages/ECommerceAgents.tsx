@@ -5,8 +5,9 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
 import ImageExtractionDialog from "@/components/ImageExtractionDialog";
+import CatalogVerificationDialog from "@/components/catalog/CatalogVerificationDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ShoppingBag, Sparkles, Camera, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Sparkles, Camera, ShoppingCart, ScanSearch } from "lucide-react";
 
 const ecommerceAgentsList = [
   {
@@ -44,6 +45,18 @@ const ecommerceAgentsList = [
       "Cross-sell suggestions"
     ],
     savings: ["20% reduction in returns"]
+  },
+  {
+    id: "pso-imagery-testing",
+    name: "PSO-Imagery-Testing",
+    purpose: "Fashion catalog verification agent for reviewing supplier product data and approving items for inventory upload.",
+    capabilities: [
+      "Image-to-catalog matching",
+      "Attribute verification",
+      "Bulk approve/deny workflows",
+      "Supplier notification generation"
+    ],
+    savings: ["60% faster catalog processing"]
   }
 ];
 
@@ -51,6 +64,7 @@ const agentIcons = {
   "hyper-personalized-marketing": Sparkles,
   "next-lens": Camera,
   "buyer-assist": ShoppingCart,
+  "pso-imagery-testing": ScanSearch,
 };
 
 const ECommerceAgents = () => {
@@ -59,6 +73,7 @@ const ECommerceAgents = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
+  const [catalogDialogOpen, setCatalogDialogOpen] = useState(false);
 
   const handleRunAgent = (agentId: string) => {
     if (agentId === "hyper-personalized-marketing") {
@@ -71,6 +86,10 @@ const ECommerceAgents = () => {
     }
     if (agentId === "buyer-assist") {
       setImageDialogOpen(true);
+      return;
+    }
+    if (agentId === "pso-imagery-testing") {
+      setCatalogDialogOpen(true);
       return;
     }
     
@@ -149,6 +168,11 @@ const ECommerceAgents = () => {
       <ImageExtractionDialog
         open={imageDialogOpen}
         onOpenChange={setImageDialogOpen}
+      />
+
+      <CatalogVerificationDialog
+        open={catalogDialogOpen}
+        onOpenChange={setCatalogDialogOpen}
       />
     </div>
   );

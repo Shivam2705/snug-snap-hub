@@ -1,0 +1,190 @@
+export interface CatalogItem {
+  id: string;
+  itemNo: string;
+  itemName: string;
+  category: string;
+  brand: string;
+  colour: string;
+  size: string;
+  pattern: string;
+  imageUrl: string;
+  matchPercent: number;
+  status: "Suggested: Approve" | "Needs Review" | "Suggested: Deny";
+  decision?: "approved" | "denied";
+  denyReason?: string;
+  denyComment?: string;
+}
+
+export const SUPPLIERS = [
+  "FashionCo Ltd",
+  "StyleWorks International",
+  "TrendVista Apparel",
+  "Luxe Fabrics Inc",
+  "UrbanThread Supply",
+];
+
+export const DENY_REASONS = [
+  "Image mismatch",
+  "Incorrect category",
+  "Incorrect color",
+  "Incomplete data",
+];
+
+export const mockCatalogItems: CatalogItem[] = [
+  {
+    id: "1",
+    itemNo: "PSO-7201",
+    itemName: "Classic Fit Oxford Shirt",
+    category: "Shirts",
+    brand: "FashionCo",
+    colour: "Light Blue",
+    size: "M",
+    pattern: "Solid",
+    imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=200&h=200&fit=crop",
+    matchPercent: 96,
+    status: "Suggested: Approve",
+  },
+  {
+    id: "2",
+    itemNo: "PSO-7202",
+    itemName: "Slim Chino Trousers",
+    category: "Trousers",
+    brand: "FashionCo",
+    colour: "Navy",
+    size: "32",
+    pattern: "Solid",
+    imageUrl: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=200&h=200&fit=crop",
+    matchPercent: 91,
+    status: "Suggested: Approve",
+  },
+  {
+    id: "3",
+    itemNo: "PSO-7203",
+    itemName: "Floral Print Midi Dress",
+    category: "Dresses",
+    brand: "StyleWorks",
+    colour: "Multi",
+    size: "S",
+    pattern: "Floral",
+    imageUrl: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=200&h=200&fit=crop",
+    matchPercent: 84,
+    status: "Needs Review",
+  },
+  {
+    id: "4",
+    itemNo: "PSO-7204",
+    itemName: "Wool Blend Blazer",
+    category: "Outerwear",
+    brand: "LuxeFabrics",
+    colour: "Charcoal",
+    size: "L",
+    pattern: "Herringbone",
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
+    matchPercent: 73,
+    status: "Suggested: Deny",
+  },
+  {
+    id: "5",
+    itemNo: "PSO-7205",
+    itemName: "Ribbed Knit Sweater",
+    category: "Knitwear",
+    brand: "TrendVista",
+    colour: "Cream",
+    size: "M",
+    pattern: "Ribbed",
+    imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200&h=200&fit=crop",
+    matchPercent: 98,
+    status: "Suggested: Approve",
+  },
+  {
+    id: "6",
+    itemNo: "PSO-7206",
+    itemName: "Denim Jacket Washed",
+    category: "Outerwear",
+    brand: "UrbanThread",
+    colour: "Indigo",
+    size: "L",
+    pattern: "Solid",
+    imageUrl: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&h=200&fit=crop",
+    matchPercent: 87,
+    status: "Needs Review",
+  },
+  {
+    id: "7",
+    itemNo: "PSO-7207",
+    itemName: "Pleated Maxi Skirt",
+    category: "Skirts",
+    brand: "StyleWorks",
+    colour: "Burgundy",
+    size: "M",
+    pattern: "Solid",
+    imageUrl: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=200&h=200&fit=crop",
+    matchPercent: 92,
+    status: "Suggested: Approve",
+  },
+  {
+    id: "8",
+    itemNo: "PSO-7208",
+    itemName: "Striped Polo T-Shirt",
+    category: "T-Shirts",
+    brand: "FashionCo",
+    colour: "Red/White",
+    size: "XL",
+    pattern: "Striped",
+    imageUrl: "https://images.unsplash.com/photo-1625910513413-5fc42c1c5dfe?w=200&h=200&fit=crop",
+    matchPercent: 77,
+    status: "Suggested: Deny",
+  },
+  {
+    id: "9",
+    itemNo: "PSO-7209",
+    itemName: "Linen Blend Trousers",
+    category: "Trousers",
+    brand: "TrendVista",
+    colour: "Beige",
+    size: "34",
+    pattern: "Solid",
+    imageUrl: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=200&h=200&fit=crop",
+    matchPercent: 95,
+    status: "Suggested: Approve",
+  },
+  {
+    id: "10",
+    itemNo: "PSO-7210",
+    itemName: "Embroidered Tunic Top",
+    category: "Tops",
+    brand: "LuxeFabrics",
+    colour: "White",
+    size: "S",
+    pattern: "Embroidered",
+    imageUrl: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=200&h=200&fit=crop",
+    matchPercent: 82,
+    status: "Needs Review",
+  },
+  {
+    id: "11",
+    itemNo: "PSO-7211",
+    itemName: "Tailored Suit Trousers",
+    category: "Trousers",
+    brand: "LuxeFabrics",
+    colour: "Black",
+    size: "30",
+    pattern: "Solid",
+    imageUrl: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=200&h=200&fit=crop",
+    matchPercent: 99,
+    status: "Suggested: Approve",
+  },
+  {
+    id: "12",
+    itemNo: "PSO-7212",
+    itemName: "Printed Wrap Dress",
+    category: "Dresses",
+    brand: "TrendVista",
+    colour: "Teal",
+    size: "M",
+    pattern: "Abstract",
+    imageUrl: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200&h=200&fit=crop",
+    matchPercent: 68,
+    status: "Suggested: Deny",
+  },
+];
