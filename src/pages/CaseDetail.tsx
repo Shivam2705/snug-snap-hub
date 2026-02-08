@@ -22,12 +22,13 @@ import {
 import { toast } from "sonner";
 import { useState, useCallback } from "react";
 
-const DYNAMIC_CASES = ['CAW-2024-009', 'CAW-2024-004', 'CAW-2024-003'];
+const DYNAMIC_CASES = ['CAW-2024-009', 'CAW-2024-004', 'CAW-2024-003', 'CAW-2024-002'];
 
 const SCENARIO_OUTCOMES: Record<string, { status: CaseStatus; finalOutcome: FinalOutcome }> = {
   'CAW-2024-009': { status: 'Completed', finalOutcome: 'approved' },
   'CAW-2024-004': { status: 'Completed', finalOutcome: 'blocked' },
   'CAW-2024-003': { status: 'Completed', finalOutcome: 'awaiting-customer' },
+  'CAW-2024-002': { status: 'Completed', finalOutcome: 'blocked' },
 };
 
 const SCENARIO_RECOMMENDATIONS: Record<string, AIRecommendation> = {
@@ -65,6 +66,18 @@ const SCENARIO_RECOMMENDATIONS: Record<string, AIRecommendation> = {
       'Customer phone number verified but email bounced',
       'CIFAS check returned monitoring flag — not a confirmed fraud marker',
       'Insufficient documentation to make final determination'
+    ]
+  },
+  'CAW-2024-002': {
+    action: 'block' as RecommendationAction,
+    label: 'Block Account',
+    reasoning: 'CIFAS match detected indicating False Identity fraud. Phone and email verified against Mainframe, but CIFAS address does not match Mainframe records. Account has been blocked via iGuide to prevent potential fraudulent activity.',
+    supportingEvidence: [
+      'CIFAS National Fraud Database returned match - Case 16218601: False Identity (01)',
+      'Phone Number & Email matched with iGuide Mainframe records',
+      'CIFAS address (355 Montagu Road) not matching with Mainframe',
+      'Address discrepancy found between Experian and TransUnion records',
+      'Credit account blocked via iGuide Mainframe'
     ]
   }
 };

@@ -475,6 +475,11 @@ const generateEvidenceTimeline = (caseData: Partial<CustomerCase>): EvidenceItem
   if (caseData.caseId === 'CAW-2024-004') {
     return generateCAW004Timeline(baseDate);
   }
+
+  // Special handling for CAW-2024-002 (same as CAW-2024-004 - Sarah Davis)
+  if (caseData.caseId === 'CAW-2024-002') {
+    return generateCAW004Timeline(baseDate);
+  }
   
   const timeline: EvidenceItem[] = [];
   
@@ -664,33 +669,34 @@ const baseCases = [
   },
   {
     caseId: "CAW-2024-002",
-    firstName: "Emily",
-    lastName: "Brown",
-    birthDate: "1990-07-22",
-    emailAddress: "emily.brown@gmail.com",
-    mobileNumber: "+44 7700 900456",
-    address: "45 Oak Lane, Manchester, M1 2AB",
-    cifas: false,
-    noc: true,
+    firstName: "Sarah",
+    lastName: "Davis",
+    birthDate: "1995-02-28",
+    emailAddress: "sarahdavis1234@gmail.com",
+    mobileNumber: "01406860876",
+    address: "12 Garden View, Leeds, LS1 4EF",
+    cifas: true,
+    noc: false,
     authenticateCode: 2 as const,
-    zown: true,
+    zown: false,
     receivedDateTime: "2024-01-15T10:15:00",
     completionDateTime: null,
-    assignTo: "Michael Chen",
-    status: "In Progress" as CaseStatus,
+    assignTo: "AI Agent",
+    status: "New" as CaseStatus,
     queue: "day-0" as QueueType,
-    aiSummary: "Customer verification in progress. ZOWN flag triggered - potential duplicate account. NOC flag requires verification.",
+    aiSummary: "CIFAS match detected at historical address 355 Montagu Road - Case 16218601: False Identity (01). Fraud Detection Agent flagged potential identity fraud. Case escalated to AIT team for specialist investigation with 92% confidence.",
     aiRecommendation: {
-      action: 'block' as RecommendationAction,
-      label: 'Block Account',
-      reasoning: 'ZOWN flag triggered indicating potential duplicate account ownership. NOC flag present with name verification mismatch. High risk indicators suggest blocking.',
+      action: 'escalate' as RecommendationAction,
+      label: 'Escalated to AIT Team',
+      reasoning: 'CIFAS match found - Case 16218601: False Identity (01) at 355 Montagu Road. Fraud Detection Agent flagged potential identity fraud requiring specialist investigation.',
       supportingEvidence: [
-        'ZOWN: Potential duplicate account detected - same DOB, similar address',
-        'NOC flag: Name on Credit file does not match application',
-        'iGuide: Account linkage to previously blocked customer'
+        'CIFAS match: Case 16218601 - False Identity (01)',
+        'Historical address: 355 Montagu Road, N9 0EU',
+        'DOB confirmed across all sources',
+        'All address checks completed via Experian and TransUnion'
       ]
     },
-    confidenceScore: 72
+    confidenceScore: 92
   },
   {
     caseId: "CAW-2024-003",
