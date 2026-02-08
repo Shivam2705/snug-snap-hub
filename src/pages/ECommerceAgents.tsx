@@ -37,8 +37,8 @@ const ecommerceAgentsList = [
     savings: ["20% reduction in returns"],
   },
   {
-    id: "Catalog review and publication",
-    name: "Catalog review and publication",
+    id: "brands-catalogue-review",
+    name: "Brands Catalogue Review & Publication",
     purpose:
       "Fashion catalog verification agent for reviewing supplier product data and approving items for inventory upload.",
     capabilities: [
@@ -55,7 +55,7 @@ const agentIcons = {
   "hyper-personalized-marketing": Sparkles,
   "next-lens": Camera,
   "buyer-assist": ShoppingCart,
-  "Catalog review and publication": ScanSearch,
+  "brands-catalogue-review": ScanSearch,
 };
 
 const ECommerceAgents = () => {
@@ -79,7 +79,7 @@ const ECommerceAgents = () => {
       setImageDialogOpen(true);
       return;
     }
-    if (agentId === "Catalog review and publication") {
+    if (agentId === "brands-catalogue-review") {
       setCatalogDialogOpen(true);
       return;
     }
