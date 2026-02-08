@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CatalogItem, mockCatalogItems } from "@/data/mockCatalogData";
 import CatalogUploadScreen from "./CatalogUploadScreen";
+import CatalogAgentFlow from "./CatalogAgentFlow";
 import CatalogReviewTable from "./CatalogReviewTable";
 import ItemDetailPanel from "./ItemDetailPanel";
 import BulkActionToolbar from "./BulkActionToolbar";
@@ -16,7 +17,7 @@ interface CatalogVerificationDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type Screen = "upload" | "review" | "notification";
+type Screen = "upload" | "processing" | "review" | "notification";
 
 const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDialogProps) => {
   const [screen, setScreen] = useState<Screen>("upload");
@@ -29,6 +30,10 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
   const supplierName = "FashionCo Ltd";
 
   const handleUpload = () => {
+    setScreen("processing");
+  };
+
+  const handleProcessingComplete = () => {
     setScreen("review");
   };
 
@@ -113,7 +118,7 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent
           className={`bg-card border-border p-0 gap-0 ${
-            screen === "upload" ? "sm:max-w-lg" : "sm:max-w-[95vw] sm:max-h-[90vh] h-[90vh]"
+            screen === "upload" ? "sm:max-w-lg" : screen === "processing" ? "sm:max-w-xl" : "sm:max-w-[95vw] sm:max-h-[90vh] h-[90vh]"
           }`}
         >
           {screen === "upload" && (
@@ -125,6 +130,12 @@ const CatalogVerificationDialog = ({ open, onOpenChange }: CatalogVerificationDi
                 </DialogTitle>
               </DialogHeader>
               <CatalogUploadScreen onUpload={handleUpload} />
+            </div>
+          )}
+
+          {screen === "processing" && (
+            <div className="p-6">
+              <CatalogAgentFlow onComplete={handleProcessingComplete} />
             </div>
           )}
 
