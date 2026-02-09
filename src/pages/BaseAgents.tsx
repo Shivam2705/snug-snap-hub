@@ -13,7 +13,10 @@ import {
   ShoppingBag, Image, Shirt,
   Mic, Headphones,
   FileType, ImageIcon, Volume2,
-  Filter, ArrowLeft, Home
+  Filter, ArrowLeft, Home,
+  Database, FileSearch, PenTool,
+  Layers, Sparkles,
+  AudioLines, Speech
 } from "lucide-react";
 
 type FilterType = "all" | "text" | "image" | "voice";
@@ -99,6 +102,54 @@ const BaseAgents = () => {
       savings: ["60% faster research", "24/7 availability"],
       icon: MessageSquare,
       category: "text" as const
+    },
+    {
+      id: "rag-agent",
+      name: "RAG Agent",
+      purpose: "Retrieval-Augmented Generation agent that combines document retrieval with AI generation for accurate, grounded responses.",
+      capabilities: [
+        "Vector-based document retrieval",
+        "Context-aware generation",
+        "Source attribution",
+        "Multi-document synthesis",
+        "Semantic search"
+      ],
+      savings: ["90% accuracy improvement", "Grounded responses"],
+      icon: Database,
+      category: "text" as const,
+      disabled: true
+    },
+    {
+      id: "summarization-agent",
+      name: "Summarization Agent",
+      purpose: "Automatically generate concise summaries from lengthy documents, articles, and reports.",
+      capabilities: [
+        "Extractive summarization",
+        "Abstractive summarization",
+        "Key points extraction",
+        "Multi-document summarization",
+        "Customizable summary length"
+      ],
+      savings: ["75% time saved", "Key insights extraction"],
+      icon: FileSearch,
+      category: "text" as const,
+      disabled: true
+    },
+    {
+      id: "text-generation-agent",
+      name: "Text Generation Agent",
+      purpose: "Generate high-quality text content including articles, reports, and creative writing based on prompts.",
+      capabilities: [
+        "Content generation",
+        "Style customization",
+        "Tone adjustment",
+        "Multi-format output",
+        "Template-based generation"
+      ],
+      savings: ["80% faster content creation", "Consistent quality"],
+      icon: PenTool,
+      category: "text" as const,
+      disabled: true
     }
   ];
 
@@ -148,6 +199,38 @@ const BaseAgents = () => {
       savings: ["50% better predictions", "25% higher margins"],
       icon: Shirt,
       category: "image" as const
+    },
+    {
+      id: "data-curation-agent",
+      name: "Data Curation Agent",
+      purpose: "Automatically curate, clean, and organize image datasets for training and analysis purposes.",
+      capabilities: [
+        "Image quality assessment",
+        "Duplicate detection",
+        "Auto-tagging & labeling",
+        "Dataset organization",
+        "Metadata enrichment"
+      ],
+      savings: ["70% curation time saved", "Higher data quality"],
+      icon: Layers,
+      category: "image" as const,
+      disabled: true
+    },
+    {
+      id: "image-generation-agent",
+      name: "Image Generation Agent",
+      purpose: "Generate high-quality images from text descriptions using advanced AI models.",
+      capabilities: [
+        "Text-to-image generation",
+        "Style transfer",
+        "Image editing & inpainting",
+        "Batch generation",
+        "Custom model fine-tuning"
+      ],
+      savings: ["90% faster asset creation", "Unlimited variations"],
+      icon: Sparkles,
+      category: "image" as const,
+      disabled: true
     }
   ];
 
@@ -182,6 +265,38 @@ const BaseAgents = () => {
       savings: ["80% audit time saved", "100% coverage"],
       icon: Headphones,
       category: "voice" as const
+    },
+    {
+      id: "speech-to-text-agent",
+      name: "Speech to Text Agent",
+      purpose: "Convert audio recordings and live speech into accurate text transcriptions with speaker diarization.",
+      capabilities: [
+        "Real-time transcription",
+        "Speaker identification",
+        "Multi-language support",
+        "Punctuation & formatting",
+        "Custom vocabulary"
+      ],
+      savings: ["95% transcription accuracy", "Real-time processing"],
+      icon: AudioLines,
+      category: "voice" as const,
+      disabled: true
+    },
+    {
+      id: "text-to-speech-agent",
+      name: "Text to Speech Agent",
+      purpose: "Convert text content into natural-sounding speech with customizable voices and emotions.",
+      capabilities: [
+        "Natural voice synthesis",
+        "Multiple voice options",
+        "Emotion & tone control",
+        "Multi-language support",
+        "SSML support"
+      ],
+      savings: ["Instant audio generation", "Consistent quality"],
+      icon: Speech,
+      category: "voice" as const,
+      disabled: true
     }
   ];
 
@@ -341,6 +456,7 @@ const BaseAgents = () => {
                     savings={agent.savings}
                     icon={agent.icon}
                     onRun={handleRunAgent}
+                    disabled={agent.disabled}
                   />
                 ))}
               </div>
@@ -364,6 +480,7 @@ const BaseAgents = () => {
                     savings={agent.savings}
                     icon={agent.icon}
                     onRun={handleRunAgent}
+                    disabled={agent.disabled}
                   />
                 ))}
               </div>
@@ -387,6 +504,7 @@ const BaseAgents = () => {
                     savings={agent.savings}
                     icon={agent.icon}
                     onRun={handleRunAgent}
+                    disabled={agent.disabled}
                   />
                 ))}
               </div>
@@ -407,6 +525,7 @@ const BaseAgents = () => {
                 savings={agent.savings}
                 icon={agent.icon}
                 onRun={handleRunAgent}
+                disabled={agent.disabled}
               />
             ))}
           </div>
