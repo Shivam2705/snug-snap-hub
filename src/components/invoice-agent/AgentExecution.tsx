@@ -74,9 +74,9 @@ const AgentExecution = ({ agents, sseLogs, executionStatus }: AgentExecutionProp
   }, [sseLogs]);
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Agents Status */}
-      <div className="p-4 space-y-4">
+    <div className="flex h-full">
+      {/* Left: Agent Pipeline */}
+      <div className="w-1/2 p-4 space-y-4 border-r border-border overflow-auto">
         <h3 className="font-semibold text-lg">Agent Pipeline</h3>
         
         <div className="space-y-3">
@@ -103,14 +103,14 @@ const AgentExecution = ({ agents, sseLogs, executionStatus }: AgentExecutionProp
         </div>
       </div>
 
-      {/* Execution Log */}
-      <div className="flex-1 flex flex-col border-t border-border">
+      {/* Right: Execution Log */}
+      <div className="w-1/2 flex flex-col">
         <div className="p-3 bg-muted/30 border-b border-border">
           <h4 className="font-medium text-sm">Execution Log</h4>
         </div>
         <div 
           ref={logsContainerRef}
-          className="flex-1 overflow-auto overflow-y-scroll p-3 space-y-2 font-mono text-xs"
+          className="flex-1 overflow-auto p-3 space-y-2 font-mono text-xs"
         >
           {executionStatus === 'idle' ? (
             <p className="text-muted-foreground">Upload a PDF and click "Run Agent" to start</p>
