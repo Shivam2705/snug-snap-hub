@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
-import { Headphones, ClipboardCheck, ArrowLeft } from "lucide-react";
+import { Headphones, ClipboardCheck, ArrowLeft, AudioLines, Speech } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const BaseAgentsVoice = () => {
@@ -12,45 +12,36 @@ const BaseAgentsVoice = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const agents = [
-    // {
-    //   id: "i-assist",
-    //   name: "Customer Insights",
-    //   purpose: "Upload audio recordings for transcription and post-call analysis. Identify customer vulnerability and expressions of dissatisfaction automatically.",
-    //   capabilities: [
-    //     "Sentiment detection",
-    //     "Intent for contact(L1/L2)",
-    //     "Resolution Detection...",
-    //     "Channel sub agents(voice, chat, email, whatsapp)"
-    //   ],
-    //   savings: [],
-    //   icon: Headphones,
-    //   sampleInputs: [
-    //     { label: "Call Type", type: "select", options: ["Customer Service", "Sales", "Returns", "Complaints", "General Inquiry"] },
-    //     { label: "Call Duration", type: "text", placeholder: "15:30" },
-    //     { label: "Agent ID", type: "text", placeholder: "AGT-001" },
-    //     { label: "Priority", type: "select", options: ["Standard", "High", "Urgent"] }
-    //   ]
-    // },
-    // {
-    //   id: "i-audit",
-    //   name: "i-Audit",
-    //   purpose: "Upload customer call recordings for compliance auditing. Analyze if calls were handled within guidelines, required questions were asked, and relevant information was confirmed.",
-    //   capabilities: [
-    //     "Compliance checking",
-    //     "Script adherence analysis",
-    //     "Required questions verification",
-    //     "Handle time assessment",
-    //     "Quality scoring"
-    //   ],
-    //   savings: [],
-    //   icon: ClipboardCheck,
-    //   sampleInputs: [
-    //     { label: "Call Category", type: "select", options: ["Returns", "Refunds", "Exchanges", "Complaints", "General"] },
-    //     { label: "Product Type", type: "text", placeholder: "Jacket" },
-    //     { label: "Call Reference", type: "text", placeholder: "CALL-2024-12345" },
-    //     { label: "Audit Type", type: "select", options: ["Full Audit", "Compliance Only", "Quality Only"] }
-    //   ]
-    // }
+    {
+      id: "speech-to-text-agent",
+      name: "Speech to Text Agent",
+      purpose: "Convert audio recordings and live speech into accurate text transcriptions with speaker diarization.",
+      capabilities: [
+        "Real-time transcription",
+        "Speaker identification",
+        "Multi-language support",
+        "Punctuation & formatting",
+        "Custom vocabulary"
+      ],
+      savings: ["95% transcription accuracy", "Real-time processing"],
+      icon: AudioLines,
+      sampleInputs: []
+    },
+    {
+      id: "text-to-speech-agent",
+      name: "Text to Speech Agent",
+      purpose: "Convert text content into natural-sounding speech with customizable voices and emotions.",
+      capabilities: [
+        "Natural voice synthesis",
+        "Multiple voice options",
+        "Emotion & tone control",
+        "Multi-language support",
+        "SSML support"
+      ],
+      savings: ["Instant audio generation", "Consistent quality"],
+      icon: Speech,
+      sampleInputs: []
+    }
   ];
 
   const handleRunAgent = (agentId: string) => {

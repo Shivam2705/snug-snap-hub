@@ -5,7 +5,7 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import ProductRecommendationDialog from "@/components/ProductRecommendationDialog";
 import ImageExtractionDialog from "@/components/ImageExtractionDialog";
-import { ShoppingBag, ScanSearch, TrendingUp, ArrowLeft } from "lucide-react";
+import { ShoppingBag, ScanSearch, TrendingUp, ArrowLeft, Layers, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const BaseAgentsImage = () => {
@@ -49,26 +49,36 @@ const BaseAgentsImage = () => {
         { label: "Output Format", type: "select", options: ["JSON", "Plain Text", "Structured Report"] }
       ]
     },
-    // {
-    //   id: "buyer-assist",
-    //   name: "Buyer Assist Agent",
-    //   purpose: "Analyze fashion trends from internet, social media, and celebrity styles. Upload dress images to identify patterns and predict sales probability for upcoming seasons.",
-    //   capabilities: [
-    //     "Trend forecasting",
-    //     "Pattern identification (Midi, Polka dots, etc.)",
-    //     "Celebrity style tracking",
-    //     "Social media analysis",
-    //     "Sales probability prediction"
-    //   ],
-    //   savings: [],
-    //   icon: TrendingUp,
-    //   sampleInputs: [
-    //     { label: "Season", type: "select", options: ["Spring/Summer 2025", "Autumn/Winter 2025", "Spring/Summer 2026"] },
-    //     { label: "Product Type", type: "select", options: ["Dress", "Top", "Jacket", "Skirt", "Trousers"] },
-    //     { label: "Target Market", type: "select", options: ["Women 18-25", "Women 25-35", "Women 35-50", "All Ages"] },
-    //     { label: "Price Point", type: "select", options: ["Budget", "Mid-range", "Premium"] }
-    //   ]
-    // }
+    {
+      id: "data-curation-agent",
+      name: "Data Curation Agent",
+      purpose: "Automatically curate, clean, and organize image datasets for training and analysis purposes.",
+      capabilities: [
+        "Image quality assessment",
+        "Duplicate detection",
+        "Auto-tagging & labeling",
+        "Dataset organization",
+        "Metadata enrichment"
+      ],
+      savings: ["70% curation time saved", "Higher data quality"],
+      icon: Layers,
+      sampleInputs: []
+    },
+    {
+      id: "image-generation-agent",
+      name: "Image Generation Agent",
+      purpose: "Generate high-quality images from text descriptions using advanced AI models.",
+      capabilities: [
+        "Text-to-image generation",
+        "Style transfer",
+        "Image editing & inpainting",
+        "Batch generation",
+        "Custom model fine-tuning"
+      ],
+      savings: ["90% faster asset creation", "Unlimited variations"],
+      icon: Sparkles,
+      sampleInputs: []
+    }
   ];
 
   const handleRunAgent = (agentId: string) => {

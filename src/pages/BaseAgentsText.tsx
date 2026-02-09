@@ -5,7 +5,7 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import EmailAssistDialog from "@/components/EmailAssistDialog";
 import InvoiceAgentDialog from "@/components/invoice-agent/InvoiceAgentDialog";
-import { Mail, FileSpreadsheet, FileText, MessageSquare, ArrowLeft } from "lucide-react";
+import { Mail, FileSpreadsheet, FileText, MessageSquare, ArrowLeft, Database, FileSearch, PenTool } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const BaseAgentsText = () => {
@@ -56,44 +56,51 @@ const BaseAgentsText = () => {
         { label: "Invoice Date", type: "date" }
       ]
     },
-    // {
-    //   id: "text-extraction",
-    //   name: "Text Extraction Agent",
-    //   purpose: "Upload any document to extract text, generate summaries, and identify key points automatically.",
-    //   capabilities: [
-    //     "Multi-format support",
-    //     "Smart summarization",
-    //     "Key point extraction",
-    //     "Entity recognition",
-    //     "Language detection"
-    //   ],
-    //   savings: ["70% faster", "Batch processing"],
-    //   icon: FileText,
-    //   sampleInputs: [
-    //     { label: "Document Type", type: "select", options: ["PDF", "Word Document", "Scanned Image", "Other"] },
-    //     { label: "Document Title", type: "text", placeholder: "Q4 Financial Report" },
-    //     { label: "Summary Length", type: "select", options: ["Brief", "Standard", "Detailed"] }
-    //   ]
-    // },
-    // {
-    //   id: "knowledge-assist",
-    //   name: "Knowledge Assist Agent",
-    //   purpose: "Upload documents and chat with the agent to get intelligent answers based on your document content.",
-    //   capabilities: [
-    //     "Document Q&A",
-    //     "Context-aware responses",
-    //     "Multi-document search",
-    //     "Citation tracking",
-    //     "Knowledge synthesis"
-    //   ],
-    //   savings: [],
-    //   icon: MessageSquare,
-    //   sampleInputs: [
-    //     { label: "Document Name", type: "text", placeholder: "Policy Manual 2024" },
-    //     { label: "Your Question", type: "textarea", placeholder: "What is the return policy for damaged items?" },
-    //     { label: "Response Style", type: "select", options: ["Concise", "Detailed", "Step-by-step"] }
-    //   ]
-    // }
+    {
+      id: "rag-agent",
+      name: "RAG Agent",
+      purpose: "Retrieval-Augmented Generation agent that combines document retrieval with AI generation for accurate, grounded responses.",
+      capabilities: [
+        "Vector-based document retrieval",
+        "Context-aware generation",
+        "Source attribution",
+        "Multi-document synthesis",
+        "Semantic search"
+      ],
+      savings: ["90% accuracy improvement", "Grounded responses"],
+      icon: Database,
+      sampleInputs: []
+    },
+    {
+      id: "summarization-agent",
+      name: "Summarization Agent",
+      purpose: "Automatically generate concise summaries from lengthy documents, articles, and reports.",
+      capabilities: [
+        "Extractive summarization",
+        "Abstractive summarization",
+        "Key points extraction",
+        "Multi-document summarization",
+        "Customizable summary length"
+      ],
+      savings: ["75% time saved", "Key insights extraction"],
+      icon: FileSearch,
+      sampleInputs: []
+    },
+    {
+      id: "text-generation-agent",
+      name: "Text Generation Agent",
+      purpose: "Generate high-quality text content including articles, reports, and creative writing based on prompts.",
+      capabilities: [
+        "Content generation",
+        "Style customization",
+        "Tone adjustment",
+        "Multi-format output",
+        "Template-based generation"
+      ],
+      savings: ["80% faster content creation", "Consistent quality"],
+      icon: PenTool,
+      sampleInputs: []
+    }
   ];
 
   const handleRunAgent = (agentId: string) => {
