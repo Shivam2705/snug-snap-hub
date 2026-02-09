@@ -20,6 +20,7 @@ const contactCenterAgentsList = [
       ],
       savings: [],
       icon: Headphones,
+      disabled: true,
       sampleInputs: [
         { label: "Call Type", type: "select", options: ["Customer Service", "Sales", "Returns", "Complaints", "General Inquiry"] },
         { label: "Call Duration", type: "text", placeholder: "15:30" },
@@ -150,6 +151,7 @@ const ContactCenterAgents = () => {
                 savings={agent.savings}
                 icon={IconComponent}
                 onRun={handleRunAgent}
+                disabled={agent.disabled}
               />
             );
           })}

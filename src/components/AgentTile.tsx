@@ -11,23 +11,24 @@ interface AgentTileProps {
   savings: string[];
   icon: LucideIcon;
   onRun: (agentId: string) => void;
+  disabled?: boolean;
 }
 
-const AgentTile = ({ id, name, purpose, capabilities, savings, icon: Icon, onRun }: AgentTileProps) => {
+const AgentTile = ({ id, name, purpose, capabilities, savings, icon: Icon, onRun, disabled = false }: AgentTileProps) => {
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <Card className={`group relative overflow-hidden transition-all duration-300 ${disabled ? 'opacity-60' : 'hover:shadow-lg hover:-translate-y-1'}`}>
       <div className="absolute top-0 right-0 w-32 h-32 gradient-exl opacity-10 rounded-bl-full transition-all duration-300 group-hover:opacity-20" />
       
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <div className="h-14 w-14 rounded-xl gradient-exl flex items-center justify-center mb-3 flex-shrink-0">
-            <Icon className="h-7 w-7 text-white" />
+          <div className={`h-14 w-14 rounded-xl flex items-center justify-center mb-3 flex-shrink-0 ${disabled ? 'bg-muted' : 'gradient-exl'}`}>
+            <Icon className={`h-7 w-7 ${disabled ? 'text-muted-foreground' : 'text-white'}`} />
           </div>
           <Badge variant="secondary" className="text-xs bg-success/10 text-success border-success/20">
             AI Agent
           </Badge>
         </div>
-        <CardTitle className="text-lg leading-tight">{name}</CardTitle>
+        <CardTitle className={`text-lg leading-tight ${disabled ? 'text-muted-foreground' : ''}`}>{name}</CardTitle>
         <CardDescription className="line-clamp-2 text-sm">{purpose}</CardDescription>
       </CardHeader>
       
@@ -58,9 +59,10 @@ const AgentTile = ({ id, name, purpose, capabilities, savings, icon: Icon, onRun
         </div>
         
         <Button 
-          onClick={() => onRun(id)} 
+          onClick={() => !disabled && onRun(id)} 
           className="w-full group/btn"
           variant="default"
+          disabled={disabled}
         >
           <Play className="mr-2 h-4 w-4" />
           Try Agent
