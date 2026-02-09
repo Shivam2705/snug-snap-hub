@@ -18,7 +18,7 @@ const financeAgentsList = [
       "Authentication codes",
       "Address validation"
     ],
-    savings: ["50% reduction in fraud losses"]
+    savings: []
   },
   {
     id: "invoice-agent",
@@ -30,7 +30,7 @@ const financeAgentsList = [
       "Approval workflows",
       "Exception handling"
     ],
-    savings: ["70% faster invoice processing"]
+    savings: []
   }
 ];
 
@@ -89,12 +89,12 @@ const FinanceAgents = () => {
               <p className="text-muted-foreground">AI Agents for financial operations automation</p>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+          {/* <p className="text-muted-foreground max-w-3xl leading-relaxed">
             EXL's Finance & Auditing AI agents streamline financial operations through automated 
             credit investigation, fraud detection, and invoice processing. These agents ensure 
             compliance, reduce manual effort, and provide real-time insights for better 
             financial control and decision-making.
-          </p>
+          </p> */}
         </div>
 
         {/* Agents Grid */}

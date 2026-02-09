@@ -23,7 +23,8 @@ const BaseAgentsVoice = () => {
         "Punctuation & formatting",
         "Custom vocabulary"
       ],
-      savings: ["95% transcription accuracy", "Real-time processing"],
+      disabled: true,
+      savings: [],
       icon: AudioLines,
       sampleInputs: []
     },
@@ -38,7 +39,8 @@ const BaseAgentsVoice = () => {
         "Multi-language support",
         "SSML support"
       ],
-      savings: ["Instant audio generation", "Consistent quality"],
+      disabled: true,
+      savings: [],
       icon: Speech,
       sampleInputs: []
     }

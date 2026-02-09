@@ -67,7 +67,8 @@ const BaseAgentsText = () => {
         "Multi-document synthesis",
         "Semantic search"
       ],
-      savings: ["90% accuracy improvement", "Grounded responses"],
+      disabled: true,
+      savings: [],
       icon: Database,
       sampleInputs: []
     },
@@ -82,7 +83,8 @@ const BaseAgentsText = () => {
         "Multi-document summarization",
         "Customizable summary length"
       ],
-      savings: ["75% time saved", "Key insights extraction"],
+      disabled: true,
+      savings: [],
       icon: FileSearch,
       sampleInputs: []
     },
@@ -97,7 +99,8 @@ const BaseAgentsText = () => {
         "Multi-format output",
         "Template-based generation"
       ],
-      savings: ["80% faster content creation", "Consistent quality"],
+      savings: [],
+      disabled: true,
       icon: PenTool,
       sampleInputs: []
     }

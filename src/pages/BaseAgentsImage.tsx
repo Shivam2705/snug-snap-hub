@@ -31,6 +31,21 @@ const BaseAgentsImage = () => {
     //   icon: ShoppingBag,
     //   sampleInputs: []
     // },
+        {
+      id: "data-curation-agent",
+      name: "Data Curation Agent",
+      purpose: "Organizing, managing, analyzing and classification of images data.",
+      capabilities: [
+        "Image classification",
+        "Duplicate detection",
+        "Tagging & labeling",
+        "Image organization",
+      ],
+      disabled: true,
+      savings: [],
+      icon: Layers,
+      sampleInputs: []
+    },
     {
       id: "image-extraction",
       name: "Image Extraction Agent",
@@ -50,32 +65,19 @@ const BaseAgentsImage = () => {
       ]
     },
     {
-      id: "data-curation-agent",
-      name: "Data Curation Agent",
-      purpose: "Automatically curate, clean, and organize image datasets for training and analysis purposes.",
-      capabilities: [
-        "Image quality assessment",
-        "Duplicate detection",
-        "Auto-tagging & labeling",
-        "Dataset organization",
-        "Metadata enrichment"
-      ],
-      savings: ["70% curation time saved", "Higher data quality"],
-      icon: Layers,
-      sampleInputs: []
-    },
-    {
       id: "image-generation-agent",
       name: "Image Generation Agent",
-      purpose: "Generate high-quality images from text descriptions using advanced AI models.",
+      purpose: "Generate images as per user requirements with guardrails.",
       capabilities: [
+        "Custom image creation",
         "Text-to-image generation",
         "Style transfer",
         "Image editing & inpainting",
         "Batch generation",
         "Custom model fine-tuning"
       ],
-      savings: ["90% faster asset creation", "Unlimited variations"],
+      disabled: true,
+      savings: [],
       icon: Sparkles,
       sampleInputs: []
     }

@@ -200,13 +200,12 @@ const BaseAgents = () => {
     {
       id: "data-curation-agent",
       name: "Data Curation Agent",
-      purpose: "Automatically curate, clean, and organize image datasets for training and analysis purposes.",
+      purpose: "Organizing, managing, analyzing images data.",
       capabilities: [
-        "Image quality assessment",
+        "Image classification",
         "Duplicate detection",
-        "Auto-tagging & labeling",
-        "Dataset organization",
-        "Metadata enrichment"
+        "Tagging & labeling",
+        "Image organization",
       ],
       savings: ["70% curation time saved", "Higher data quality"],
       icon: Layers,
@@ -217,11 +216,9 @@ const BaseAgents = () => {
       name: "Image Generation Agent",
       purpose: "Generate high-quality images from text descriptions using advanced AI models.",
       capabilities: [
+        "Custom image creation",
         "Text-to-image generation",
-        "Style transfer",
-        "Image editing & inpainting",
-        "Batch generation",
-        "Custom model fine-tuning"
+        "Batch generation"
       ],
       savings: ["90% faster asset creation", "Unlimited variations"],
       icon: Sparkles,

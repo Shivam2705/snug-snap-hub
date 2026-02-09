@@ -32,6 +32,7 @@ const ecommerceAgentsList = [
   {
     id: "buyer-assist",
     name: "Buyer Assist Agent",
+    disabled: true,
     purpose: "Intelligent shopping assistant providing personalized product guidance.",
     capabilities: ["Size recommendations", "Style matching", "Inventory awareness", "Cross-sell suggestions"],
     savings: ["20% reduction in returns"],
@@ -134,6 +135,7 @@ const ECommerceAgents = () => {
                 id={agent.id}
                 name={agent.name}
                 purpose={agent.purpose}
+                disabled={agent.disabled}
                 capabilities={agent.capabilities}
                 savings={agent.savings}
                 icon={IconComponent}

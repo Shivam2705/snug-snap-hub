@@ -36,7 +36,7 @@ const AgentCard = ({
 }) => {
   return (
     <div className={cn(
-      "p-4 rounded-lg border transition-all",
+      "p-1 rounded-lg border transition-all",
       status.status === 'running' && "border-primary bg-primary/5",
       status.status === 'completed' && "border-accent bg-accent/20",
       status.status === 'error' && "border-destructive/50 bg-destructive/5",
@@ -110,7 +110,7 @@ const AgentExecution = ({ agents, sseLogs, executionStatus }: AgentExecutionProp
         </div>
         <div 
           ref={logsContainerRef}
-          className="flex-1 overflow-auto p-3 space-y-2 font-mono text-xs"
+          className="flex-1 overflow-auto overflow-y-scroll p-3 space-y-2 font-mono text-xs"
         >
           {executionStatus === 'idle' ? (
             <p className="text-muted-foreground">Upload a PDF and click "Run Agent" to start</p>
