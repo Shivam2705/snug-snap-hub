@@ -40,12 +40,12 @@ const SolutionTile = ({
           <div className="h-14 w-14 rounded-xl gradient-primary flex items-center justify-center glow-primary">
             <Icon className="h-7 w-7 text-white" />
           </div>
-          <Badge 
+          {/* <Badge 
             variant="outline" 
             className="text-xs bg-primary/10 text-primary border-primary/30 font-medium"
           >
             {agents.length} Agents
-          </Badge>
+          </Badge> */}
         </div>
         <CardTitle className="text-xl font-semibold tracking-tight">{title}</CardTitle>
         <CardDescription className="text-muted-foreground/80 leading-relaxed">
@@ -54,7 +54,7 @@ const SolutionTile = ({
       </CardHeader>
       
       <CardContent className="space-y-5 relative z-10 flex-1 flex flex-col justify-end">
-        <div className="flex flex-wrap gap-2">
+        {/* <div className="flex flex-wrap gap-2">
           {agents.slice(0, 4).map((agent, index) => (
             <Badge 
               key={index} 
@@ -72,7 +72,7 @@ const SolutionTile = ({
               +{agents.length - 4} more
             </Badge>
           )}
-        </div>
+        </div> */}
         
         <div className="flex gap-3 mt-auto">
           <Button asChild className="flex-1 group/btn bg-primary hover:bg-primary/90">

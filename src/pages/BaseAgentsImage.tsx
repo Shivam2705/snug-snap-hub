@@ -16,33 +16,32 @@ const BaseAgentsImage = () => {
   const [showImageExtraction, setShowImageExtraction] = useState(false);
 
   const agents = [
-    {
-      id: "next-lens",
-      name: "NEXT Lens",
-      purpose: "Upload an image to find similar products from product inventory. Extract product attributes and match with inventory for personalized style recommendations.",
-      capabilities: [
-        "Attribute extraction",
-        "Inventory lookup",
-        "Visual similarity matching",
-        "Style recommendations",
-        "Match scoring"
-      ],
-      savings: ["Instant matches", "Higher conversion"],
-      icon: ShoppingBag,
-      sampleInputs: []
-    },
+    // {
+    //   id: "next-lens",
+    //   name: "NEXT Lens",
+    //   purpose: "Upload an image to find similar products from product inventory. Extract product attributes and match with inventory for personalized style recommendations.",
+    //   capabilities: [
+    //     "Attribute extraction",
+    //     "Inventory lookup",
+    //     "Visual similarity matching",
+    //     "Style recommendations",
+    //     "Match scoring"
+    //   ],
+    //   savings: [],
+    //   icon: ShoppingBag,
+    //   sampleInputs: []
+    // },
     {
       id: "image-extraction",
       name: "Image Extraction Agent",
       purpose: "Upload images to identify and extract text, objects, patterns, and detailed visual information.",
       capabilities: [
-        "OCR text extraction",
         "Object detection",
-        "Pattern recognition",
-        "Color analysis",
+        "Pattern identification",
+        "Color detection",
         "Brand identification"
       ],
-      savings: ["95% accuracy", "Multi-language OCR"],
+      savings: [],
       icon: ScanSearch,
       sampleInputs: [
         { label: "Image Type", type: "select", options: ["Product Photo", "Document", "Label", "Receipt", "Other"] },
@@ -50,26 +49,26 @@ const BaseAgentsImage = () => {
         { label: "Output Format", type: "select", options: ["JSON", "Plain Text", "Structured Report"] }
       ]
     },
-    {
-      id: "buyer-assist",
-      name: "Buyer Assist Agent",
-      purpose: "Analyze fashion trends from internet, social media, and celebrity styles. Upload dress images to identify patterns and predict sales probability for upcoming seasons.",
-      capabilities: [
-        "Trend forecasting",
-        "Pattern identification (Midi, Polka dots, etc.)",
-        "Celebrity style tracking",
-        "Social media analysis",
-        "Sales probability prediction"
-      ],
-      savings: ["Data-driven buying", "Trend insights"],
-      icon: TrendingUp,
-      sampleInputs: [
-        { label: "Season", type: "select", options: ["Spring/Summer 2025", "Autumn/Winter 2025", "Spring/Summer 2026"] },
-        { label: "Product Type", type: "select", options: ["Dress", "Top", "Jacket", "Skirt", "Trousers"] },
-        { label: "Target Market", type: "select", options: ["Women 18-25", "Women 25-35", "Women 35-50", "All Ages"] },
-        { label: "Price Point", type: "select", options: ["Budget", "Mid-range", "Premium"] }
-      ]
-    }
+    // {
+    //   id: "buyer-assist",
+    //   name: "Buyer Assist Agent",
+    //   purpose: "Analyze fashion trends from internet, social media, and celebrity styles. Upload dress images to identify patterns and predict sales probability for upcoming seasons.",
+    //   capabilities: [
+    //     "Trend forecasting",
+    //     "Pattern identification (Midi, Polka dots, etc.)",
+    //     "Celebrity style tracking",
+    //     "Social media analysis",
+    //     "Sales probability prediction"
+    //   ],
+    //   savings: [],
+    //   icon: TrendingUp,
+    //   sampleInputs: [
+    //     { label: "Season", type: "select", options: ["Spring/Summer 2025", "Autumn/Winter 2025", "Spring/Summer 2026"] },
+    //     { label: "Product Type", type: "select", options: ["Dress", "Top", "Jacket", "Skirt", "Trousers"] },
+    //     { label: "Target Market", type: "select", options: ["Women 18-25", "Women 25-35", "Women 35-50", "All Ages"] },
+    //     { label: "Price Point", type: "select", options: ["Budget", "Mid-range", "Premium"] }
+    //   ]
+    // }
   ];
 
   const handleRunAgent = (agentId: string) => {
@@ -103,16 +102,16 @@ const BaseAgentsImage = () => {
         </Button>
 
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
+          {/* <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-3">
             Visual AI
-          </div>
+          </div> */}
           <h1 className="text-3xl font-bold mb-4">Image Agents</h1>
-          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+          {/* <p className="text-muted-foreground max-w-3xl leading-relaxed">
             Visual AI is transforming retail and ecommerce through intelligent image understanding. From enabling 
             customers to search products by simply uploading a photo, to helping buyers identify emerging fashion 
             trends from social media—our agents drive higher conversion rates, smarter merchandising decisions, 
             and personalized shopping experiences that keep customers coming back.
-          </p>
+          </p> */}
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

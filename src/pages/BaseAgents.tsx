@@ -57,8 +57,8 @@ const BaseAgents = () => {
     },
     {
       id: "invoice-agent",
-      name: "Invoice Agent",
-      purpose: "Upload invoices for automated data extraction, validation, and reconciliation with step-by-step processing visibility.",
+      name: "Text Extraction Agent",
+      purpose: "Upload any document to extract text, generate summaries, and identify key points automatically.",
       capabilities: [
         "OCR data extraction",
         "Field validation & verification",
@@ -70,21 +70,21 @@ const BaseAgents = () => {
       icon: FileText,
       category: "text" as const
     },
-    {
-      id: "text-extraction",
-      name: "Text Extraction Agent",
-      purpose: "Upload any document for intelligent text extraction, summarization, and key point identification.",
-      capabilities: [
-        "Universal document support",
-        "Intelligent summarization",
-        "Key point extraction",
-        "Entity recognition",
-        "Multi-language support"
-      ],
-      savings: ["70% faster review", "85% accuracy"],
-      icon: Brain,
-      category: "text" as const
-    },
+    // {
+    //   id: "text-extraction",
+    //   name: "Text Extraction Agent",
+    //   purpose: "Upload any document for intelligent text extraction, summarization, and key point identification.",
+    //   capabilities: [
+    //     "Universal document support",
+    //     "Intelligent summarization",
+    //     "Key point extraction",
+    //     "Entity recognition",
+    //     "Multi-language support"
+    //   ],
+    //   savings: ["70% faster review", "85% accuracy"],
+    //   icon: Brain,
+    //   category: "text" as const
+    // },
     {
       id: "knowledge-assist",
       name: "Knowledge Assist Agent",

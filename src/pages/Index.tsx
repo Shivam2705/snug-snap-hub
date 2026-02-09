@@ -40,17 +40,17 @@ const Index = () => {
   const capabilities = [{
     icon: FileText,
     title: "Text AI",
-    description: "EXL's Text AI leverages advanced NLP to automate document processing, email triage, invoice extraction, and knowledge synthesis with enterprise-grade accuracy.",
+    description: "Agents for Text extraction, Summarization and Document Processing.",
     href: "/base-agents/text"
   }, {
     icon: Image,
     title: "Visual AI",
-    description: "EXL's Visual AI powers intelligent image recognition, product attribute extraction, visual search, and fashion trend analysis for seamless retail experiences.",
+    description: "Image recognition, attribute extraction, visual search and validation.",
     href: "/base-agents/image"
   }, {
     icon: Mic,
     title: "Voice AI",
-    description: "EXL's Voice AI delivers real-time transcription, sentiment analysis, compliance monitoring, and conversational intelligence for enhanced customer interactions.",
+    description: "Speech-to-text, Text to Speech, Voice AI Agents.",
     href: "/base-agents/voice"
   }];
   return <div className="min-h-screen bg-background">
@@ -66,22 +66,20 @@ const Index = () => {
         
         <div className="container py-24 md:py-32 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-8 animate-pulse-subtle">
+            {/* <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-8 animate-pulse-subtle">
               <Sparkles className="h-4 w-4" />
               Autonomous Intelligence Platform
-            </div>
+            </div> */}
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8">
               <span className="text-foreground font-display">NEXT</span>{" "}
               <span className="text-gradient-primary">Agentic AI</span>
               <br />
-              <span className="text-gradient-primary">Platform</span>
+              <span className="text-gradient-primary">Platform - Prototype</span>
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Luxury retail meets autonomous intelligence. Empowering NEXT with AI agents 
-              that automate complex workflows, enhance decision-making, and deliver 
-              measurable business outcomes with precision and elegance.
+              A shared foundation to build AI agents, reuse core capabilities, and evolve with Technology upgrades & change in Business rules/ workflows.
             </p>
           </div>
           
@@ -116,20 +114,19 @@ const Index = () => {
       </section>
 
       {/* Partner Slider */}
-      <PartnerSlider />
+      {/* <PartnerSlider /> */}
 
       {/* Multi-Modal Agentic Capabilities */}
       <section className="container py-20 md:py-28">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground mb-4">
+          {/* <div className="inline-flex items-center gap-2 rounded-full bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground mb-4">
             Foundation Layer
-          </div>
+          </div> */}
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Multi-Modal Agentic Capabilities
+            Foundation Layer
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Our autonomous agents perceive the world through text, vision, and voice—processing 
-            information across modalities to deliver comprehensive, context-aware intelligence.
+            This layer provides text, vision, and voice foundation that agents can reliably consume, combine, and orchestrate—ensuring consistency, reuse, and governance across all AI use cases. Most suitable layer for integration with Enterprise Data sources & Business rules.
           </p>
         </div>
         
@@ -210,20 +207,19 @@ const Index = () => {
       <section className="border-y border-border/50 bg-card/20">
         <div className="container py-20 md:py-28">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary mb-4">
+            {/* <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary mb-4">
               Enterprise Solutions
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Agentic Suite for NEXT</h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">Purpose-built agentic solutions designed for NEXT's unique business challenges. 
-Agentic Processes, Powered by the 3R Ideology - Repurposed Intelligence, Reusable Processes, Responsible Automation.</p>
+            </div> */}
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Custom agents</h2>
+            <p className="text-muted-foreground text-lg leading-relaxed">Unified Intelligence, Reusable Agents, Responsible Automation.</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <SolutionTile title="Contact Center" description="AI-powered agents for call transcription, compliance auditing, email processing, and intelligent knowledge assistance—transforming every customer interaction." agents={contactCenterAgents} icon={Headphones} href="/contact-center" />
+            <SolutionTile title="Contact Center" description="Intent Detection & Sentiment Detection, Compliance (Vulnerability, EOD, Complaints)…" agents={contactCenterAgents} icon={Headphones} href="/contact-center" />
             
-            <SolutionTile title="E-Commerce" description="Hyper-personalized marketing, visual product search, and trend analysis agents that drive engagement, conversions, and smarter merchandising decisions." agents={ecommerceAgents} icon={ShoppingBag} href="/ecommerce" />
+            <SolutionTile title="E-Commerce" description="Image Attribution, Product Search, Hyper-personalization…" agents={ecommerceAgents} icon={ShoppingBag} href="/ecommerce" />
             
-            <SolutionTile title="Finance & Auditing" description="Automated credit investigation, fraud detection, and invoice processing agents ensuring compliance, accuracy, and financial control." agents={financeAgents} icon={DollarSign} href="/finance" />
+            <SolutionTile title="Finance & Accounting" description="Automated credit investigation, fraud detection, and invoice processing agents ensuring compliance, accuracy, and financial control." agents={financeAgents} icon={DollarSign} href="/finance" />
           </div>
         </div>
       </section>
