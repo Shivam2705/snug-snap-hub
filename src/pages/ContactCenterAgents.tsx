@@ -9,8 +9,27 @@ import { ArrowLeft, Headphones, FileText, BookOpen, Mic, Shield } from "lucide-r
 
 const contactCenterAgentsList = [
   {
+      id: "i-assist",
+      name: "Customer Insights",
+      purpose: "Upload audio recordings for transcription and post-call analysis. Identify customer vulnerability and expressions of dissatisfaction automatically.",
+      capabilities: [
+        "Sentiment detection",
+        "Intent for contact(L1/L2)",
+        "Resolution Detection...",
+        "Channel sub agents(voice, chat, email, whatsapp)"
+      ],
+      savings: [],
+      icon: Headphones,
+      sampleInputs: [
+        { label: "Call Type", type: "select", options: ["Customer Service", "Sales", "Returns", "Complaints", "General Inquiry"] },
+        { label: "Call Duration", type: "text", placeholder: "15:30" },
+        { label: "Agent ID", type: "text", placeholder: "AGT-001" },
+        { label: "Priority", type: "select", options: ["Standard", "High", "Urgent"] }
+      ]
+    },
+  {
     id: "i-audit",
-    name: "i-Audit",
+    name: "Compliance & Audit",
     purpose: "Real-time call quality monitoring and compliance auditing through advanced speech analytics.",
     capabilities: [
       "Call transcription & analysis",
@@ -18,33 +37,9 @@ const contactCenterAgentsList = [
       "Quality scoring",
       "Agent performance insights"
     ],
-    savings: ["40% reduction in manual QA effort"]
+    savings: []
   },
-  {
-    id: "i-assist",
-    name: "i-Assist",
-    purpose: "AI-powered real-time agent assistance for improved customer interactions and faster resolution.",
-    capabilities: [
-      "Real-time suggestions",
-      "Knowledge retrieval",
-      "Sentiment detection",
-      "Next-best-action guidance"
-    ],
-    savings: ["25% improvement in first-call resolution"]
-  },
-  {
-    id: "email-assist",
-    name: "Email Assist Agent",
-    purpose: "Intelligent email processing and response generation for customer service efficiency.",
-    capabilities: [
-      "Email classification",
-      "Auto-response drafting",
-      "Sentiment analysis",
-      "Priority routing"
-    ],
-    savings: ["60% faster email response times"]
-  },
-  {
+    {
     id: "knowledge-assist",
     name: "Knowledge Assist Agent",
     purpose: "Instant access to organizational knowledge for agents and customers.",
@@ -54,8 +49,21 @@ const contactCenterAgentsList = [
       "Document retrieval",
       "FAQ automation"
     ],
-    savings: ["35% reduction in average handle time"]
-  }
+    savings: []
+  },
+  {
+    id: "email-assist",
+    name: "Email Comprehension Agent",
+    purpose: "Intelligent email processing and response generation for customer service efficiency.",
+    capabilities: [
+      "Email classification",
+      "Auto-response drafting",
+      "Sentiment analysis",
+      "Priority routing"
+    ],
+    savings: []
+  },
+
 ];
 
 const agentIcons = {
@@ -120,12 +128,12 @@ const ContactCenterAgents = () => {
               <p className="text-muted-foreground">AI Agents transforming customer interactions</p>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+          {/* <p className="text-muted-foreground max-w-3xl leading-relaxed">
             EXL's Contact Center AI agents revolutionize customer service operations through intelligent 
             call monitoring, real-time agent assistance, and automated email processing. These agents 
             ensure compliance, enhance agent productivity, and deliver exceptional customer experiences 
             at scale.
-          </p>
+          </p> */}
         </div>
 
         {/* Agents Grid */}
