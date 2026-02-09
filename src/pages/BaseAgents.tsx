@@ -116,8 +116,7 @@ const BaseAgents = () => {
       ],
       savings: ["90% accuracy improvement", "Grounded responses"],
       icon: Database,
-      category: "text" as const,
-      disabled: true
+      category: "text" as const
     },
     {
       id: "summarization-agent",
@@ -132,8 +131,7 @@ const BaseAgents = () => {
       ],
       savings: ["75% time saved", "Key insights extraction"],
       icon: FileSearch,
-      category: "text" as const,
-      disabled: true
+      category: "text" as const
     },
     {
       id: "text-generation-agent",
@@ -148,8 +146,7 @@ const BaseAgents = () => {
       ],
       savings: ["80% faster content creation", "Consistent quality"],
       icon: PenTool,
-      category: "text" as const,
-      disabled: true
+      category: "text" as const
     }
   ];
 
@@ -213,8 +210,7 @@ const BaseAgents = () => {
       ],
       savings: ["70% curation time saved", "Higher data quality"],
       icon: Layers,
-      category: "image" as const,
-      disabled: true
+      category: "image" as const
     },
     {
       id: "image-generation-agent",
@@ -229,8 +225,7 @@ const BaseAgents = () => {
       ],
       savings: ["90% faster asset creation", "Unlimited variations"],
       icon: Sparkles,
-      category: "image" as const,
-      disabled: true
+      category: "image" as const
     }
   ];
 
@@ -279,8 +274,7 @@ const BaseAgents = () => {
       ],
       savings: ["95% transcription accuracy", "Real-time processing"],
       icon: AudioLines,
-      category: "voice" as const,
-      disabled: true
+      category: "voice" as const
     },
     {
       id: "text-to-speech-agent",
@@ -295,8 +289,7 @@ const BaseAgents = () => {
       ],
       savings: ["Instant audio generation", "Consistent quality"],
       icon: Speech,
-      category: "voice" as const,
-      disabled: true
+      category: "voice" as const
     }
   ];
 
@@ -456,7 +449,6 @@ const BaseAgents = () => {
                     savings={agent.savings}
                     icon={agent.icon}
                     onRun={handleRunAgent}
-                    disabled={agent.disabled}
                   />
                 ))}
               </div>
@@ -480,7 +472,6 @@ const BaseAgents = () => {
                     savings={agent.savings}
                     icon={agent.icon}
                     onRun={handleRunAgent}
-                    disabled={agent.disabled}
                   />
                 ))}
               </div>
@@ -504,7 +495,6 @@ const BaseAgents = () => {
                     savings={agent.savings}
                     icon={agent.icon}
                     onRun={handleRunAgent}
-                    disabled={agent.disabled}
                   />
                 ))}
               </div>
@@ -525,7 +515,6 @@ const BaseAgents = () => {
                 savings={agent.savings}
                 icon={agent.icon}
                 onRun={handleRunAgent}
-                disabled={agent.disabled}
               />
             ))}
           </div>
