@@ -5,7 +5,7 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import EmailAssistDialog from "@/components/EmailAssistDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Headphones, FileText, BookOpen, Mic, Shield } from "lucide-react";
+import { ArrowLeft, Headphones, FileText, BookOpen, Mic, Shield, ClipboardCheck } from "lucide-react";
 
 const contactCenterAgentsList = [
   {
@@ -53,6 +53,18 @@ const contactCenterAgentsList = [
     savings: []
   },
   {
+    id: "cawao-schedule",
+    name: "CAWAO-Schedule",
+    purpose: "Credit Account Investigation without orders. Multi-agent verification for fraud detection.",
+    capabilities: [
+      "CIFAS fraud detection",
+      "Customer verification",
+      "Authentication codes",
+      "Address validation"
+    ],
+    savings: []
+  },
+  {
     id: "email-assist",
     name: "Email Comprehension Agent",
     purpose: "Intelligent email processing and response generation for customer service efficiency.",
@@ -70,6 +82,7 @@ const contactCenterAgentsList = [
 const agentIcons = {
   "i-audit": Shield,
   "i-assist": Mic,
+  "cawao-schedule": ClipboardCheck,
   "email-assist": FileText,
   "knowledge-assist": BookOpen,
 };
@@ -83,6 +96,11 @@ const ContactCenterAgents = () => {
   const handleRunAgent = (agentId: string) => {
     if (agentId === "i-audit") {
       window.location.href = "https://next-iaudit-ui-1037311574972.us-central1.run.app";
+      return;
+    }
+    
+    if (agentId === "cawao-schedule") {
+      navigate("/cawao");
       return;
     }
     

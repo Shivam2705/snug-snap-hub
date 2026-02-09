@@ -5,21 +5,9 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import InvoiceAgentDialog from "@/components/invoice-agent/InvoiceAgentDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, DollarSign, FileText, Shield, Calculator } from "lucide-react";
+import { ArrowLeft, DollarSign, FileText } from "lucide-react";
 
 const financeAgentsList = [
-  {
-    id: "cawao-schedule",
-    name: "CAWAO-Schedule",
-    purpose: "Credit Account Investigation without orders. Multi-agent verification for fraud detection.",
-    capabilities: [
-      "CIFAS fraud detection",
-      "Customer verification",
-      "Authentication codes",
-      "Address validation"
-    ],
-    savings: []
-  },
   {
     id: "invoice-agent",
     name: "Invoice Agent",
@@ -35,7 +23,6 @@ const financeAgentsList = [
 ];
 
 const agentIcons = {
-  "cawao-schedule": Shield,
   "invoice-agent": FileText,
 };
 
