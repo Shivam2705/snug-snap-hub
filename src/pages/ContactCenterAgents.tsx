@@ -5,7 +5,7 @@ import AgentTile from "@/components/AgentTile";
 import RunAgentDialog from "@/components/RunAgentDialog";
 import EmailAssistDialog from "@/components/EmailAssistDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Headphones, FileText, BookOpen, Mic, Shield, ClipboardCheck } from "lucide-react";
+import { ArrowLeft, Headphones, FileText, BookOpen, Mic, Shield, ClipboardCheck, ShieldCheck } from "lucide-react";
 
 const contactCenterAgentsList = [
   {
@@ -65,6 +65,20 @@ const contactCenterAgentsList = [
     savings: []
   },
   {
+    id: "idv-agent",
+    name: "ID&V Agent",
+    purpose: "Next-gen AI voice agent delivering instant, secure, and highly accurate customer verification across accents, geographies, and channels.",
+    capabilities: [
+      "Real-time voice conversations",
+      "Multi-engine speech AI",
+      "Precision entity extraction",
+      "Backend data validation",
+      "Smart matching & confidence scoring",
+      "Adaptive retry & confirmations"
+    ],
+    savings: []
+  },
+  {
     id: "email-assist",
     name: "Email Comprehension Agent",
     purpose: "Intelligent email processing and response generation for customer service efficiency.",
@@ -83,6 +97,7 @@ const agentIcons = {
   "i-audit": Shield,
   "i-assist": Mic,
   "cawao-schedule": ClipboardCheck,
+  "idv-agent": ShieldCheck,
   "email-assist": FileText,
   "knowledge-assist": BookOpen,
 };
@@ -101,6 +116,11 @@ const ContactCenterAgents = () => {
     
     if (agentId === "cawao-schedule") {
       navigate("/cawao");
+      return;
+    }
+    
+    if (agentId === "idv-agent") {
+      window.location.href = "https://exl-voice-flow.lovable.app/records";
       return;
     }
     
