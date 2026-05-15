@@ -13,8 +13,11 @@ const Header = () => {
             <span className="text-xs text-muted-foreground">Platform</span>
           </div>
         </Link>
-        
-        
+
+        <nav className="hidden md:flex items-center gap-6">
+          <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Home</Link>
+          <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Platform</Link>
+        </nav>
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">
