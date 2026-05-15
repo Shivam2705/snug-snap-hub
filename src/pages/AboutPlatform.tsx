@@ -139,28 +139,30 @@ const AboutPlatform = () => {
         </Button>
 
         {/* Hero */}
-        <section className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/30 p-10 md:p-16 mb-16">
+        <section className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/30 p-8 md:p-12 mb-8">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.12)_0%,transparent_60%)]" />
-          <div className="relative max-w-3xl">
+          <div className="relative max-w-4xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary mb-5">
               <Sparkles className="h-3.5 w-3.5" />
-              Agentic AI Platform
+              Enterprise-Grade Agentic AI Platform
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Build, Orchestrate &{" "}
-              <span className="text-gradient-primary">Scale Intelligent Agents</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
+              The{" "}
+              <span className="text-gradient-primary">Autonomous Intelligence</span>
+              {" "}Fabric for{" "}
+              <span className="text-gradient-primary">Modern Enterprises</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              A unified platform to design, deploy, and govern AI agents across the enterprise —
-              accelerating decisions, automating workflows, and unlocking new productivity at every
+              Design, deploy, and govern multi-modal AI agents across Text, Vision, and Voice — orchestrating
+              end-to-end workflows, accelerating decisions, and unlocking compounding productivity at every
               layer of your operations.
             </p>
           </div>
         </section>
 
         {/* What We Offer */}
-        <section className="mb-20">
-          <div className="max-w-3xl mb-10">
+        <section className="mb-10">
+          <div className="max-w-3xl mb-6">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">What the Platform Offers</h2>
             <p className="text-muted-foreground text-lg leading-relaxed">
               Everything you need to move from isolated AI experiments to production-grade agentic
@@ -183,8 +185,8 @@ const AboutPlatform = () => {
         </section>
 
         {/* Productivity */}
-        <section className="mb-20 rounded-2xl border border-border/50 bg-card/20 p-8 md:p-12">
-          <div className="max-w-3xl mb-10">
+        <section className="mb-10 rounded-2xl border border-border/50 bg-card/20 p-8 md:p-10">
+          <div className="max-w-3xl mb-6">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">
               Optimize Today's Processes, Unlock Tomorrow's Productivity
             </h2>
@@ -213,8 +215,8 @@ const AboutPlatform = () => {
         </section>
 
         {/* Key Features */}
-        <section className="mb-20">
-          <div className="max-w-3xl mb-10">
+        <section className="mb-10">
+          <div className="max-w-3xl mb-6">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">Key Platform Features</h2>
             <p className="text-muted-foreground text-lg leading-relaxed">
               Built for the realities of enterprise AI — flexible, secure, and ready for change.
@@ -238,7 +240,7 @@ const AboutPlatform = () => {
         </section>
 
         {/* CTA */}
-        <section className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-10 md:p-14 text-center">
+        <section className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-8 md:p-10 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore the Agent Library</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
             Discover ready-to-use agents across Contact Center, E-Commerce, and Finance —
