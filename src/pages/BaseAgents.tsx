@@ -154,7 +154,7 @@ const BaseAgents = () => {
   const imageAgents = [
     {
       id: "product-recommendation",
-      name: "NEXT Lens",
+      name: "Visual Lens",
       purpose: "Image-based search agent that finds similar products by extracting product attributes and matching against our inventory.",
       capabilities: [
         "Product attribute extraction",

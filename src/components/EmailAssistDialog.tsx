@@ -80,7 +80,7 @@ I would appreciate if you could:
 2. Provide an updated delivery estimate
 3. Consider expedited shipping if there's been a delay on your end
 
-I have been a loyal NEXT customer for over 5 years and this experience has been quite disappointing. I really hope this can be resolved promptly.
+I have been a loyal customer for over 5 years and this experience has been quite disappointing. I really hope this can be resolved promptly.
 
 Looking forward to your urgent response.
 

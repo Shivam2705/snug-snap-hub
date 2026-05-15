@@ -24,7 +24,7 @@ const ecommerceAgentsList = [
   },
   {
     id: "next-lens",
-    name: "NEXT Lens",
+    name: "Visual Lens",
     purpose: "Visual AI-powered product discovery enabling customers to search with images.",
     capabilities: ["Image-based search", "Visual similarity matching", "Style recommendations", "Trend identification"],
     savings: ["30% increase in product discovery"],
