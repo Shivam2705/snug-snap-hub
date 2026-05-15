@@ -265,7 +265,7 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
           <div className="w-full lg:w-1/3 border-b lg:border-b-0 lg:border-r bg-muted/30 p-4 lg:p-6 flex flex-col">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-semibold">NEXT Lens</h2>
+                <h2 className="text-xl font-semibold">Visual Lens</h2>
                 <p className="text-sm text-muted-foreground mt-1">
                   Image-based search to find similar products
                 </p>
@@ -491,7 +491,7 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
                   <div>
                     <div className="flex items-center justify-between mb-6">
                       <div>
-                        <h3 className="text-lg font-semibold">Similar Styles from NEXT</h3>
+                        <h3 className="text-lg font-semibold">Similar Styles</h3>
                         <p className="text-sm text-muted-foreground">
                           {apiResponse?.length || 0} products matching your uploaded style
                         </p>
@@ -546,7 +546,7 @@ const ProductRecommendationDialog = ({ open, onOpenChange }: ProductRecommendati
 
                     {/* Message from API */}
                     <div className="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-xl">
-                      <p className="text-sm text-primary">Here are the top matching products from NEXT.co.uk based on your uploaded style!</p>
+                      <p className="text-sm text-primary">Here are the top matching products based on your uploaded style!</p>
                     </div>
                   </div>
                 ) : isCompleted && !isRunning ? (

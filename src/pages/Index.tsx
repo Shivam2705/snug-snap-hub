@@ -22,7 +22,7 @@ const Index = () => {
   const ecommerceAgents = [{
     name: "Hyper Personalized Marketing"
   }, {
-    name: "NEXT Lens"
+    name: "Visual Lens"
   }, {
     name: "Buyer Assist Agent"
   }, {
@@ -72,10 +72,9 @@ const Index = () => {
             </div> */}
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8">
-              <span className="text-foreground font-display">NEXT</span>{" "}
               <span className="text-gradient-primary">Agentic AI</span>
               <br />
-              <span className="text-gradient-primary">Platform - Prototype</span>
+              <span className="text-foreground font-display">Platform</span>
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -233,7 +232,7 @@ const Index = () => {
                 <Brain className="h-5 w-5 text-white" />
               </div>
               <div>
-                <span className="font-semibold text-foreground">NEXT Agentic AI</span>
+                <span className="font-semibold text-foreground">Agentic AI</span>
                 <span className="text-muted-foreground text-sm ml-2">Platform</span>
               </div>
             </div>
