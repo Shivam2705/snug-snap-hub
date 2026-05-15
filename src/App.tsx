@@ -17,6 +17,7 @@ import BaseAgentsImage from "./pages/BaseAgentsImage";
 import BaseAgentsVoice from "./pages/BaseAgentsVoice";
 import BaseAgents from "./pages/BaseAgents";
 import KnowledgeAssistPage from "./pages/KnowledgeAssistPage";
+import AboutPlatform from "./pages/AboutPlatform";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
           <Route path="/base-agents/image" element={<BaseAgentsImage />} />
           <Route path="/base-agents/voice" element={<BaseAgentsVoice />} />
           <Route path="/knowledge-assist" element={<KnowledgeAssistPage />} />
+          <Route path="/about" element={<AboutPlatform />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
